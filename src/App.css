@@ -1,0 +1,25 @@
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+}
+
+/* Smooth section transitions */
+.main>section {
+    scroll-margin-top: 80px;
+}
+
+/* Ensure proper stacking context */
+.main>section:nth-child(odd) {
+    position: relative;
+    z-index: 1;
+}
+
+.main>section:nth-child(even) {
+    position: relative;
+    z-index: 2;
+}

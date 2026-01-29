@@ -1,0 +1,157 @@
+/* Tech Stack Section - Bento Grid */
+.techstack {
+    position: relative;
+    overflow: hidden;
+}
+
+.techstack__header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.techstack__header .section-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Bento Grid Layout */
+.techstack__grid {
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: var(--spacing-3xl);
+}
+
+/* Specialization Cards */
+.techstack__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.techstack__card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.techstack__card:hover::before {
+    opacity: 1;
+}
+
+.techstack__card--highlight {
+    background: linear-gradient(145deg,
+            rgba(0, 242, 255, 0.05) 0%,
+            rgba(112, 0, 255, 0.05) 100%);
+}
+
+.techstack__card-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+}
+
+.techstack__card:hover .techstack__card-icon {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--card-accent);
+}
+
+.techstack__card-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.techstack__card-desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+.techstack__card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: auto;
+}
+
+/* Tech Marquee */
+.techstack__marquee {
+    position: relative;
+    overflow: hidden;
+    padding: var(--spacing-xl) 0;
+    mask-image: linear-gradient(90deg,
+            transparent,
+            white 10%,
+            white 90%,
+            transparent);
+    -webkit-mask-image: linear-gradient(90deg,
+            transparent,
+            white 10%,
+            white 90%,
+            transparent);
+}
+
+.techstack__marquee-track {
+    display: flex;
+    gap: var(--spacing-xl);
+    animation: marquee 30s linear infinite;
+    width: max-content;
+}
+
+.techstack__marquee-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    white-space: nowrap;
+}
+
+.techstack__marquee-name {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+.techstack__marquee-item:hover .techstack__marquee-name {
+    color: var(--color-accent-primary);
+}
+
+.techstack__marquee-dot {
+    color: var(--color-accent-primary);
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .techstack__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .techstack__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .techstack__card--highlight {
+        grid-column: span 1;
+    }
+
+    .techstack__marquee-name {
+        font-size: var(--font-size-base);
+    }
+}
