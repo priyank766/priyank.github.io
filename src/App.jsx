@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     FiArrowRight,
@@ -11,7 +11,9 @@ import {
     FiLinkedin,
     FiMail,
     FiMapPin,
+    FiMoon,
     FiSend,
+    FiSun,
 } from 'react-icons/fi';
 import './App.css';
 
@@ -175,6 +177,27 @@ function App() {
         message: '',
     });
 
+    const [theme, setTheme] = useState(() => {
+        if (typeof window === 'undefined') {
+            return 'light';
+        }
+
+        const savedTheme = window.localStorage.getItem('theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+            return savedTheme;
+        }
+
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    });
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        window.localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    };
     const currentYear = useMemo(() => new Date().getFullYear(), []);
     const isSubmitting = formState.status === 'submitting';
 
@@ -266,9 +289,19 @@ function App() {
                         ))}
                     </nav>
 
-                    <a className="topbar__cta" href="#contact">
-                        Let&apos;s Talk
-                    </a>
+                    <div className="topbar__actions">
+                        <button
+                            type="button"
+                            className="topbar__theme"
+                            onClick={toggleTheme}
+                            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                        >
+                            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+                        </button>
+                        <a className="topbar__cta" href="#contact">
+                            Let&apos;s Talk
+                        </a>
+                    </div>
                 </div>
             </header>
 
@@ -551,6 +584,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
