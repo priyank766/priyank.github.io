@@ -33,7 +33,7 @@ function Footer() {
                             <FiGithub />
                         </a>
                         <a
-                            href="https://www.linkedin.com/in/priyank-patel-01469028b/"
+                            href="https://www.linkedin.com/in/priyank766/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="footer__social-link"
