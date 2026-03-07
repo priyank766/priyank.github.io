@@ -14,6 +14,7 @@ import {
     FiMoon,
     FiSend,
     FiSun,
+    FiTwitter,
 } from 'react-icons/fi';
 import './App.css';
 
@@ -336,6 +337,10 @@ function App() {
                                 <FiLinkedin />
                                 LinkedIn
                             </a>
+                            <a href="https://x.com/priyank_766" target="_blank" rel="noreferrer">
+                                <FiTwitter />
+                                X
+                            </a>
                         </div>
                     </div>
 
@@ -576,6 +581,9 @@ function App() {
                         <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
                             <FiLinkedin />
                         </a>
+                        <a href="https://x.com/priyank_766" target="_blank" rel="noreferrer" aria-label="X profile">
+                            <FiTwitter />
+                        </a>
                     </div>
                 </div>
             </footer>
@@ -584,6 +592,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
