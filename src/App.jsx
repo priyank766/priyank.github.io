@@ -26,8 +26,9 @@ const navLinks = [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },
     { label: 'Experience', href: '#experience' },
-    { label: 'Skills', href: '#skills' },
+    { label: 'Research', href: '#research' },
     { label: 'Projects', href: '#projects' },
+    { label: 'Skills', href: '#skills' },
     { label: 'Contact', href: '#contact' },
 ];
 
@@ -123,15 +124,6 @@ const projects = [
         github: 'https://github.com/priyank766/BioAgent-ALPHAFOLD',
     },
     {
-        title: 'Deepfake Detection Research',
-        category: 'Media Forensics',
-        description:
-            'Research-oriented deep learning setup for manipulated media detection with strong cross-domain behavior.',
-        highlight: 'Domain-adversarial training for stronger generalization.',
-        stack: ['TensorFlow', 'ResNet50', 'Domain Adaptation', 'Computer Vision'],
-        github: 'https://github.com/priyank766/DFD-Research',
-    },
-    {
         title: 'Multi-National Money Transfer',
         category: 'Fintech Infrastructure',
         description:
@@ -148,14 +140,26 @@ const projects = [
         stack: ['LangChain', 'OpenAI', 'GitHub API', 'React'],
         github: 'https://github.com/priyank766/FrontFrEND',
     },
+];
+
+const research = [
     {
-        title: 'WonderPlan',
-        category: 'Travel Intelligence',
+        title: 'Recursive Language Models (RLM)',
+        category: 'AI Architecture Research',
         description:
-            'A planning assistant that composes personalized itineraries and recommendations through agent-style orchestration.',
-        highlight: 'Composable microservice structure for travel decision support.',
-        stack: ['Google ADK', 'A2A Protocol', 'Microservices', 'React'],
-        github: 'https://github.com/priyank766/WonderPLAN_Traveller',
+            'A local, reproducible research project implementing and benchmarking Recursive Language Models against standard LLM inference for long-context tasks. RLM addresses "context rot" by storing documents in an external Python REPL, keeping active context small and preventing attention dilution.',
+        highlight: 'Successfully answered queries on a 52,719-character document in 3 recursive sub-calls, bypassing ~16K character KV cache truncation.',
+        stack: ['Python 3.12', 'Ollama', 'QLoRA', 'Custom REPL Engine'],
+        github: 'https://priyank766.github.io/RLM/',
+    },
+    {
+        title: 'Deepfake Detection Research',
+        category: 'Media Forensics',
+        description:
+            'Research-oriented deep learning setup for manipulated media detection with strong cross-domain behavior and domain-adversarial training for improved generalization.',
+        highlight: 'Domain-adversarial training for stronger cross-domain generalization.',
+        stack: ['TensorFlow', 'ResNet50', 'Domain Adaptation', 'Computer Vision'],
+        github: 'https://github.com/priyank766/DFD-Research',
     },
 ];
 
@@ -415,21 +419,41 @@ function App() {
                     </div>
                 </motion.section>
 
-                <motion.section id="skills" className="section-panel" {...fadeInUp}>
+                <motion.section id="research" className="section-panel" {...fadeInUp}>
                     <div className="section-heading">
-                        <p className="section-heading__kicker">Skills</p>
-                        <h2>Tools I work with regularly.</h2>
+                        <p className="section-heading__kicker">Research</p>
+                        <h2>Explorations in AI and model behavior.</h2>
                     </div>
 
-                    <div className="skill-grid">
-                        {skillGroups.map((group) => (
-                            <article className="skill-card" key={group.title}>
-                                <h3>{group.title}</h3>
-                                <div className="skill-tags">
-                                    {group.items.map((skill) => (
-                                        <span key={skill}>{skill}</span>
+                    <div className="projects-grid projects-grid--research">
+                        {research.map((item) => (
+                            <article key={item.title} className="project-card">
+                                <div className="project-card__top">
+                                    <p>{item.category}</p>
+                                    {item.github && (
+                                        <a href={item.github} target="_blank" rel="noreferrer" aria-label={`${item.title} repository`}>
+                                            <FiGithub />
+                                        </a>
+                                    )}
+                                </div>
+
+                                <h3>{item.title}</h3>
+                                <p className="project-card__desc">{item.description}</p>
+
+                                <p className="project-card__highlight">{item.highlight}</p>
+
+                                <div className="project-card__tags">
+                                    {item.stack.map((tech) => (
+                                        <span key={tech}>{tech}</span>
                                     ))}
                                 </div>
+
+                                {item.github && (
+                                    <a className="project-card__link" href={item.github} target="_blank" rel="noreferrer">
+                                        View Research
+                                        <FiExternalLink />
+                                    </a>
+                                )}
                             </article>
                         ))}
                     </div>
@@ -438,7 +462,7 @@ function App() {
                 <motion.section id="projects" className="section-panel" {...fadeInUp}>
                     <div className="section-heading">
                         <p className="section-heading__kicker">Projects</p>
-                        <h2>Selected builds and research work.</h2>
+                        <h2>Selected engineering builds.</h2>
                     </div>
 
                     <div className="projects-grid">
@@ -470,6 +494,26 @@ function App() {
                                         <FiExternalLink />
                                     </a>
                                 )}
+                            </article>
+                        ))}
+                    </div>
+                </motion.section>
+
+                <motion.section id="skills" className="section-panel" {...fadeInUp}>
+                    <div className="section-heading">
+                        <p className="section-heading__kicker">Skills</p>
+                        <h2>Tools I work with regularly.</h2>
+                    </div>
+
+                    <div className="skill-grid">
+                        {skillGroups.map((group) => (
+                            <article className="skill-card" key={group.title}>
+                                <h3>{group.title}</h3>
+                                <div className="skill-tags">
+                                    {group.items.map((skill) => (
+                                        <span key={skill}>{skill}</span>
+                                    ))}
+                                </div>
                             </article>
                         ))}
                     </div>
@@ -592,13 +636,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
