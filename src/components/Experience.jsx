@@ -4,22 +4,9 @@ import './Experience.css';
 
 const experiences = [
     {
-        company: 'Innover-Global',
-        role: 'Full Stack Engineer (Freelance)',
-        period: 'Dec 2025 - Present',
-        location: 'Remote',
-        color: '#7000FF',
-        highlights: [
-            'Engineered a global fund transfer platform with Stripe, Zumrails, Razorpay, and Cashfree integration',
-            'Architected full-stack admin dashboard for real-time transaction monitoring',
-            'Developed end-to-end payment flows for one-time, recurring, and subscription models',
-            'Integrated third-party KYC APIs for automated user verification',
-        ],
-    },
-    {
         company: 'ChaitanyaAI',
         role: 'AI/ML Intern',
-        period: 'Nov 2025 - Present',
+        period: 'Nov 2025 - Jan 2026',
         location: 'Remote',
         color: '#00F2FF',
         highlights: [
@@ -32,7 +19,7 @@ const experiences = [
     {
         company: 'Zenith India',
         role: 'AI/ML Intern',
-        period: 'Oct 2025 - Dec 2025',
+        period: 'Oct 2025 - Nov 2025',
         location: 'Remote',
         color: '#00F2FF',
         highlights: [
@@ -41,6 +28,19 @@ const experiences = [
             'Built AI Fashion Trend Monitor with Selenium for automated data extraction',
         ],
     },
+    {
+        company: 'Innover-Global',
+        role: 'Full Stack Engineer (Freelance)',
+        period: 'Dec 2025 - Jan 2026',
+        location: 'Remote',
+        color: '#7000FF',
+        highlights: [
+            'Engineered a global fund transfer platform with Stripe, Zumrails, Razorpay, and Cashfree integration',
+            'Architected full-stack admin dashboard for real-time transaction monitoring',
+            'Developed end-to-end payment flows for one-time, recurring, and subscription models',
+            'Integrated third-party KYC APIs for automated user verification',
+        ],
+    }
 ];
 
 function Experience() {

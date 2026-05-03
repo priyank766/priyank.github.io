@@ -19,16 +19,7 @@ const sideIndexIds = ['top', 'about', 'work', 'projects', 'research', 'stack', '
 
 const experiences = [
   {
-    date: 'Dec 2025 — Present',
-    company: 'Innover-Global',
-    meta: 'Remote · Freelance',
-    role: 'Full-Stack Engineer',
-    detail:
-      'Engineered a global fund-transfer platform with Stripe, Razorpay, Cashfree and Zumrails. Built the admin dashboard for real-time monitoring; implemented one-time, recurring and subscription payment flows; integrated third-party KYC for automated user verification.',
-    tags: ['Next.js', 'FastAPI', 'Postgres', 'Multi-Gateway'],
-  },
-  {
-    date: 'Nov 2025 — Present',
+    date: 'Nov\'2025 — Jan\'2026',
     company: 'ChaitanyaAI',
     meta: 'Remote · Internship',
     role: 'AI / ML Intern',
@@ -37,7 +28,7 @@ const experiences = [
     tags: ['MLOps', 'Quantization', 'Voice AI', 'Monitoring'],
   },
   {
-    date: 'Oct 2025 — Dec 2025',
+    date: 'Oct\'2025 — Dec\'2025',
     company: 'Zenith India',
     meta: 'Remote · Internship',
     role: 'AI / ML Intern',
@@ -45,6 +36,15 @@ const experiences = [
       'Developed a finance Prompt Evaluator using sentence-transformers and RAG. Engineered a GEO Agent to analyse LLM ranking patterns for web visibility. Built an AI Fashion Trend Monitor with Selenium for automated extraction.',
     tags: ['RAG', 'Sentence-Transformers', 'GEO', 'Selenium'],
   },
+    {
+    date: 'Dec\'2025 — Jan\'2026',
+    company: 'Innover-Global',
+    meta: 'Remote · Freelance',
+    role: 'Full-Stack Engineer',
+    detail:
+      'Engineered a global fund-transfer platform with Stripe, Razorpay, Cashfree and Zumrails. Built the admin dashboard for real-time monitoring; implemented one-time, recurring and subscription payment flows; integrated third-party KYC for automated user verification.',
+    tags: ['Next.js', 'FastAPI', 'Postgres', 'Multi-Gateway'],
+  }
 ];
 
 const stackGroups = [
