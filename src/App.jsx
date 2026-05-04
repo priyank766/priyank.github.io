@@ -381,7 +381,7 @@ function App() {
       </section>
 
       {/* ABOUT */}
-      <section className="section" id="about">
+      <section className="section section--invert" id="about">
         <div className="container">
           <div className="section__head reveal">
             <div>

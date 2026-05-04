@@ -270,6 +270,7 @@
   --bg: var(--ink); --bg-2: var(--ink-2); --bg-3: var(--ink-3);
   --text: #f5f1ea; --text-mute: rgba(245, 241, 234, 0.62);
   --line: rgba(245, 241, 234, 0.12); --line-bright: rgba(245, 241, 234, 0.25);
+  --portrait-bg: linear-gradient(135deg, #1a1410 0%, #0c0c0e 100%);
 }
 .section--invert::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0;
