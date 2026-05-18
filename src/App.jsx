@@ -9,13 +9,13 @@ const X_URL = 'https://x.com/priyank_766';
 
 const navLinks = [
   { id: 'about', label: 'about' },
-  { id: 'work', label: 'work' },
+  { id: 'products', label: 'products' },
   { id: 'projects', label: 'projects' },
   { id: 'research', label: 'research' },
-  { id: 'stack', label: 'stack' },
+  { id: 'work', label: 'work' },
 ];
 
-const sideIndexIds = ['top', 'about', 'work', 'projects', 'research', 'stack', 'freelance', 'contact'];
+const sideIndexIds = ['top', 'about', 'products', 'projects', 'research', 'work', 'contact'];
 
 const experiences = [
   {
@@ -45,17 +45,6 @@ const experiences = [
       'Engineered a global fund-transfer platform with Stripe, Razorpay, Cashfree and Zumrails. Built the admin dashboard for real-time monitoring; implemented one-time, recurring and subscription payment flows; integrated third-party KYC for automated user verification.',
     tags: ['Next.js', 'FastAPI', 'Postgres', 'Multi-Gateway'],
   }
-];
-
-const stackGroups = [
-  { title: ['Agentic', 'AI', 'left'], items: ['LangGraph · LangChain', 'Multi-agent systems', 'ReAct · Tool-use', 'MCP servers', 'Google ADK · A2A'] },
-  { title: ['LLM &', 'GenAI', 'right'], items: ['Gemini · OpenAI', 'Ollama · Local LLMs', 'RAG systems', 'Prompt engineering', 'QLoRA fine-tuning'] },
-  { title: ['ML', 'Research', 'right'], items: ['PyTorch · TensorFlow', 'Domain adaptation', 'Computer vision', 'Sentence-transformers', 'STT / TTS'] },
-  { title: ['', 'MLOps', 'left'], items: ['Docker · Kubernetes', 'Model quantization', 'Drift monitoring', 'CI/CD', 'Triton · vLLM'] },
-  { title: ['', 'Frontend', 'left'], items: ['React · Next.js', 'TypeScript', 'Three.js · R3F', 'Tailwind', 'Zustand'] },
-  { title: ['', 'Backend', 'left'], items: ['FastAPI · Python', 'Node.js', 'WebSockets · SSE', 'SQLAlchemy', 'REST + RPC'] },
-  { title: ['', 'Fintech', 'left'], items: ['Stripe · Razorpay', 'Cashfree · Zumrails', 'KYC integrations', 'Recurring billing', 'Multi-gateway routing'] },
-  { title: ['', 'Data', 'left'], items: ['PostgreSQL · MongoDB', 'SQLite · Redis', 'Vector stores', 'TFRecord pipelines', 'RDKit · Pandas'] },
 ];
 
 const GithubIcon = (props) => (
@@ -96,13 +85,6 @@ const ClockIcon = (props) => (
     <path d="M12 6v6l4 2" />
   </svg>
 );
-
-function StackTitle({ pre, em, em_position }) {
-  if (em_position === 'right') {
-    return <>{pre} <em>{em}</em></>;
-  }
-  return <><em>{em}</em>{pre ? <> {pre}</> : null}</>;
-}
 
 function ProjectCardCortex() {
   return (
@@ -193,6 +175,25 @@ function ProjectCardCAD() {
           <div><span className="acc">boolean_subtract</span> · base ∖ cyl</div>
           <div><span className="acc">apply_material</span> · brushed_steel</div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCardAnchorMem() {
+  return (
+    <div className="project__visual pv-hermes">
+      <div className="pv">
+        <div className="pv__head"><span><span className="pv__head-dot" />anchormem · memory graph</span><span>long-context recall</span></div>
+        <div className="pv__terminal" style={{ marginTop: 16 }}>
+          <div><span className="acc">input</span> · multi-session conversations</div>
+          <div><span className="key">→</span> extract atomic facts</div>
+          <div><span className="key">→</span> group facts into events</div>
+          <div><span className="key">→</span> link associative context graph</div>
+          <div><span className="ok">✓</span> context-preserving retrieval</div>
+        </div>
+        <div className="pv__rule" />
+        <div className="pv__title">Facts · Events · Associative Memory</div>
       </div>
     </div>
   );
@@ -374,10 +375,10 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="hero__scroll-cue">
+        <a href="#about" className="hero__scroll-cue" aria-label="Scroll to about section">
           <span>Scroll</span>
           <span className="hero__scroll-line" />
-        </div>
+        </a>
       </section>
 
       {/* ABOUT */}
@@ -455,35 +456,43 @@ function App() {
         </div>
       </section>
 
-      {/* EXPERIENCE */}
-      <section className="section section--alt" id="work">
+      {/* PRODUCTS */}
+      <section className="section" id="products">
         <div className="container">
           <div className="section__head reveal">
             <div>
-              <span className="eyebrow">Selected work</span>
-              <h2 className="section-title">Where I've <em>shipped</em>.</h2>
+              <span className="eyebrow">Product</span>
+              <h2 className="section-title">What I've <em>launched</em>.</h2>
             </div>
             <p className="section__head-sub">
-              Three engagements across AI research, MLOps, and fintech — one on retainer, two through end of year.
+              A production-ready memory architecture for LLM agents focused on long-term, context-aware recall.
             </p>
           </div>
-          <div className="exp__list reveal">
-            {experiences.map((x) => (
-              <div className="exp__row" key={x.company}>
-                <div className="exp__date">{x.date}</div>
-                <div>
-                  <div className="exp__company">{x.company}</div>
-                  <div className="exp__company-meta">{x.meta}</div>
+
+          <div className="projects__list reveal">
+            <article className="project">
+              <div className="project__head">
+                <h3>Anchor<em>Mem</em></h3>
+                <div className="project__sub">Long-term memory system for LLMs</div>
+                <ProductCardAnchorMem />
+              </div>
+              <div className="project__body">
+                <p className="project__desc">
+                  AnchorMem is a memory architecture inspired by human associative recall. It structures knowledge into atomic facts and higher-level events, then links them so AI systems can retrieve precise information without losing conversation context.
+                </p>
+                <div className="project__highlight">
+                  Built for persistent, context-preserving retrieval in autonomous agents and long-running AI workflows.
                 </div>
-                <div>
-                  <div className="exp__role">{x.role}</div>
-                  <div className="exp__role-detail">{x.detail}</div>
+                <div className="project__tags">
+                  {['LLM Memory', 'Context Retrieval', 'Fact Graph', 'Event Modeling', 'Agent Systems'].map((t) => <span key={t} className="project__tag">{t}</span>)}
                 </div>
-                <div className="exp__tags">
-                  {x.tags.map((t) => <span key={t} className="exp__tag">{t}</span>)}
+                <div className="project__links">
+                  <a href="https://anchormem.me/" target="_blank" rel="noopener noreferrer" className="project__link">
+                    Visit Product
+                  </a>
                 </div>
               </div>
-            ))}
+            </article>
           </div>
         </div>
       </section>
@@ -652,87 +661,35 @@ function App() {
         </div>
       </section>
 
-      {/* STACK */}
-      <section className="section section--alt" id="stack">
+      {/* EXPERIENCE */}
+      <section className="section section--alt" id="work">
         <div className="container">
           <div className="section__head reveal">
             <div>
-              <span className="eyebrow">Stack</span>
-              <h2 className="section-title">The <em>tools</em> I reach for.</h2>
+              <span className="eyebrow">Selected work</span>
+              <h2 className="section-title">Where I've <em>shipped</em>.</h2>
             </div>
             <p className="section__head-sub">
-              Specialisations grouped by where I spend my time, not by what's trending this week.
+              Three engagements across AI research, MLOps, and fintech — one on retainer, two through end of year.
             </p>
           </div>
-
-          <div className="stack__grid reveal">
-            {stackGroups.map((g, i) => (
-              <div className="stack__cell" key={i}>
-                <div className="stack__cell-title">
-                  <StackTitle pre={g.title[0]} em={g.title[1]} em_position={g.title[2]} />
+          <div className="exp__list reveal">
+            {experiences.map((x) => (
+              <div className="exp__row" key={x.company}>
+                <div className="exp__date">{x.date}</div>
+                <div>
+                  <div className="exp__company">{x.company}</div>
+                  <div className="exp__company-meta">{x.meta}</div>
                 </div>
-                <ul className="stack__cell-list">
-                  {g.items.map((it) => <li key={it}>{it}</li>)}
-                </ul>
+                <div>
+                  <div className="exp__role">{x.role}</div>
+                  <div className="exp__role-detail">{x.detail}</div>
+                </div>
+                <div className="exp__tags">
+                  {x.tags.map((t) => <span key={t} className="exp__tag">{t}</span>)}
+                </div>
               </div>
             ))}
-          </div>
-
-          <div className="stack__marquee">
-            <div className="stack__marquee-track">
-              {[...Array(2)].map((_, k) => (
-                <span key={k} style={{ display: 'inline-flex', gap: 56 }}>
-                  <span>Python</span><span>·</span>
-                  <span><em>Agentic AI</em></span><span>·</span>
-                  <span>FastAPI</span><span>·</span>
-                  <span><em>LangGraph</em></span><span>·</span>
-                  <span>Three.js</span><span>·</span>
-                  <span><em>MLOps</em></span><span>·</span>
-                  <span>Gemini</span><span>·</span>
-                  <span><em>RAG</em></span><span>·</span>
-                  <span>Next.js</span><span>·</span>
-                  <span><em>Fintech</em></span><span>·</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FREELANCE */}
-      <section className="section" id="freelance">
-        <div className="container">
-          <div className="freelance__inner reveal">
-            <div>
-              <span className="eyebrow">Open for projects</span>
-              <h2>Hire me for <em>AI</em><br />that ships.</h2>
-              <p>
-                Looking for an engineer to build production-grade AI? I take on focused, well-scoped contracts in agentic systems, fintech infrastructure, and applied ML — usually 4–12 weeks, always with a working artifact at the end.
-              </p>
-              <a href="#contact" className="freelance__cta-btn">Start a project →</a>
-            </div>
-            <div className="freelance__services">
-              <div className="freelance__service">
-                <svg className="freelance__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
-                <div className="freelance__service-title">Agentic Systems</div>
-                <p className="freelance__service-desc">LangGraph and ADK-based autonomous agents with tool-use, planning, and recovery loops.</p>
-              </div>
-              <div className="freelance__service">
-                <svg className="freelance__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19h16M4 15l4-6 4 4 4-7 4 5" /><circle cx="8" cy="9" r="1.5" /><circle cx="12" cy="13" r="1.5" /><circle cx="16" cy="6" r="1.5" /></svg>
-                <div className="freelance__service-title">RAG & LLM Apps</div>
-                <p className="freelance__service-desc">Retrieval pipelines, vector stores, and production-ready LLM integrations on Gemini, OpenAI, or local Ollama.</p>
-              </div>
-              <div className="freelance__service">
-                <svg className="freelance__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4" /></svg>
-                <div className="freelance__service-title">MLOps Pipelines</div>
-                <p className="freelance__service-desc">Training, deployment, drift monitoring, and quantization for low-latency inference at scale.</p>
-              </div>
-              <div className="freelance__service">
-                <svg className="freelance__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg>
-                <div className="freelance__service-title">Voice & Vision AI</div>
-                <p className="freelance__service-desc">Realtime STT/TTS conversational agents and computer-vision systems including domain-adversarial detection.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -741,9 +698,9 @@ function App() {
       <section className="section section--invert" id="contact">
         <div className="container">
           <span className="eyebrow">Let's talk</span>
-          <h2 className="contact__big">Have a <em>project</em><br /><span className="stroke">in mind?</span></h2>
+          <h2 className="contact__big reveal">Have a <em>project</em><br /><span className="stroke">in mind?</span></h2>
 
-          <div className="contact__grid">
+          <div className="contact__grid reveal">
             <div>
               <p className="contact__lede">
                 I read every message. The fastest way to reach me is email — I usually reply within 24 hours.
