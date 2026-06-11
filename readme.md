@@ -1,6 +1,4 @@
-# Priyank Patel Portfolio
-
-Professional portfolio website for Priyank Patel, an AI/ML engineer focused on agentic AI, applied machine learning, and production software systems.
+# Portfolio
 
 ## Overview
 
@@ -49,4 +47,3 @@ The repository includes a GitHub Actions workflow that builds the site and deplo
 - GitHub: https://github.com/priyank766
 - LinkedIn: https://www.linkedin.com/in/priyank766/
 - Email: priyank8445@gmail.com
-
