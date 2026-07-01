@@ -305,7 +305,7 @@ function App() {
   return (
     <>
       <nav className={`nav${scrolled ? ' is-scrolled' : ''}`}>
-        <div className="container nav__inner">
+        <div className="nav__inner">
           <a href="#top" className="nav__brand">
             <span className="nav__brand-dot" />
             Priyank Patel
