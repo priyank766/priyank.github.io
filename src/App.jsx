@@ -19,6 +19,15 @@ const sideIndexIds = ['top', 'about', 'products', 'projects', 'research', 'work'
 
 const experiences = [
   {
+    date: 'Jun\'2026 — Present',
+    company: 'Saarthios',
+    meta: 'Remote · Full-Time',
+    role: 'AI Product Engineer',
+    detail:
+      'Building the operating-intelligence layer unifying ERP, CRM, WhatsApp, and email data. Engineered a multi-GB scale document-to-Markdown Context Builder Agent and a Context Graph achieving 95%+ retrieval accuracy, outperforming Mem0.',
+    tags: ['AI Agents', 'Context Graphs', 'Document Parsing', 'Enterprise Integration'],
+  },
+  {
     date: 'Nov\'2025 — Jan\'2026',
     company: 'ChaitanyaAI',
     meta: 'Remote · Internship',
