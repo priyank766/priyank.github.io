@@ -27,9 +27,10 @@ html {
   --line: rgba(245, 241, 234, 0.12);
   --line-bright: rgba(245, 241, 234, 0.25);
   --portrait-bg: linear-gradient(135deg, #1a1410 0%, #0c0c0e 100%);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.005) 100%);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --glass-glow: rgba(255, 255, 255, 0.06);
 }
 
 [data-theme="light"] {
@@ -41,9 +42,10 @@ html {
   --line: rgba(12, 12, 14, 0.12);
   --line-bright: rgba(12, 12, 14, 0.22);
   --portrait-bg: linear-gradient(135deg, #e8dfd0 0%, #d4c5a8 100%);
-  --glass-bg: rgba(255, 255, 255, 0.35);
-  --glass-border: rgba(255, 255, 255, 0.45);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --glass-glow: rgba(255, 255, 255, 0.35);
 }
 
 .container {
@@ -100,6 +102,7 @@ html {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 32px;
+  position: relative;
   /* Start transparent */
   background: rgba(255, 255, 255, 0);
   backdrop-filter: blur(0px);
@@ -155,9 +158,9 @@ html {
 .nav__cta::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -2px;
   border-radius: inherit;
-  background: radial-gradient(circle at 80% 50%, rgba(196, 98, 58, 0.26), transparent 55%);
+  background: radial-gradient(circle at var(--cursor-x) var(--cursor-y), rgba(196, 98, 58, 0.28), transparent 60%);
   opacity: 0;
   transition: opacity 0.35s var(--ease);
   z-index: -2;

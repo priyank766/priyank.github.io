@@ -228,13 +228,20 @@ function App() {
 
   useEffect(() => {
     const onMove = (e) => {
+      // Hero spotlight
       const sp = spotlightRef.current;
-      if (!sp) return;
-      const r = sp.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width) * 100;
-      const y = ((e.clientY - r.top) / r.height) * 100;
-      sp.style.setProperty('--mx', x + '%');
-      sp.style.setProperty('--my', y + '%');
+      if (sp) {
+        const r = sp.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        const y = ((e.clientY - r.top) / r.height) * 100;
+        sp.style.setProperty('--mx', x + '%');
+        sp.style.setProperty('--my', y + '%');
+      }
+      // Global cursor position for CSS effects
+      const cx = (e.clientX / window.innerWidth) * 100;
+      const cy = (e.clientY / window.innerHeight) * 100;
+      document.documentElement.style.setProperty('--cursor-x', `${cx}%`);
+      document.documentElement.style.setProperty('--cursor-y', `${cy}%`);
     };
     document.addEventListener('mousemove', onMove);
     return () => document.removeEventListener('mousemove', onMove);
