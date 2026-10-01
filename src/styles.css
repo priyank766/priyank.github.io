@@ -1,0 +1,623 @@
+/* ------------------------------------------------------------------
+   Palette. Warm paper and ink, with one restrained accent for links.
+   Dark mode is the same page printed in reverse, not a neon variant.
+   ------------------------------------------------------------------ */
+:root {
+  --paper: #f3efe9;
+  --ink: #1a1917;
+  --ink-2: #46403a;   /* secondary text, ~9:1 on paper */
+  --ink-3: #6b6259;   /* metadata, ~5.3:1 on paper */
+  --rule: #d5cbc0;
+  --accent: #1f3f66;
+  --accent-rule: rgba(31, 63, 102, 0.35);
+  --selection: #e2d8cd;
+
+  --serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --margin-col: 9.5rem;
+  --body-col: 38rem;
+  --gutter: 2.5rem;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #171612;
+    --ink: #ebe5d8;
+    --ink-2: #c4bdae;
+    --ink-3: #99927f;
+    --rule: #38352d;
+    --accent: #a9c1e0;
+    --accent-rule: rgba(169, 193, 224, 0.4);
+    --selection: #3a3a35;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #171612;
+  --ink: #ebe5d8;
+  --ink-2: #c4bdae;
+  --ink-3: #99927f;
+  --rule: #38352d;
+  --accent: #a9c1e0;
+  --accent-rule: rgba(169, 193, 224, 0.4);
+  --selection: #3a3a35;
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+p + p {
+  margin-top: 0.9em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent-rule);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: text-decoration-color 160ms ease;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ------------------------------------------------------------------
+   Page grid: a narrow margin column and one reading column.
+   ------------------------------------------------------------------ */
+.page {
+  max-width: calc(var(--margin-col) + var(--gutter) + var(--body-col));
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page {
+    animation: page-in 420ms ease-out both;
+  }
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: var(--margin-col) minmax(0, 1fr);
+  column-gap: var(--gutter);
+}
+
+.margin {
+  color: var(--ink-3);
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.3rem;
+}
+
+.body {
+  min-width: 0;
+  max-width: var(--body-col);
+}
+
+/* ------------------------------------------------------------------
+   Masthead
+   ------------------------------------------------------------------ */
+.masthead {
+  padding: 1.75rem 0 0;
+}
+
+.masthead .margin {
+  padding-top: 0;
+}
+
+.monogram {
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.masthead-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.masthead ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.masthead nav a {
+  color: var(--ink-2);
+  text-decoration-color: transparent;
+}
+
+.masthead nav a:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+.theme-toggle {
+  font: inherit;
+  color: var(--ink-2);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.2em;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+/* ------------------------------------------------------------------
+   Intro
+   ------------------------------------------------------------------ */
+.intro {
+  padding: 5.5rem 0 4rem;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.roles {
+  margin-top: 0.75rem;
+  line-height: 1.45;
+  color: var(--ink-3);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.07em;
+  font-size: 1.125rem;
+}
+
+.lede {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+}
+
+.intro p + p {
+  margin-top: 0.9em;
+}
+
+.intro .lede + p {
+  margin-top: 0;
+}
+
+.intro .body > p:not(.roles):not(.lede) {
+  color: var(--ink-2);
+}
+
+.link-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0;
+  margin-top: 1.75rem;
+  color: var(--ink-3);
+}
+
+.link-line li:not(:last-child)::after {
+  content: '·';
+  margin: 0 0.65rem;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------
+   Sections
+   ------------------------------------------------------------------ */
+.section {
+  padding-bottom: 1.5rem;
+}
+
+.section-head {
+  border-top: 1px solid var(--rule);
+  padding-top: 0.9rem;
+  margin-bottom: 2.25rem;
+}
+
+.section-head .margin {
+  padding-top: 0.15rem;
+}
+
+.label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.section .row + .row {
+  margin-top: 2.75rem;
+}
+
+.section-head + .row {
+  margin-top: 0;
+}
+
+.margin span + span {
+  margin-top: 0.1rem;
+}
+
+/* Titles */
+.position {
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.case-title {
+  margin-top: 0.4rem;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.item-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+.item-title.small {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.item-title a {
+  color: inherit;
+  text-decoration-color: var(--rule);
+}
+
+.item-title a:hover {
+  text-decoration-color: currentColor;
+}
+
+.dek {
+  margin-top: 0.35rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: var(--ink-2);
+  font-size: 1.1875rem;
+  line-height: 1.45;
+}
+
+.dek + p {
+  margin-top: 0;
+}
+
+.run-in {
+  margin-top: 1.9rem;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* The three agents: a definition list set like a glossary. */
+.agents > div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  column-gap: 1.25rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.agents > div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.agents dt {
+  font-style: italic;
+}
+
+.stack {
+  margin-top: 1.25rem;
+  color: var(--ink-3);
+}
+
+.project-link {
+  margin-top: 0.35rem;
+}
+
+/* Open source pull requests */
+.repo {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.repo a {
+  color: var(--ink);
+  text-decoration-color: var(--rule);
+}
+
+.repo a:hover {
+  text-decoration-color: currentColor;
+}
+
+.prs li {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  column-gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.prs li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.pr-num {
+  text-align: right;
+}
+
+.section .pr-group {
+  margin-top: 2rem;
+}
+
+/* Other projects */
+.also-list li {
+  color: var(--ink-2);
+}
+
+.also-list li + li {
+  margin-top: 0.6rem;
+}
+
+.also-list a {
+  font-style: italic;
+}
+
+/* Skills */
+.skills > div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  column-gap: 1.25rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.skills > div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.skills dt {
+  color: var(--ink-3);
+}
+
+.contact-line {
+  font-size: 1.3125rem;
+  line-height: 1.45;
+}
+
+.contact-line + .link-line {
+  margin-top: 1rem;
+}
+
+/* Colophon */
+.colophon {
+  margin-top: 3rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------
+   Narrow screens: the margin column folds above its content.
+   ------------------------------------------------------------------ */
+@media (min-width: 64rem) {
+  body {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .margin {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 0;
+    margin-bottom: 0.4rem;
+  }
+
+  .margin:empty {
+    display: none;
+  }
+
+  .margin span + span {
+    margin-top: 0;
+  }
+
+  .margin span + span::before {
+    content: '·';
+    margin: 0 0.5rem;
+  }
+
+  .page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .masthead {
+    padding-top: 1.25rem;
+    font-size: 0.75rem;
+  }
+
+  .masthead ul {
+    column-gap: 0.9rem;
+  }
+
+  .masthead .margin {
+    display: none;
+  }
+
+  .intro {
+    padding: 3.5rem 0 3rem;
+  }
+
+  .lede {
+    font-size: 1.3125rem;
+  }
+
+  .case-title {
+    font-size: 1.75rem;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .section-head .margin {
+    margin: 0;
+    padding: 0;
+  }
+
+  .agents > div,
+  .skills > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .agents dt,
+  .skills dt {
+    margin-bottom: 0.1rem;
+  }
+}
