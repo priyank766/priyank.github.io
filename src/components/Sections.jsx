@@ -4,7 +4,7 @@ import TriageFigure from './TriageFigure.jsx';
 import {
   earlier,
   education,
-  glance,
+  hero,
   links,
   now,
   openSource,
@@ -14,17 +14,19 @@ import {
   skills,
 } from '../content.js';
 
-function Elsewhere({ label = 'Elsewhere' }) {
+export const CASE_URL = '/right-hand/';
+
+export function Elsewhere({ label = 'Elsewhere', full = false }) {
   return (
     <ul className="link-line mono" aria-label={label}>
       <li>
         <a href={`mailto:${links.email}`}>{links.email}</a>
       </li>
       <li>
-        <a href={links.github}>GitHub</a>
+        <a href={links.github}>{full ? 'github.com/priyank766' : 'GitHub'}</a>
       </li>
       <li>
-        <a href={links.linkedin}>LinkedIn</a>
+        <a href={links.linkedin}>{full ? 'linkedin.com/in/priyank766' : 'LinkedIn'}</a>
       </li>
       <li>
         <a href={links.x}>X</a>
@@ -36,38 +38,28 @@ function Elsewhere({ label = 'Elsewhere' }) {
 export function Intro() {
   return (
     <div className="intro" id="top">
-      <Row
-        className="intro-row"
-        aside={
-          <dl className="glance" aria-label="At a glance">
-            {glance.map((g) => (
-              <div key={g.label}>
-                <dt className="mono">{g.label}</dt>
-                {g.lines.map((l) => (
-                  <dd key={l}>{l}</dd>
-                ))}
-              </div>
-            ))}
-          </dl>
-        }
-      >
-        <h1>{person.name}</h1>
-        <p className="roles">
-          {person.roles.map((r, i) => (
-            <Fragment key={r}>
-              {i > 0 && ' · '}
-              <span className="nowrap">{r}</span>
-            </Fragment>
+      <header className="hero">
+        <div className="hero-top">
+          <h1>
+            {person.name}
+            <span className="roles">
+              {person.roles.map((r, i) => (
+                <Fragment key={r}>
+                  {i > 0 && ' · '}
+                  <span className="nowrap">{r}</span>
+                </Fragment>
+              ))}
+            </span>
+          </h1>
+          <Elsewhere />
+        </div>
+        <p className="statement">
+          {hero.statement.map((line) => (
+            <span key={line}>{line}</span>
           ))}
         </p>
-        <p className="lede">{person.positioning}</p>
-        {person.about.map((p) => (
-          <p key={p.slice(0, 24)} className="about">
-            {p}
-          </p>
-        ))}
-        <Elsewhere />
-      </Row>
+        <p className="hero-lede">{hero.lede}</p>
+      </header>
       <TriageFigure />
     </div>
   );
@@ -76,44 +68,21 @@ export function Intro() {
 export function Now() {
   return (
     <Section id="now" number="1" title="Now">
-      <Row className="now-row" aside={<Figures items={now.figures} />}>
+      <Row>
         <p className="meta mono">
           {now.role}, <a href={now.companyUrl}>{now.company}</a> · {now.dates} · {now.place}
         </p>
-        <h3 className="case-title">{now.project}</h3>
-        <p className="dek">{now.dek}</p>
-        <p className="dropcap">{now.summary}</p>
-
-        <h4 className="run-in">Three agents</h4>
-        <dl className="agents">
-          {now.agents.map((a) => (
-            <div key={a.name}>
-              <dt>{a.name}</dt>
-              <dd>{a.text}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <blockquote className="pull">
-          <p>{now.pull}</p>
-        </blockquote>
-
-        <details className="more">
-          <summary className="mono">
-            <span className="more-open">Read the full case study</span>
-            <span className="more-close">Close the case study</span>
-          </summary>
-          <div className="more-body">
-            {now.details.map((d) => (
-              <Fragment key={d.heading}>
-                <h4 className="run-in">{d.heading}</h4>
-                <p>{d.text}</p>
-              </Fragment>
-            ))}
-          </div>
-        </details>
-        <Stack items={now.stack} />
+        <div className="now-head">
+          <h3 className="case-title">{now.project}</h3>
+          <p className="one-line">{now.line}</p>
+        </div>
       </Row>
+      <div className="figure-strip">
+        <Figures items={now.homeFigures} />
+      </div>
+      <p className="read-more">
+        <a href={CASE_URL}>Read the case study →</a>
+      </p>
     </Section>
   );
 }
@@ -121,41 +90,23 @@ export function Now() {
 export function OpenSource() {
   return (
     <Section id="open-source" number="2" title="Open source">
-      <Row aside={<Figures items={[openSource.figure]} />}>
-        <p className="meta mono">
-          {openSource.org} · {openSource.orgNote}
-        </p>
-        <p className="headline">
-          Code Reviewer for kubeflow/mcp-server, listed in OWNERS after{' '}
-          <a href={openSource.reviewerUrl}>the maintainers nominated me</a>.{' '}
-          <a href={openSource.memberUrl}>Official member</a> of the Kubeflow organization.
+      <div className="wide-block">
+        <p className="one-line">
+          Code Reviewer for kubeflow/mcp-server, <a href={openSource.reviewerUrl}>nominated by the maintainers</a>, and
+          an <a href={openSource.memberUrl}>official member</a> of the Kubeflow organization.
         </p>
         <dl className="themes">
           {openSource.themes.map((t) => (
             <div key={t.label}>
               <dt className="mono">{t.label}</dt>
-              <dd>
-                {t.items.map((item) => (
-                  <Fragment key={item.text}>
-                    {item.text}{' '}
-                    {item.refs.map((r) => (
-                      <a
-                        key={r.n}
-                        className="pr mono"
-                        href={r.url}
-                        aria-label={`kubeflow/${r.repo} pull request ${r.n}`}
-                      >
-                        {r.repo === 'sdk' ? 'sdk' : ''}#{r.n}
-                      </a>
-                    ))}
-                    {'. '}
-                  </Fragment>
-                ))}
-              </dd>
+              <dd>{t.short}</dd>
             </div>
           ))}
         </dl>
-      </Row>
+        <p className="mono quiet-link">
+          <a href={openSource.contributionsUrl}>See my contributions on GitHub</a>
+        </p>
+      </div>
     </Section>
   );
 }
@@ -171,17 +122,20 @@ export function Projects() {
                 <span className="row">
                   <span className="body">
                     <span className="project-name">
-                      {p.name}<span className="kind mono">{p.kind}</span>
+                      {p.name}
+                      <span className="kind mono">{p.kind}</span>
                     </span>
-                    <span className="project-dek">{p.dek}</span>
+                    <span className="project-dek">
+                      {p.dek}{' '}
+                      <span className="toggle mono" aria-hidden="true">
+                        <span className="more-open">More</span>
+                        <span className="more-close">Less</span>
+                      </span>
+                    </span>
                   </span>
                   <span className="aside project-fig">
                     <span className="fig">{p.figure.fig}</span>
                     <span className="fig-cap mono">{p.figure.cap}</span>
-                  </span>
-                  <span className="toggle mono" aria-hidden="true">
-                    <span className="more-open">Details</span>
-                    <span className="more-close">Close</span>
                   </span>
                 </span>
               </summary>
@@ -202,53 +156,57 @@ export function Projects() {
           </li>
         ))}
       </ol>
-      <Row className="also">
-        <h3 className="run-in">Also</h3>
-        <ul className="also-list">
-          {otherProjects.map((p) => (
-            <li key={p.name}>
-              <a href={p.url}>{p.name}</a>. {p.text}
-            </li>
-          ))}
-        </ul>
-      </Row>
+      <p className="also-line">
+        <span className="mono also-label">Also</span>
+        {otherProjects.map((p, i) => (
+          <Fragment key={p.name}>
+            {i > 0 && (i === otherProjects.length - 1 ? ', and ' : ', ')}
+            <a href={p.url} title={p.text}>
+              {p.name}
+            </a>
+          </Fragment>
+        ))}
+        .
+      </p>
     </Section>
   );
 }
 
 export function Background() {
+  const e = earlier[0];
   return (
     <Section id="background" number="4" title="Background">
-      <Row className="bg-row">
-        {earlier.map((e) => (
-          <div className="entry" key={e.role}>
-            <p className="meta mono">{e.dates}</p>
-            <h3 className="item-title">{e.role}</h3>
-            <p>{e.text}</p>
-            <Stack items={e.stack} />
-          </div>
-        ))}
-        <div className="entry">
-          <p className="meta mono">{education.dates}</p>
-          <h3 className="item-title">{education.degree}</h3>
-          <p>
-            {education.school}. {education.note}
-          </p>
+      <dl className="ledger">
+        <div>
+          <dt className="mono">{e.dates}</dt>
+          <dd>{e.short}</dd>
         </div>
-      </Row>
-      <div className="row tools-row">
-        <div className="body wide">
-          <h3 className="run-in">Tools</h3>
-          <dl className="skills">
-            {skills.map((s) => (
-              <div key={s.label}>
-                <dt className="mono">{s.label}</dt>
-                <dd>{s.items.join(', ')}</dd>
-              </div>
-            ))}
-          </dl>
+        <div>
+          <dt className="mono">{education.dates}</dt>
+          <dd>
+            B.E. in AI &amp; ML, L.D. College of Engineering, Ahmedabad (GTU). CGPA 8.43.
+          </dd>
         </div>
-      </div>
+        <div>
+          <dt className="mono">Tools</dt>
+          <dd>
+            <details className="more tools">
+              <summary className="mono">
+                <span className="more-open">Python, TypeScript, Go, Anthropic SDK, LangGraph, and more</span>
+                <span className="more-close">Close</span>
+              </summary>
+              <dl className="skills">
+                {skills.map((s) => (
+                  <div key={s.label}>
+                    <dt className="mono">{s.label}</dt>
+                    <dd>{s.items.join(', ')}</dd>
+                  </div>
+                ))}
+              </dl>
+            </details>
+          </dd>
+        </div>
+      </dl>
     </Section>
   );
 }
@@ -256,22 +214,10 @@ export function Background() {
 export function Contact() {
   return (
     <Section id="contact" number="5" title="Contact">
-      <Row aside={<p className="mono aside-note">{person.location}</p>}>
-        <p className="contact-line">
-          Email is the best way to reach me: <a href={`mailto:${links.email}`}>{links.email}</a>.
-        </p>
-        <ul className="link-line mono" aria-label="Elsewhere">
-          <li>
-            <a href={links.github}>github.com/priyank766</a>
-          </li>
-          <li>
-            <a href={links.linkedin}>linkedin.com/in/priyank766</a>
-          </li>
-          <li>
-            <a href={links.x}>X · x.com/priyank766</a>
-          </li>
-        </ul>
-      </Row>
+      <p className="contact-line">
+        Write to me at <a href={`mailto:${links.email}`}>{links.email}</a>, or find me on{' '}
+        <a href={links.github}>GitHub</a>, <a href={links.linkedin}>LinkedIn</a>, and <a href={links.x}>X</a>.
+      </p>
     </Section>
   );
 }

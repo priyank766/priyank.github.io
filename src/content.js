@@ -6,9 +6,12 @@ export const person = {
   location: 'Ahmedabad, Gujarat, India',
   positioning:
     'I build production multi-agent systems for enterprise clients and deploy them alongside the executives who use them.',
-  about: [
-    'At SaarthiOS I build Right Hand, an AI chief of staff that is live with three clients. I’m in the final year of a B.E. in AI and ML at L.D. College of Engineering, and a code reviewer for Kubeflow.',
-  ],
+};
+
+// The first screen: one statement, then Fig. 1.
+export const hero = {
+  statement: ['100+ open situations.', '5 that need action today.'],
+  lede: 'I build production multi-agent systems for enterprise clients and deploy them alongside the executives who use them. Right Hand, my current one at SaarthiOS, is live with three clients.',
 };
 
 export const links = {
@@ -19,12 +22,6 @@ export const links = {
   site: 'https://priyank.is-a.dev',
 };
 
-// The five-second summary next to the intro.
-export const glance = [
-  { label: 'Now', lines: ['AI Product Engineer, SaarthiOS', 'Right Hand, live with 3 clients'] },
-  { label: 'Open source', lines: ['Code Reviewer, kubeflow/mcp-server', 'Kubeflow organization member'] },
-  { label: 'Education', lines: ['B.E. AI & ML, L.D. College of Engineering', '2023–2027 · CGPA 8.43'] },
-];
 
 export const now = {
   role: 'AI Product Engineer',
@@ -34,6 +31,12 @@ export const now = {
   place: 'Remote',
   project: 'Right Hand',
   dek: 'An AI chief of staff for executives.',
+  line: 'An AI chief of staff for promoters, CFOs, and CEOs.',
+  homeFigures: [
+    { fig: '3', cap: 'clients live' },
+    { fig: '100+ → 5', cap: 'open situations to today’s' },
+    { fig: '4,000+', cap: 'documents, source-linked' },
+  ],
   summary:
     'Right Hand reads an executive’s inbox and tells them what needs their attention today. It is live with three clients, where promoters, CFOs, and CEOs use it. It runs as a multi-agent system on the Anthropic SDK and AWS Bedrock.',
   figures: [
@@ -72,38 +75,24 @@ export const now = {
   stack: ['Anthropic SDK', 'AWS Bedrock', 'Microsoft Graph', 'WhatsApp Business API', 'GCP'],
 };
 
-const pr = (repo, n) => ({ repo, n, url: `https://github.com/kubeflow/${repo}/pull/${n}` });
-
 export const openSource = {
   org: 'Kubeflow',
   orgNote: 'CNCF',
   reviewerUrl: 'https://github.com/kubeflow/mcp-server/pull/288',
   memberUrl: 'https://github.com/kubeflow/internal-acls/pull/951',
-  figure: { fig: '9', cap: 'pull requests across kubeflow/mcp-server and kubeflow/sdk' },
+  contributionsUrl: 'https://github.com/kubeflow/mcp-server/pulls?q=is%3Apr+author%3Apriyank766',
   themes: [
     {
       label: 'Safety and observability',
-      items: [
-        { text: 'Added OpenTelemetry tracing for tool calls', refs: [pr('mcp-server', 21)] },
-        { text: 'Added a confirmation gate before a training job can be modified', refs: [pr('mcp-server', 198)] },
-      ],
+      short: 'Tracing for tool calls, and a confirmation gate before a training job changes.',
     },
     {
       label: 'Reliability',
-      items: [
-        { text: 'Capped memory use when streaming job logs', refs: [pr('mcp-server', 167)] },
-        { text: 'Fixed runtime-metadata extraction', refs: [pr('mcp-server', 192)] },
-        { text: 'Fixed pip permission detection on OpenShift', refs: [pr('mcp-server', 46)] },
-        { text: 'Fixed trainer status never reaching TRAINJOB_COMPLETE', refs: [pr('sdk', 340)] },
-        { text: 'Made dataset and model initializers run in parallel to shorten job startup', refs: [pr('sdk', 313)] },
-      ],
+      short: 'Bounded log-streaming memory, metadata and OpenShift fixes, and faster SDK job startup.',
     },
     {
       label: 'Testing and CI',
-      items: [
-        { text: 'Extended the Kubernetes E2E suite with negative-path and lifecycle scenarios', refs: [pr('mcp-server', 196)] },
-        { text: 'Added CI that catches lockfile regressions', refs: [pr('mcp-server', 73)] },
-      ],
+      short: 'Negative-path and lifecycle E2E scenarios, and lockfile-regression CI.',
     },
   ],
 };
@@ -113,7 +102,7 @@ export const projects = [
     name: 'Anchor',
     kind: 'MCP server',
     dek: 'Shared, persistent memory for coding agents.',
-    figure: { fig: '44×', cap: 'context compression, with 100% of critical facts recovered' },
+    figure: { fig: '44×', cap: 'context compression, 100% of critical facts kept' },
     url: 'https://anchormem.me',
     urlLabel: 'anchormem.me',
     body: [
@@ -126,7 +115,7 @@ export const projects = [
     name: 'Hermes-BIO',
     kind: 'Agent harness',
     dek: 'An agentic harness for drug-discovery research.',
-    figure: { fig: '6/6', cap: 'textbook targets recovered, and 4/4 defensible picks on harder diseases' },
+    figure: { fig: '6/6', cap: 'textbook targets found; 4/4 on hard cases' },
     url: 'https://github.com/priyank766/Hermes-BIO',
     urlLabel: 'github.com/priyank766/Hermes-BIO',
     body: [
@@ -139,7 +128,7 @@ export const projects = [
     name: 'Recursive Language Models',
     kind: 'Reproduction',
     dek: 'Zhang et al. (2025), reproduced on a 6 GB laptop GPU.',
-    figure: { fig: '67%', cap: 'needle found at 64K tokens, against 33% for standard inference' },
+    figure: { fig: '67%', cap: 'needle found at 64K tokens, vs 33%' },
     url: 'https://priyank766.github.io/RLM/',
     urlLabel: 'Read the write-up',
     body: [
@@ -152,7 +141,7 @@ export const projects = [
     name: 'ACPC Admissions Assistant',
     kind: 'Student project',
     dek: 'A trilingual voice and text assistant for Gujarat’s B.E. and B.Tech admissions.',
-    figure: { fig: '1 month', cap: 'to delivery, then a Letter of Appreciation from the state' },
+    figure: { fig: '1 month', cap: 'to delivery; state Letter of Appreciation' },
     body: [
       'Students can ask it about admissions by voice or text in three languages. It uses RAG for answers and speech-to-text and text-to-speech for voice.',
       'It was presented to state officials and received a Letter of Appreciation from Gujarat’s Commissioner of Technical Education (IAS) and the ACPC Chairperson.',
@@ -188,6 +177,7 @@ export const earlier = [
   {
     dates: 'Dec 2025 – Jan 2026',
     role: 'Full-stack engineer, freelance',
+    short: 'Freelance full-stack work: a multi-gateway payments platform with KYC and an admin dashboard.',
     text: 'Built a fund-transfer platform for a client. It takes one-time, recurring, and subscription payments through Stripe, Razorpay, Cashfree, and Zumrails, verifies users through a third-party KYC provider, and has an admin dashboard for monitoring.',
     stack: ['Next.js', 'FastAPI', 'PostgreSQL'],
   },
