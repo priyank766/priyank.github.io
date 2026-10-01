@@ -39,8 +39,8 @@ export default function Rail() {
   const next = theme === 'dark' ? 'light' : 'dark';
   return (
     <header className="rail mono">
-      <a className="rail-name" href="#top">
-        Priyank Patel
+      <a className="rail-name" href="#top" aria-label="Priyank Patel, back to top">
+        P.P.
       </a>
       <nav aria-label="Sections">
         <ol>
