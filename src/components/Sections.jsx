@@ -1,8 +1,10 @@
 import { Fragment } from 'react';
-import { Row, Section, Stack } from './Layout.jsx';
+import { Figures, Row, Section, Stack } from './Layout.jsx';
+import TriageFigure from './TriageFigure.jsx';
 import {
   earlier,
   education,
+  glance,
   links,
   now,
   openSource,
@@ -12,13 +14,43 @@ import {
   skills,
 } from '../content.js';
 
-const host = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+function Elsewhere({ label = 'Elsewhere' }) {
+  return (
+    <ul className="link-line mono" aria-label={label}>
+      <li>
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+      </li>
+      <li>
+        <a href={links.github}>GitHub</a>
+      </li>
+      <li>
+        <a href={links.linkedin}>LinkedIn</a>
+      </li>
+      <li>
+        <a href={links.x}>X</a>
+      </li>
+    </ul>
+  );
+}
 
 export function Intro() {
   return (
-    <div className="row intro">
-      <div className="margin mono" />
-      <div className="body">
+    <div className="intro" id="top">
+      <Row
+        className="intro-row"
+        aside={
+          <dl className="glance" aria-label="At a glance">
+            {glance.map((g) => (
+              <div key={g.label}>
+                <dt className="mono">{g.label}</dt>
+                {g.lines.map((l) => (
+                  <dd key={l}>{l}</dd>
+                ))}
+              </div>
+            ))}
+          </dl>
+        }
+      >
         <h1>{person.name}</h1>
         <p className="roles">
           {person.roles.map((r, i) => (
@@ -30,21 +62,13 @@ export function Intro() {
         </p>
         <p className="lede">{person.positioning}</p>
         {person.about.map((p) => (
-          <p key={p.slice(0, 24)}>{p}</p>
+          <p key={p.slice(0, 24)} className="about">
+            {p}
+          </p>
         ))}
-        <ul className="link-line mono" aria-label="Elsewhere">
-          <li>
-            <a href={`mailto:${links.email}`}>{links.email}</a>
-          </li>
-          <li>
-            <a href={links.github}>GitHub</a>
-          </li>
-          <li>
-            <a href={links.linkedin}>LinkedIn</a>
-          </li>
-          <li>{person.location}</li>
-        </ul>
-      </div>
+        <Elsewhere />
+      </Row>
+      <TriageFigure />
     </div>
   );
 }
@@ -52,40 +76,42 @@ export function Intro() {
 export function Now() {
   return (
     <Section id="now" number="1" title="Now">
-      <Row
-        margin={
-          <>
-            <span>{now.dates}</span>
-            <span>{now.place}</span>
-          </>
-        }
-      >
-        <p className="position">
-          {now.role}, <a href={now.companyUrl}>{now.company}</a>
+      <Row className="now-row" aside={<Figures items={now.figures} />}>
+        <p className="meta mono">
+          {now.role}, <a href={now.companyUrl}>{now.company}</a> · {now.dates} · {now.place}
         </p>
         <h3 className="case-title">{now.project}</h3>
         <p className="dek">{now.dek}</p>
-        {now.intro.map((p) => (
-          <p key={p.slice(0, 24)}>{p}</p>
-        ))}
-        {now.sections.map((s) => (
-          <Fragment key={s.heading}>
-            <h4 className="run-in">{s.heading}</h4>
-            {s.paragraphs?.map((p) => (
-              <p key={p.slice(0, 24)}>{p}</p>
+        <p className="dropcap">{now.summary}</p>
+
+        <h4 className="run-in">Three agents</h4>
+        <dl className="agents">
+          {now.agents.map((a) => (
+            <div key={a.name}>
+              <dt>{a.name}</dt>
+              <dd>{a.text}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <blockquote className="pull">
+          <p>{now.pull}</p>
+        </blockquote>
+
+        <details className="more">
+          <summary className="mono">
+            <span className="more-open">Read the full case study</span>
+            <span className="more-close">Close the case study</span>
+          </summary>
+          <div className="more-body">
+            {now.details.map((d) => (
+              <Fragment key={d.heading}>
+                <h4 className="run-in">{d.heading}</h4>
+                <p>{d.text}</p>
+              </Fragment>
             ))}
-            {s.agents && (
-              <dl className="agents">
-                {s.agents.map((a) => (
-                  <div key={a.name}>
-                    <dt>{a.name}</dt>
-                    <dd>{a.text}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </Fragment>
-        ))}
+          </div>
+        </details>
         <Stack items={now.stack} />
       </Row>
     </Section>
@@ -95,31 +121,41 @@ export function Now() {
 export function OpenSource() {
   return (
     <Section id="open-source" number="2" title="Open source">
-      <Row margin={<span>{openSource.orgNote}</span>}>
-        <h3 className="item-title">{openSource.org}</h3>
-        <p>
-          I’m a code reviewer for kubeflow/mcp-server, listed in its OWNERS file after{' '}
-          <a href={openSource.intro.reviewerUrl}>the maintainers nominated me</a>. I’m also an{' '}
-          <a href={openSource.intro.memberUrl}>official member</a> of the Kubeflow organization.
+      <Row aside={<Figures items={[openSource.figure]} />}>
+        <p className="meta mono">
+          {openSource.org} · {openSource.orgNote}
         </p>
+        <p className="headline">
+          Code Reviewer for kubeflow/mcp-server, listed in OWNERS after{' '}
+          <a href={openSource.reviewerUrl}>the maintainers nominated me</a>.{' '}
+          <a href={openSource.memberUrl}>Official member</a> of the Kubeflow organization.
+        </p>
+        <dl className="themes">
+          {openSource.themes.map((t) => (
+            <div key={t.label}>
+              <dt className="mono">{t.label}</dt>
+              <dd>
+                {t.items.map((item) => (
+                  <Fragment key={item.text}>
+                    {item.text}{' '}
+                    {item.refs.map((r) => (
+                      <a
+                        key={r.n}
+                        className="pr mono"
+                        href={r.url}
+                        aria-label={`kubeflow/${r.repo} pull request ${r.n}`}
+                      >
+                        {r.repo === 'sdk' ? 'sdk' : ''}#{r.n}
+                      </a>
+                    ))}
+                    {'. '}
+                  </Fragment>
+                ))}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </Row>
-      {openSource.repos.map((repo) => (
-        <Row key={repo.name} className="pr-group">
-          <h4 className="repo mono">
-            <a href={repo.url}>{repo.name}</a>
-          </h4>
-          <ol className="prs">
-            {repo.prs.map((pr) => (
-              <li key={pr.n}>
-                <a className="mono pr-num" href={pr.url} aria-label={`${repo.name} pull request ${pr.n}`}>
-                  #{pr.n}
-                </a>
-                <span>{pr.text}</span>
-              </li>
-            ))}
-          </ol>
-        </Row>
-      ))}
     </Section>
   );
 }
@@ -127,23 +163,47 @@ export function OpenSource() {
 export function Projects() {
   return (
     <Section id="projects" number="3" title="Selected projects">
-      {projects.map((p) => (
-        <Row key={p.name} className="project" margin={<span>{p.kind}</span>}>
-          <h3 className="item-title">{p.url ? <a href={p.url}>{p.name}</a> : p.name}</h3>
-          <p className="dek">{p.dek}</p>
-          {p.body.map((para) => (
-            <p key={para.slice(0, 24)}>{para}</p>
-          ))}
-          <Stack items={p.stack} />
-          {p.url && (
-            <p className="mono project-link">
-              <a href={p.url}>{p.urlLabel ?? host(p.url)}</a>
-            </p>
-          )}
-        </Row>
-      ))}
-      <Row className="also" margin={<span>Also</span>}>
-        <h3 className="visually-hidden">Other projects</h3>
+      <ol className="project-index">
+        {projects.map((p) => (
+          <li key={p.name}>
+            <details className="project">
+              <summary>
+                <span className="row">
+                  <span className="body">
+                    <span className="project-name">
+                      {p.name}<span className="kind mono">{p.kind}</span>
+                    </span>
+                    <span className="project-dek">{p.dek}</span>
+                  </span>
+                  <span className="aside project-fig">
+                    <span className="fig">{p.figure.fig}</span>
+                    <span className="fig-cap mono">{p.figure.cap}</span>
+                  </span>
+                  <span className="toggle mono" aria-hidden="true">
+                    <span className="more-open">Details</span>
+                    <span className="more-close">Close</span>
+                  </span>
+                </span>
+              </summary>
+              <div className="row project-detail">
+                <div className="body">
+                  {p.body.map((para) => (
+                    <p key={para.slice(0, 24)}>{para}</p>
+                  ))}
+                  <Stack items={p.stack} />
+                  {p.url && (
+                    <p className="mono project-link">
+                      <a href={p.url}>{p.urlLabel}</a>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </details>
+          </li>
+        ))}
+      </ol>
+      <Row className="also">
+        <h3 className="run-in">Also</h3>
         <ul className="also-list">
           {otherProjects.map((p) => (
             <li key={p.name}>
@@ -159,30 +219,36 @@ export function Projects() {
 export function Background() {
   return (
     <Section id="background" number="4" title="Background">
-      {earlier.map((e) => (
-        <Row key={e.role} margin={<span>{e.dates}</span>}>
-          <h3 className="item-title small">{e.role}</h3>
-          <p>{e.text}</p>
-          <Stack items={e.stack} />
-        </Row>
-      ))}
-      <Row margin={<span>{education.dates}</span>}>
-        <h3 className="item-title small">{education.degree}</h3>
-        <p>
-          {education.school}. {education.note}
-        </p>
+      <Row className="bg-row">
+        {earlier.map((e) => (
+          <div className="entry" key={e.role}>
+            <p className="meta mono">{e.dates}</p>
+            <h3 className="item-title">{e.role}</h3>
+            <p>{e.text}</p>
+            <Stack items={e.stack} />
+          </div>
+        ))}
+        <div className="entry">
+          <p className="meta mono">{education.dates}</p>
+          <h3 className="item-title">{education.degree}</h3>
+          <p>
+            {education.school}. {education.note}
+          </p>
+        </div>
       </Row>
-      <Row margin={<span>Tools</span>}>
-        <h3 className="visually-hidden">Skills</h3>
-        <dl className="skills">
-          {skills.map((s) => (
-            <div key={s.label}>
-              <dt className="mono">{s.label}</dt>
-              <dd>{s.items.join(', ')}</dd>
-            </div>
-          ))}
-        </dl>
-      </Row>
+      <div className="row tools-row">
+        <div className="body wide">
+          <h3 className="run-in">Tools</h3>
+          <dl className="skills">
+            {skills.map((s) => (
+              <div key={s.label}>
+                <dt className="mono">{s.label}</dt>
+                <dd>{s.items.join(', ')}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
     </Section>
   );
 }
@@ -190,7 +256,7 @@ export function Background() {
 export function Contact() {
   return (
     <Section id="contact" number="5" title="Contact">
-      <Row>
+      <Row aside={<p className="mono aside-note">{person.location}</p>}>
         <p className="contact-line">
           Email is the best way to reach me: <a href={`mailto:${links.email}`}>{links.email}</a>.
         </p>
@@ -200,6 +266,9 @@ export function Contact() {
           </li>
           <li>
             <a href={links.linkedin}>linkedin.com/in/priyank766</a>
+          </li>
+          <li>
+            <a href={links.x}>X · x.com/priyank766</a>
           </li>
         </ul>
       </Row>

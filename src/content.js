@@ -7,8 +7,7 @@ export const person = {
   positioning:
     'I build production multi-agent systems for enterprise clients and deploy them alongside the executives who use them.',
   about: [
-    'I work at SaarthiOS, where I build Right Hand, an AI chief of staff for executives. I write the agents and I also deploy them. I work directly with the executives who use the system, and what I learn from them goes back into the product.',
-    'I’m in the final year of a B.E. in Artificial Intelligence and Machine Learning at L.D. College of Engineering. Outside work I review code for Kubeflow and build tools for coding agents.',
+    'At SaarthiOS I build Right Hand, an AI chief of staff that is live with three clients. I’m in the final year of a B.E. in AI and ML at L.D. College of Engineering, and a code reviewer for Kubeflow.',
   ],
 };
 
@@ -16,8 +15,16 @@ export const links = {
   email: 'priyank8445@gmail.com',
   github: 'https://github.com/priyank766',
   linkedin: 'https://www.linkedin.com/in/priyank766/',
+  x: 'https://x.com/priyank766',
   site: 'https://priyank.is-a.dev',
 };
+
+// The five-second summary next to the intro.
+export const glance = [
+  { label: 'Now', lines: ['AI Product Engineer, SaarthiOS', 'Right Hand, live with 3 clients'] },
+  { label: 'Open source', lines: ['Code Reviewer, kubeflow/mcp-server', 'Kubeflow organization member'] },
+  { label: 'Education', lines: ['B.E. AI & ML, L.D. College of Engineering', '2023–2027 · CGPA 8.43'] },
+];
 
 export const now = {
   role: 'AI Product Engineer',
@@ -26,87 +33,76 @@ export const now = {
   dates: 'Jun 2026 – present',
   place: 'Remote',
   project: 'Right Hand',
-  dek: 'An AI chief of staff. It reads an executive’s inbox and tells them what needs their attention today.',
-  intro: [
-    'Right Hand is live with three clients. The people who use it every day are promoters, CFOs, and CEOs. It runs as a multi-agent system on the Anthropic SDK and AWS Bedrock.',
+  dek: 'An AI chief of staff for executives.',
+  summary:
+    'Right Hand reads an executive’s inbox and tells them what needs their attention today. It is live with three clients, where promoters, CFOs, and CEOs use it. It runs as a multi-agent system on the Anthropic SDK and AWS Bedrock.',
+  figures: [
+    { fig: '3', cap: 'clients live' },
+    { fig: '100+ → 5', cap: 'open situations narrowed to the ones that need action today' },
+    { fig: '4,000+', cap: 'documents converted to source-linked Markdown' },
+    { fig: '15 min', cap: 'mail sync interval, plus event triggers' },
   ],
-  sections: [
+  agents: [
+    { name: 'Profiler', text: 'Learns how each executive works from their past mail.' },
+    { name: 'Interpreter', text: 'Groups related emails into one situation.' },
+    {
+      name: 'Chief of Staff',
+      text: 'Narrows 100+ open situations to the 5 that need action today. It recommends a next step for each in the executive’s usual tone, grounded first in how they handled similar cases before.',
+    },
+  ],
+  pull: 'When the evidence runs out, it says it can’t tell. It does not guess.',
+  details: [
     {
       heading: 'The first version',
-      paragraphs: [
-        'I started with a rule-based Context Graph. Every answer it gave cited its source down to the page and line.',
-        'It degraded with the second client. Each new supplier needed new rules. I replaced it with an agent design where a new client needs only configuration.',
-      ],
-    },
-    {
-      heading: 'Three agents',
-      agents: [
-        {
-          name: 'Profiler',
-          text: 'Learns how each executive works by reading their past mail.',
-        },
-        {
-          name: 'Interpreter',
-          text: 'Groups related emails into one situation.',
-        },
-        {
-          name: 'Chief of Staff',
-          text: 'Narrows 100+ open situations to the 5 that need action today. For each one it recommends a next step in the executive’s usual tone. It grounds that recommendation first in how the executive handled similar cases before.',
-        },
-      ],
+      text: 'I started with a rule-based Context Graph that cited every answer to its source page and line. It degraded with the second client, because each new supplier needed new rules. The agent design that replaced it needs only configuration for a new client.',
     },
     {
       heading: 'Made for real mail',
-      paragraphs: [
-        'The agents read executive inboxes, so the limits are strict. Their tools are read-only and can see only one person’s data. Every run has hard limits on steps and cost. When the evidence runs out, the system says it can’t tell. It does not guess.',
-      ],
+      text: 'The agents’ tools are read-only and can see only one person’s data. Every run has hard limits on steps and cost. When the evidence runs out, the system says it can’t tell.',
     },
     {
       heading: 'Getting the mail in',
-      paragraphs: [
-        'An ingestion pipeline pulls mail from Microsoft Graph every 15 minutes and on event triggers. A Context Builder agent converts DOCX, PDF, CSV, XLSX, and PPTX files into Markdown that links back to the source. It runs across corpora of more than 4,000 documents.',
-      ],
+      text: 'An ingestion pipeline pulls mail from Microsoft Graph every 15 minutes and on event triggers. A Context Builder agent converts DOCX, PDF, CSV, XLSX, and PPTX files into Markdown that links back to the source, across corpora of more than 4,000 documents.',
     },
     {
       heading: 'In the field',
-      paragraphs: [
-        'I scope requirements directly with client executives. Recommendations reach them through the WhatsApp Business API, as text or as voice. I set up the second client’s infrastructure on GCP with Cloud Run, GCS, and Compute Engine. When the same issue keeps coming up in the field, I turn it into a product change.',
-      ],
+      text: 'I scope requirements directly with client executives. Recommendations reach them through the WhatsApp Business API, as text or as voice. I set up the second client’s infrastructure on GCP with Cloud Run, GCS, and Compute Engine. When the same issue keeps coming up in the field, I turn it into a product change.',
     },
   ],
   stack: ['Anthropic SDK', 'AWS Bedrock', 'Microsoft Graph', 'WhatsApp Business API', 'GCP'],
 };
 
-const mcp = (n) => `https://github.com/kubeflow/mcp-server/pull/${n}`;
-const sdk = (n) => `https://github.com/kubeflow/sdk/pull/${n}`;
+const pr = (repo, n) => ({ repo, n, url: `https://github.com/kubeflow/${repo}/pull/${n}` });
 
 export const openSource = {
   org: 'Kubeflow',
   orgNote: 'CNCF',
-  intro: {
-    reviewerUrl: mcp(288),
-    memberUrl: 'https://github.com/kubeflow/internal-acls/pull/951',
-  },
-  repos: [
+  reviewerUrl: 'https://github.com/kubeflow/mcp-server/pull/288',
+  memberUrl: 'https://github.com/kubeflow/internal-acls/pull/951',
+  figure: { fig: '9', cap: 'pull requests across kubeflow/mcp-server and kubeflow/sdk' },
+  themes: [
     {
-      name: 'kubeflow/mcp-server',
-      url: 'https://github.com/kubeflow/mcp-server',
-      prs: [
-        { n: 21, url: mcp(21), text: 'Added OpenTelemetry tracing for tool calls.' },
-        { n: 198, url: mcp(198), text: 'Added a confirmation gate before a training job can be modified.' },
-        { n: 167, url: mcp(167), text: 'Capped memory use when streaming job logs.' },
-        { n: 192, url: mcp(192), text: 'Fixed runtime-metadata extraction.' },
-        { n: 46, url: mcp(46), text: 'Fixed pip permission detection on OpenShift.' },
-        { n: 196, url: mcp(196), text: 'Extended the Kubernetes E2E suite with negative-path and lifecycle scenarios.' },
-        { n: 73, url: mcp(73), text: 'Added CI that catches lockfile regressions.' },
+      label: 'Safety and observability',
+      items: [
+        { text: 'Added OpenTelemetry tracing for tool calls', refs: [pr('mcp-server', 21)] },
+        { text: 'Added a confirmation gate before a training job can be modified', refs: [pr('mcp-server', 198)] },
       ],
     },
     {
-      name: 'kubeflow/sdk',
-      url: 'https://github.com/kubeflow/sdk',
-      prs: [
-        { n: 340, url: sdk(340), text: 'Fixed trainer status never reaching TRAINJOB_COMPLETE.' },
-        { n: 313, url: sdk(313), text: 'Made dataset and model initializers run in parallel to shorten job startup.' },
+      label: 'Reliability',
+      items: [
+        { text: 'Capped memory use when streaming job logs', refs: [pr('mcp-server', 167)] },
+        { text: 'Fixed runtime-metadata extraction', refs: [pr('mcp-server', 192)] },
+        { text: 'Fixed pip permission detection on OpenShift', refs: [pr('mcp-server', 46)] },
+        { text: 'Fixed trainer status never reaching TRAINJOB_COMPLETE', refs: [pr('sdk', 340)] },
+        { text: 'Made dataset and model initializers run in parallel to shorten job startup', refs: [pr('sdk', 313)] },
+      ],
+    },
+    {
+      label: 'Testing and CI',
+      items: [
+        { text: 'Extended the Kubernetes E2E suite with negative-path and lifecycle scenarios', refs: [pr('mcp-server', 196)] },
+        { text: 'Added CI that catches lockfile regressions', refs: [pr('mcp-server', 73)] },
       ],
     },
   ],
@@ -116,12 +112,13 @@ export const projects = [
   {
     name: 'Anchor',
     kind: 'MCP server',
-    dek: 'Shared memory for coding agents.',
+    dek: 'Shared, persistent memory for coding agents.',
+    figure: { fig: '44×', cap: 'context compression, with 100% of critical facts recovered' },
     url: 'https://anchormem.me',
     urlLabel: 'anchormem.me',
     body: [
-      'Coding agents forget everything between sessions, and they don’t share what they know with each other. Anchor is an MCP server that gives Claude Code, Cursor, Cline, and Codex one persistent memory of facts, decisions, and past work. It supersedes stale entries and redacts secrets before anything is written. It is published on npm.',
-      'In reproducible evaluation suites it compressed context 44× and still recovered 100% of critical facts across 8 scenarios. Recall stays under 4 ms at p50 with 10,000 memories stored.',
+      'Anchor gives Claude Code, Cursor, Cline, and Codex one shared memory of facts, decisions, and past work that lasts across sessions. It supersedes stale entries and redacts secrets before anything is written. It is published on npm.',
+      'In reproducible evaluation suites it compressed context 44× with 100% critical-fact recovery across 8 scenarios. Recall takes under 4 ms at p50 with 10,000 memories stored.',
     ],
     stack: ['TypeScript', 'MCP', 'SQLite FTS5 / BM25', 'Node.js'],
   },
@@ -129,32 +126,35 @@ export const projects = [
     name: 'Hermes-BIO',
     kind: 'Agent harness',
     dek: 'An agentic harness for drug-discovery research.',
+    figure: { fig: '6/6', cap: 'textbook targets recovered, and 4/4 defensible picks on harder diseases' },
     url: 'https://github.com/priyank766/Hermes-BIO',
     urlLabel: 'github.com/priyank766/Hermes-BIO',
     body: [
-      'You give it a disease. It picks a target, lists druggable targets that nobody has worked hard on, and finds approved drugs that bind the target but are approved for something else. A Gemini function-calling loop chains UniProt, OpenTargets, RCSB PDB, AlphaFold DB, and ChEMBL. It runs from a React UI, a CLI, or as an MCP server.',
-      'It recovered the textbook target in 6 of 6 benchmark diseases at about 38 seconds per disease. On 4 harder diseases with no textbook answer, all 4 picks were defensible. Persistent memory makes a repeat run on the same disease roughly 3× faster.',
+      'You give it a disease. It picks a target, lists druggable targets that few people have worked on, and finds approved drugs that bind the target but are approved for something else. A Gemini function-calling loop chains UniProt, OpenTargets, RCSB PDB, AlphaFold DB, and ChEMBL. It runs from a React UI, a CLI, or as an MCP server.',
+      'It recovered the textbook target in 6 of 6 benchmark diseases at about 38 seconds per disease. On 4 harder diseases with no textbook answer, all 4 picks were defensible. Persistent memory makes a repeat run roughly 3× faster.',
     ],
     stack: ['FastAPI', 'Gemini function calling', 'FastMCP', 'RDKit', 'React', 'SQLite'],
   },
   {
     name: 'Recursive Language Models',
     kind: 'Reproduction',
-    dek: 'Zhang et al. (2025), reproduced on a laptop.',
+    dek: 'Zhang et al. (2025), reproduced on a 6 GB laptop GPU.',
+    figure: { fig: '67%', cap: 'needle found at 64K tokens, against 33% for standard inference' },
     url: 'https://priyank766.github.io/RLM/',
     urlLabel: 'Read the write-up',
     body: [
-      'I reproduced the RLM paper with a 2B model on a 6 GB laptop GPU. The model never sees the whole document. It writes Python that queries focused chunks until it has an answer.',
-      'At 64K tokens the RLM found the needle 67% of the time. Standard inference found it 33% of the time. I then built a QLoRA fine-tuning pipeline on the RLM’s own trajectories and ran an ablation of Muon against AdamW.',
+      'I reproduced the RLM paper with a 2B model. The model never sees the whole document. It writes Python that queries focused chunks until it has an answer.',
+      'At 64K tokens the RLM found the needle 67% of the time, against 33% for standard inference. I then built a QLoRA fine-tuning pipeline on the RLM’s own trajectories and ran an ablation of Muon against AdamW.',
     ],
     stack: [],
   },
   {
     name: 'ACPC Admissions Assistant',
     kind: 'Student project',
-    dek: 'A trilingual voice and text assistant for Gujarat’s engineering admissions.',
+    dek: 'A trilingual voice and text assistant for Gujarat’s B.E. and B.Tech admissions.',
+    figure: { fig: '1 month', cap: 'to delivery, then a Letter of Appreciation from the state' },
     body: [
-      'Students applying to B.E. and B.Tech programmes in Gujarat can ask it questions by voice or text in three languages. It was delivered in one month. It uses RAG for answers and speech-to-text and text-to-speech for voice.',
+      'Students can ask it about admissions by voice or text in three languages. It uses RAG for answers and speech-to-text and text-to-speech for voice.',
       'It was presented to state officials and received a Letter of Appreciation from Gujarat’s Commissioner of Technical Education (IAS) and the ACPC Chairperson.',
     ],
     stack: ['RAG', 'STT / TTS', 'FastAPI', 'React'],
