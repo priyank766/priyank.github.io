@@ -1,15 +1,15 @@
-// Layout primitives. Every row on the page is a two-column grid:
-// a narrow margin for dates and labels, and a single reading column.
+// Layout primitives. Each row is a reading column plus a right-hand margin
+// that carries figures and notes, like sidenotes in a book.
 
 export function Section({ id, number, title, children }) {
   const headingId = `${id}-title`;
   return (
     <section id={id} className="section" aria-labelledby={headingId}>
-      <header className="row section-head">
-        <span className="margin mono" aria-hidden="true">
-          §&thinsp;{number}
-        </span>
+      <header className="section-head">
         <h2 id={headingId} className="label">
+          <span className="label-n mono" aria-hidden="true">
+            §&thinsp;{number}
+          </span>
           {title}
         </h2>
       </header>
@@ -18,12 +18,25 @@ export function Section({ id, number, title, children }) {
   );
 }
 
-export function Row({ margin, className = '', children }) {
+export function Row({ aside, className = '', children }) {
   return (
     <div className={`row ${className}`.trim()}>
-      <div className="margin mono">{margin}</div>
       <div className="body">{children}</div>
+      {aside ? <aside className="aside">{aside}</aside> : null}
     </div>
+  );
+}
+
+export function Figures({ items }) {
+  return (
+    <dl className="figures">
+      {items.map((f) => (
+        <div key={f.fig}>
+          <dt className="fig">{f.fig}</dt>
+          <dd className="mono">{f.cap}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

@@ -15,9 +15,10 @@
   --serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --margin-col: 9.5rem;
-  --body-col: 38rem;
-  --gutter: 2.5rem;
+  --rail: 9rem;
+  --body: 40rem;
+  --aside: 15rem;
+  --gap: 3rem;
 
   color-scheme: light;
 }
@@ -75,10 +76,11 @@ body {
   color: var(--ink);
   font-family: var(--serif);
   font-size: 1.125rem;
-  line-height: 1.6;
+  line-height: 1.58;
   font-optical-sizing: auto;
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
+  font-variant-numeric: oldstyle-nums proportional-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -95,7 +97,9 @@ p,
 ul,
 ol,
 dl,
-dd {
+dd,
+figure,
+blockquote {
   margin: 0;
 }
 
@@ -106,7 +110,7 @@ ol {
 }
 
 p + p {
-  margin-top: 0.9em;
+  margin-top: 0.85em;
 }
 
 a {
@@ -137,7 +141,7 @@ a:hover {
   font-family: var(--mono);
   font-size: 0.8125rem;
   line-height: 1.55;
-  letter-spacing: 0;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .nowrap {
@@ -166,7 +170,7 @@ a:hover {
   font-family: var(--mono);
   font-size: 0.8125rem;
   text-decoration: none;
-  z-index: 10;
+  z-index: 20;
 }
 
 .skip-link:focus {
@@ -174,16 +178,24 @@ a:hover {
 }
 
 /* ------------------------------------------------------------------
-   Page grid: a narrow margin column and one reading column.
+   Page grid. Wide screens: a sticky section rail on the left, then
+   a reading column with a right-hand margin for figures and notes.
    ------------------------------------------------------------------ */
 .page {
-  max-width: calc(var(--margin-col) + var(--gutter) + var(--body-col));
+  max-width: calc(var(--rail) + 3.5rem + var(--body) + var(--gap) + var(--aside) + 4rem);
   margin: 0 auto;
-  padding: 0 1.25rem 4rem;
+  padding: 0 2rem 3rem;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: 3.5rem;
+}
+
+.content {
+  min-width: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .page {
+  .content {
     animation: page-in 420ms ease-out both;
   }
 
@@ -199,63 +211,71 @@ a:hover {
 
 .row {
   display: grid;
-  grid-template-columns: var(--margin-col) minmax(0, 1fr);
-  column-gap: var(--gutter);
-}
-
-.margin {
-  color: var(--ink-3);
-  display: flex;
-  flex-direction: column;
-  padding-top: 0.3rem;
+  grid-template-columns: minmax(0, var(--body)) minmax(0, var(--aside));
+  column-gap: var(--gap);
 }
 
 .body {
   min-width: 0;
-  max-width: var(--body-col);
+}
+
+.body.wide {
+  grid-column: 1 / -1;
+}
+
+.aside {
+  min-width: 0;
 }
 
 /* ------------------------------------------------------------------
-   Masthead
+   Rail
    ------------------------------------------------------------------ */
-.masthead {
-  padding: 1.75rem 0 0;
+.rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100dvh;
+  padding: 2.4rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
 }
 
-.masthead .margin {
-  padding-top: 0;
-}
-
-.monogram {
+.rail-name {
   color: var(--ink);
   text-decoration: none;
-  letter-spacing: 0.04em;
+  font-weight: 500;
 }
 
-.masthead-body {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
+.rail ol li a {
+  display: block;
+  padding: 0.22rem 0;
+  color: var(--ink-3);
+  text-decoration: none;
 }
 
-.masthead ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
+.rail-n {
+  display: inline-block;
+  width: 2.4rem;
 }
 
-.masthead nav a {
-  color: var(--ink-2);
-  text-decoration-color: transparent;
-}
-
-.masthead nav a:hover {
+.rail ol li a:hover {
   color: var(--ink);
-  text-decoration-color: currentColor;
+}
+
+.rail ol li a[aria-current='true'] {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.rail ol li a[aria-current='true'] .rail-n {
+  color: var(--accent);
 }
 
 .theme-toggle {
+  margin-top: auto;
+  align-self: flex-start;
   font: inherit;
   color: var(--ink-2);
   background: none;
@@ -277,42 +297,35 @@ a:hover {
    Intro
    ------------------------------------------------------------------ */
 .intro {
-  padding: 5.5rem 0 4rem;
+  padding-top: 4.25rem;
 }
 
 h1 {
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-size: clamp(2.6rem, 5vw, 3.75rem);
   font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+  font-variant-numeric: lining-nums;
 }
 
 .roles {
-  margin-top: 0.75rem;
-  line-height: 1.45;
+  margin-top: 0.7rem;
   color: var(--ink-3);
   font-variant-caps: all-small-caps;
   letter-spacing: 0.07em;
   font-size: 1.125rem;
+  line-height: 1.45;
 }
 
 .lede {
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.6rem;
   font-size: 1.5rem;
-  line-height: 1.38;
+  line-height: 1.36;
   letter-spacing: -0.005em;
 }
 
-.intro p + p {
-  margin-top: 0.9em;
-}
-
-.intro .lede + p {
-  margin-top: 0;
-}
-
-.intro .body > p:not(.roles):not(.lede) {
+.intro .about {
+  margin-top: 0.9rem;
   color: var(--ink-2);
 }
 
@@ -320,7 +333,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0;
-  margin-top: 1.75rem;
+  margin-top: 1.4rem;
   color: var(--ink-3);
 }
 
@@ -330,21 +343,254 @@ h1 {
   color: var(--ink-3);
 }
 
+/* At a glance: the five-second summary in the right margin. */
+.glance {
+  margin-top: 0.6rem;
+}
+
+.glance > div {
+  padding: 0.6rem 0 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+
+.glance > div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.glance dt {
+  color: var(--ink-3);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 0.15rem;
+}
+
+.glance dd {
+  font-size: 0.96875rem;
+  line-height: 1.38;
+}
+
+.glance dd + dd {
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------------
+   Fig. 1
+   ------------------------------------------------------------------ */
+.triage-figure {
+  margin-top: 3rem;
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
+}
+
+.triage {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.triage--tall {
+  display: none;
+}
+
+.triage line,
+.triage path {
+  stroke-linecap: round;
+  fill: none;
+}
+
+.t-head {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--ink);
+}
+
+.t-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13.5px;
+  fill: var(--ink-3);
+}
+
+.t-mail path {
+  stroke: var(--ink-3);
+  stroke-width: 1.1;
+}
+
+.t-mail {
+  opacity: 0.5;
+}
+
+.t-rest path {
+  stroke: var(--ink-2);
+  stroke-width: 1.15;
+}
+
+.t-rest {
+  opacity: 0.38;
+}
+
+.t-picked path {
+  stroke: var(--ink);
+  stroke-width: 1.9;
+}
+
+.t-leaders path {
+  stroke: var(--accent);
+  stroke-width: 0.9;
+  opacity: 0.75;
+}
+
+.t-picknum {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  fill: var(--accent);
+}
+
+.t-num {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-variant-numeric: oldstyle-nums;
+  fill: var(--ink);
+}
+
+.t-item {
+  stroke: var(--ink);
+  stroke-width: 2.2;
+}
+
+.t-step {
+  stroke: var(--ink-3);
+  stroke-width: 1.2;
+}
+
+.triage-figure figcaption {
+  margin-top: 1.4rem;
+  max-width: var(--body);
+  font-size: 0.96875rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.fig-no {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-right: 0.2rem;
+}
+
+/* The figure draws itself once, in four beats: mail arrives, the
+   Interpreter groups it, most situations recede, and the five for
+   today are drawn out. Whole groups animate, so it stays cheap.
+   Without motion (or before JS runs) the final state is simply there. */
+@media (prefers-reduced-motion: no-preference) {
+  .is-armed:not(.is-playing) .t-label,
+  .is-armed:not(.is-playing) .t-mail,
+  .is-armed:not(.is-playing) .t-rest,
+  .is-armed:not(.is-playing) .t-picked,
+  .is-armed:not(.is-playing) .t-row,
+  .is-armed:not(.is-playing) .t-picknum,
+  .is-armed:not(.is-playing) .t-leaders {
+    opacity: 0;
+  }
+
+  .is-playing .t-label {
+    animation: t-show 500ms ease-out both;
+  }
+
+  .is-playing .t-mail {
+    animation: t-mail 900ms ease-out 150ms both;
+  }
+
+  .is-playing .t-rest {
+    animation: t-rest 1900ms ease-in-out 900ms both;
+  }
+
+  .is-playing .t-picked {
+    animation: t-picked 1900ms ease-in-out 900ms both;
+  }
+
+  .is-playing .t-leaders path {
+    stroke-dasharray: 1;
+    animation: t-draw 700ms ease-in-out var(--d) both;
+  }
+
+  .is-playing .t-row,
+  .is-playing .t-picknum {
+    animation: t-show 450ms ease-out var(--d) both;
+  }
+
+  @keyframes t-show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes t-mail {
+    from {
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      opacity: 0.5;
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes t-rest {
+    0% {
+      opacity: 0;
+    }
+    30%,
+    60% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 0.38;
+    }
+  }
+
+  @keyframes t-picked {
+    0% {
+      opacity: 0;
+    }
+    30%,
+    60% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes t-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
 /* ------------------------------------------------------------------
    Sections
    ------------------------------------------------------------------ */
 .section {
-  padding-bottom: 1.5rem;
+  padding-top: 3rem;
 }
 
 .section-head {
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
   border-top: 1px solid var(--rule);
-  padding-top: 0.9rem;
-  margin-bottom: 2.25rem;
-}
-
-.section-head .margin {
-  padding-top: 0.15rem;
+  padding-top: 0.85rem;
+  margin-bottom: 1.4rem;
 }
 
 .label {
@@ -353,84 +599,105 @@ h1 {
   font-variant-caps: all-small-caps;
   letter-spacing: 0.09em;
   line-height: 1.4;
-  color: var(--ink);
 }
 
-.section .row + .row {
-  margin-top: 2.75rem;
+.label-n {
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  font-weight: 400;
+  margin-right: 0.9rem;
 }
 
-.section-head + .row {
-  margin-top: 0;
-}
-
-.margin span + span {
-  margin-top: 0.1rem;
-}
-
-/* Titles */
-.position {
-  color: var(--ink-2);
-  font-style: italic;
+.meta {
+  color: var(--ink-3);
+  margin-bottom: 0.3rem;
 }
 
 .case-title {
-  margin-top: 0.4rem;
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
-
-.item-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.005em;
-}
-
-.item-title.small {
-  font-size: 1.1875rem;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.item-title a {
-  color: inherit;
-  text-decoration-color: var(--rule);
-}
-
-.item-title a:hover {
-  text-decoration-color: currentColor;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
 }
 
 .dek {
-  margin-top: 0.35rem;
-  margin-bottom: 1rem;
+  margin-top: 0.3rem;
+  margin-bottom: 1.1rem;
   font-style: italic;
   color: var(--ink-2);
-  font-size: 1.1875rem;
-  line-height: 1.45;
+  font-size: 1.25rem;
+  line-height: 1.4;
 }
 
-.dek + p {
-  margin-top: 0;
+.dropcap::first-letter {
+  float: left;
+  font-size: 3.7em;
+  line-height: 0.8;
+  margin: 0.07em 0.1em 0 0;
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .run-in {
-  margin-top: 1.9rem;
-  margin-bottom: 0.4rem;
+  margin-top: 1.6rem;
+  margin-bottom: 0.45rem;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
 
-/* The three agents: a definition list set like a glossary. */
+.item-title {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Big figures in the right margin. */
+.figures > div {
+  padding: 0.55rem 0 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.figures > div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.fig {
+  display: block;
+  font-family: var(--serif);
+  font-size: 2.125rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+}
+
+.figures dd,
+.fig-cap {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.now-row .aside {
+  padding-top: 0.25rem;
+}
+
+.now-row .figures {
+  position: sticky;
+  top: 1.75rem;
+}
+
+/* The three agents: a glossary between hairlines. */
 .agents > div {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-columns: 8rem minmax(0, 1fr);
   column-gap: 1.25rem;
-  padding: 0.6rem 0;
+  padding: 0.55rem 0;
   border-top: 1px solid var(--rule);
 }
 
@@ -442,182 +709,498 @@ h1 {
   font-style: italic;
 }
 
+.pull {
+  margin: 1.9rem 0 1.6rem;
+  padding-left: 1.4rem;
+  position: relative;
+  font-size: 1.5rem;
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.pull::before {
+  content: '“';
+  position: absolute;
+  left: 0;
+  top: -0.05em;
+  font-size: 1.6em;
+  line-height: 1;
+  color: var(--ink-3);
+}
+
+/* Expanders */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.more-close {
+  display: none;
+}
+
+details[open] > summary .more-open {
+  display: none;
+}
+
+details[open] > summary .more-close {
+  display: inline;
+}
+
+.more > summary {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent-rule);
+  text-underline-offset: 0.2em;
+}
+
+.more > summary:hover {
+  text-decoration-color: currentColor;
+}
+
+.more > summary::before,
+.toggle::before {
+  content: '+';
+  display: inline-block;
+  width: 1.1em;
+}
+
+.more[open] > summary::before,
+.project[open] .toggle::before {
+  content: '−';
+}
+
+.more-body {
+  margin-top: 0.4rem;
+}
+
 .stack {
   margin-top: 1.25rem;
   color: var(--ink-3);
 }
 
-.project-link {
-  margin-top: 0.35rem;
+/* Open source */
+.headline {
+  font-size: 1.3125rem;
+  line-height: 1.45;
+  margin-bottom: 1.5rem;
 }
 
-/* Open source pull requests */
-.repo {
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.6rem;
-}
-
-.repo a {
-  color: var(--ink);
-  text-decoration-color: var(--rule);
-}
-
-.repo a:hover {
-  text-decoration-color: currentColor;
-}
-
-.prs li {
+.themes > div {
   display: grid;
-  grid-template-columns: 3.25rem minmax(0, 1fr);
-  column-gap: 0.75rem;
-  padding: 0.4rem 0;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  column-gap: 1.25rem;
+  padding: 0.65rem 0;
   border-top: 1px solid var(--rule);
   align-items: baseline;
 }
 
-.prs li:last-child {
+.themes > div:last-child {
   border-bottom: 1px solid var(--rule);
 }
 
-.pr-num {
-  text-align: right;
+.themes dt {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 1.5;
 }
 
-.section .pr-group {
-  margin-top: 2rem;
+.themes dd {
+  font-size: 1.0625rem;
+  line-height: 1.55;
 }
 
-/* Other projects */
-.also-list li {
+.pr {
+  font-size: 0.75rem;
+  margin-left: 0.1rem;
+}
+
+/* Projects: a scannable index; each row opens for detail. */
+.project-index {
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
+}
+
+.project-index > li {
+  border-top: 1px solid var(--rule);
+}
+
+.project-index > li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.project > summary {
+  display: block;
+  padding: 1rem 0 1.05rem;
+}
+
+.project > summary:focus-visible {
+  outline-offset: -2px;
+}
+
+.project-name {
+  display: block;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.kind {
+  margin-left: 0.5rem;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.project-dek {
+  display: block;
+  margin-top: 0.15rem;
   color: var(--ink-2);
 }
 
-.also-list li + li {
-  margin-top: 0.6rem;
+.toggle {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: start;
+  margin-top: 0.45rem;
+  color: var(--accent);
+  font-size: 0.75rem;
 }
+
+.project > summary:hover .project-name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.18em;
+}
+
+.project-fig {
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding-top: 0.15rem;
+}
+
+.project-detail {
+  padding-bottom: 1.4rem;
+}
+
+.project-link {
+  margin-top: 0.4rem;
+}
+
+.also {
+  margin-top: 1.5rem;
+}
+
+.also .body {
+  grid-column: 1 / -1;
+}
+
+.also .run-in {
+  margin-top: 0;
+}
+
+.also-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem var(--gap);
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
+}
+
+.also-list li {
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+
 
 .also-list a {
   font-style: italic;
 }
 
-/* Skills */
+/* Background */
+.bg-row .body {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  column-gap: var(--gap);
+}
+
+.tools-row {
+  margin-top: 1.25rem;
+}
+
+.skills {
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
+  border-bottom: 1px solid var(--rule);
+}
+
 .skills > div {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
+  grid-template-columns: 8rem minmax(0, 1fr);
   column-gap: 1.25rem;
-  padding: 0.45rem 0;
+  padding: 0.3rem 0;
   border-top: 1px solid var(--rule);
   align-items: baseline;
 }
 
-.skills > div:last-child {
-  border-bottom: 1px solid var(--rule);
-}
-
 .skills dt {
   color: var(--ink-3);
+  font-size: 0.75rem;
 }
 
+.skills dd {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* Contact */
 .contact-line {
-  font-size: 1.3125rem;
+  font-size: 1.375rem;
   line-height: 1.45;
 }
 
 .contact-line + .link-line {
-  margin-top: 1rem;
+  margin-top: 0.9rem;
 }
 
-/* Colophon */
+.aside-note {
+  color: var(--ink-3);
+  padding-top: 0.45rem;
+}
+
 .colophon {
   margin-top: 3rem;
-  padding-top: 0.9rem;
+  padding-top: 0.85rem;
   border-top: 1px solid var(--rule);
   color: var(--ink-3);
+  max-width: calc(var(--body) + var(--gap) + var(--aside));
 }
 
 /* ------------------------------------------------------------------
-   Narrow screens: the margin column folds above its content.
+   Medium screens: the rail becomes a sticky bar along the top.
    ------------------------------------------------------------------ */
-@media (min-width: 64rem) {
+@media (max-width: 75rem) {
+  html {
+    scroll-padding-top: 4rem;
+  }
+
+  .page {
+    display: block;
+    max-width: calc(var(--body) + var(--gap) + var(--aside) + 4rem);
+  }
+
+  .rail {
+    z-index: 10;
+    height: auto;
+    padding: 0.85rem 0;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 2rem;
+    background: var(--paper);
+    box-shadow: 0 1px 0 var(--rule), 0 0 0 100vmax var(--paper);
+    clip-path: inset(0 -100vmax -1px);
+  }
+
+  .rail ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  .rail ol li a {
+    padding: 0;
+  }
+
+  .rail-n {
+    display: none;
+  }
+
+  .rail ol li a[aria-current='true'] {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+
+  .theme-toggle {
+    margin-top: 0;
+    margin-left: auto;
+  }
+
+  .intro {
+    padding-top: 3.5rem;
+  }
+
+  .now-row .figures {
+    top: 4.5rem;
+  }
+}
+
+@media (min-width: 75.0625rem) {
   body {
     font-size: 1.1875rem;
   }
 }
 
+/* ------------------------------------------------------------------
+   Narrow screens: one column; margin notes follow their text.
+   ------------------------------------------------------------------ */
 @media (max-width: 47.99rem) {
+  :root {
+    --gap: 1.5rem;
+  }
+
+  .page {
+    padding: 0 1rem 2.5rem;
+  }
+
   .row {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .margin {
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-top: 0;
-    margin-bottom: 0.4rem;
+  .aside {
+    margin-top: 1.5rem;
   }
 
-  .margin:empty {
-    display: none;
-  }
-
-  .margin span + span {
-    margin-top: 0;
-  }
-
-  .margin span + span::before {
-    content: '·';
-    margin: 0 0.5rem;
-  }
-
-  .page {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .masthead {
-    padding-top: 1.25rem;
+  .rail {
+    gap: 1rem;
+    padding: 0.75rem 0;
     font-size: 0.75rem;
   }
 
-  .masthead ul {
+  .rail ol {
     column-gap: 0.9rem;
   }
 
-  .masthead .margin {
+  .rail-name,
+  .rail .is-optional {
     display: none;
   }
 
   .intro {
-    padding: 3.5rem 0 3rem;
+    padding-top: 2.75rem;
   }
 
   .lede {
     font-size: 1.3125rem;
   }
 
+  .glance {
+    margin-top: 0;
+  }
+
+  .glance > div {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    column-gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .glance dt {
+    grid-row: span 2;
+    padding-top: 0.2rem;
+  }
+
+  .glance dd {
+    grid-column: 2;
+  }
+
+  .triage-figure {
+    margin-top: 2.5rem;
+  }
+
+  .triage--wide {
+    display: none;
+  }
+
+  .triage--tall {
+    display: block;
+  }
+
+  .section {
+    padding-top: 3rem;
+  }
+
   .case-title {
+    font-size: 1.9rem;
+  }
+
+  /* Figures become a two-up ruled strip under the text. */
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .figures > div:last-child {
+    border-bottom: 0;
+  }
+
+  .figures > div:only-child {
+    grid-column: 1 / -1;
+  }
+
+  .now-row .figures {
+    position: static;
+  }
+
+  .fig {
     font-size: 1.75rem;
   }
 
-  .section-head {
+  /* In the project index the figure sits inline under the description. */
+  .project-fig {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.5rem;
     display: flex;
     align-items: baseline;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
-  .section-head .margin {
-    margin: 0;
-    padding: 0;
+  .project-fig .fig {
+    font-size: 1.375rem;
+    flex: none;
+  }
+
+  .project-fig .fig-cap {
+    margin-top: 0;
+  }
+
+  .toggle {
+    grid-row: auto;
   }
 
   .agents > div,
+  .themes > div,
   .skills > div {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .agents dt,
+  .themes dt,
   .skills dt {
     margin-bottom: 0.1rem;
+  }
+
+  .bg-row .body,
+  .also-list,
+  .skills {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bg-row .entry + .entry {
+    margin-top: 1.5rem;
+  }
+
+  .pull {
+    font-size: 1.3125rem;
   }
 }
