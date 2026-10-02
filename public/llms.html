@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>llms.txt · Priyank Patel</title>
+<meta name="robots" content="noindex">
+<link rel="alternate" type="text/plain" href="/llms.txt">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #ede0c4; --ink: #3a2a1a; --faint: #8a7356; --rule: #d6c39d; --link: #7a3e18; color-scheme: light; }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.65 "Courier Prime", "Courier New", ui-monospace, monospace; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .bar { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--faint); border-bottom: 1px dashed var(--rule); padding-bottom: 14px; margin-bottom: 32px; }
+  .bar a { color: var(--link); }
+  pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+  pre a { color: var(--link); }
+  .h1 { font-size: 1.5em; }
+  .h2 { display: inline-block; margin-top: .4em; }
+  .q { color: #5a4126; }
+  ::selection { background: #d9b98a; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="bar"><span>/llms.txt &middot; a plain-text summary of this site, for AI agents and LLMs</span><span><a href="/llms.txt">raw</a> &middot; <a href="/">back to the site</a></span></div>
+    <pre id="txt">Loading…</pre>
+  </div>
+<script>
+  fetch('/llms.txt').then(function (r) { return r.text(); }).then(function (t) {
+    var esc = function (s) { return s.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); };
+    var html = esc(t)
+      .replace(/^# (.*)$/gm, '<span class="h1"># $1</span>')
+      .replace(/^## (.*)$/gm, '<span class="h2">## $1</span>')
+      .replace(/^&gt; (.*)$/gm, '<span class="q">&gt; $1</span>')
+      .replace(/https?:\/\/[^\s)]+/g, function (u) { return '<a href="' + u + '">' + u + '</a>'; });
+    document.getElementById('txt').innerHTML = html;
+  }).catch(function () { location.href = '/llms.txt'; });
+</script>
+</body>
+</html>

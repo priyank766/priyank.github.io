@@ -1,6 +1,6 @@
 # Priyank Patel
 
-> AI engineer and forward deployed engineer in Ahmedabad, India. He builds multi-agent systems that executives use at work, reviews code for Kubeflow's MCP server (CNCF), and is in his third year of a B.E. at L.D. College of Engineering (2023 – 2027).
+> AI product engineer and forward deployed engineer in Ahmedabad, India. He builds multi-agent systems that executives use at work, reviews code for Kubeflow's MCP server (CNCF), and is in his third year of a B.E. at L.D. College of Engineering (2023 - 2027).
 
 This file is a plain-text summary of https://priyank.is-a.dev/ for AI agents and LLMs. Everything here is also on the page.
 
@@ -14,7 +14,7 @@ This file is a plain-text summary of https://priyank.is-a.dev/ for AI agents and
 
 ## Work
 
-- AI engineer at SaarthiOS (https://saarthios.com/), since June 2026.
+- AI product engineer at SaarthiOS (https://saarthios.com/), since June 2026.
 - Built Right Hand, an AI chief of staff. It reads an executive's mail and documents, works out what needs their attention today, and drafts the next step in their usual tone.
 - Multi-agent system on the Anthropic SDK and AWS Bedrock. Live with three clients; used by promoters, CFOs and CEOs. He works with them directly.
 

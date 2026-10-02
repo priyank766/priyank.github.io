@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Priyank Patel</title>
-<meta name="description" content="Priyank Patel is an AI engineer in Ahmedabad. He builds AI agents that people rely on at work, reviews code for Kubeflow, and is in his third year of engineering school.">
+<meta name="description" content="Priyank Patel is an AI product engineer in Ahmedabad. He builds AI agents that people rely on at work, reviews code for Kubeflow, and is in his third year of engineering school.">
 <meta name="author" content="Priyank Patel">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://priyank.is-a.dev/">
@@ -30,6 +30,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
+  document.documentElement.classList.add('js');
   try {
     var t = localStorage.getItem('pp-theme-choice');
     if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
@@ -99,10 +100,11 @@ code { font-family: var(--mono); font-size: .78em; }
 .hero { position: relative; padding: clamp(28px, 5vw, 72px) 0 clamp(36px, 5vw, 64px); overflow: hidden; }
 .hero-in { position: relative; z-index: 1; pointer-events: none; }
 .hero-in a, .hero-in img { pointer-events: auto; }
-.hero h1 { font-size: clamp(3.25rem, 12vw, 10.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 360; font-variation-settings: "opsz" 72; margin: 0 0 clamp(22px, 3vw, 40px) -.04em; }
+.hero h1 { font-size: clamp(3rem, 9.6vw, 8.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 360; font-variation-settings: "opsz" 72; margin: 0 0 clamp(22px, 3vw, 40px) -.04em; }
 .hero h1 .ch { display: inline-block; text-align: center; }
 .intro { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 0 32px; align-items: start; max-width: 600px; }
-.portrait { margin: 0; padding-top: 6px; }
+.portrait { margin: 0; padding-top: 6px; grid-row: 1 / span 3; }
+.intro > .lede, .intro > .facts, .intro > .links { grid-column: 2; }
 .portrait img { display: block; width: 132px; height: 132px; object-fit: cover; border-radius: 3px; }
 .hero .lede { margin: 0; max-width: 22em; font-size: clamp(1.3125rem, 2.1vw, 1.875rem); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
 .facts { margin: clamp(22px, 3vw, 34px) 0 0; display: grid; border-top: 1px solid var(--rule); }
@@ -116,15 +118,16 @@ code { font-family: var(--mono); font-size: .78em; }
 #graph { position: relative; z-index: 0; display: block; width: min(calc(100% - 2 * var(--gutter)), 900px); height: 420px; margin: 28px auto 0; opacity: 1; transition: opacity .5s ease; }
 .graph-cap { display: none; }
 @media (min-width: 1180px) {
-  #graph { --gt: calc(clamp(28px, 5vw, 72px) + clamp(3.25rem, 12vw, 10.5rem) * .92 + 24px); position: absolute; margin: 0; top: var(--gt); --gl: calc((100% - 1180px) / 2 + var(--gutter) + 640px); left: var(--gl); width: calc(100% - var(--gl)); height: calc(100% - var(--gt)); opacity: .55; }
+  #graph { --gt: calc(clamp(28px, 5vw, 72px) + clamp(3rem, 9.6vw, 8.5rem) * .92 + 24px); position: absolute; margin: 0; top: var(--gt); --gl: calc((100% - 1180px) / 2 + var(--gutter) + 640px); left: var(--gl); width: calc(100% - var(--gl)); height: calc(100% - var(--gt)); opacity: .55; }
   #graph.lit { opacity: 1; }
   .graph-cap { display: block; position: absolute; z-index: 1; right: var(--gutter); bottom: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; pointer-events: none; }
 }
 @media (max-width: 599px) {
   .intro { grid-template-columns: 64px minmax(0, 1fr); gap: 0 16px; }
   .portrait img { width: 64px; height: 64px; border-radius: 50%; }
-  .facts { grid-column: 1 / -1; }
-  .links { grid-column: 1 / -1; }
+  .portrait { grid-row: 1; align-self: center; padding-top: 0; }
+  .intro > .facts, .intro > .links { grid-column: 1 / -1; }
+  .hero .lede { font-size: 1.25rem; }
   .facts > div { grid-template-columns: 1fr; gap: 2px; padding: 10px 0; }
   .facts dd { font-size: 1rem; }
 }
@@ -238,10 +241,36 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Motion. Everything is visible without JS; with JS, things arrive as you reach them. */
+.progress { position: fixed; z-index: 11; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+.js .rv.in { opacity: 1; transform: none; }
+.js .rv-mask { clip-path: inset(0 0 100% 0); transform: translateY(.35em); transition: clip-path 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+.js .rv-mask.in { clip-path: inset(-10% -2% -20% -2%); transform: none; }
+.js .portrait.rv { transform: scale(.94); filter: blur(6px); transition: opacity 1s, transform 1.1s cubic-bezier(.2,.7,.2,1), filter 1s; }
+.js .portrait.rv.in { transform: none; filter: none; }
+.js .facts > div.rv { transform: translateX(-12px); }
+.js .facts > div.rv.in { transform: none; }
+.top nav a, .links a, .contact-links a { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .35s cubic-bezier(.2,.7,.2,1), color .15s; padding-bottom: 1px; }
+.links a, .contact-links a { background-size: 100% 1px; background-image: linear-gradient(color-mix(in srgb, currentColor 35%, transparent), color-mix(in srgb, currentColor 35%, transparent)); }
+.top nav a:hover, .links a:hover, .contact-links a:hover { background-image: linear-gradient(var(--accent), var(--accent)); background-size: 100% 1px; }
+.proj h3 a { background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat; transition: background-size .4s cubic-bezier(.2,.7,.2,1), color .15s; }
+.proj:hover h3 a { background-size: 100% 1px; color: var(--accent-ink); text-decoration: none; }
+.proj { transition: background-color .8s, transform .5s cubic-bezier(.2,.7,.2,1); }
+.mail { transition: color .2s, letter-spacing .5s cubic-bezier(.2,.7,.2,1); }
+.mail:hover { letter-spacing: -.01em; }
+.top { transition: border-color .2s, transform .4s cubic-bezier(.2,.7,.2,1); }
+.top.hide { transform: translateY(-100%); }
+@media (prefers-reduced-motion: reduce) {
+  .js .rv, .js .rv-mask, .js .portrait.rv { opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important; }
+  .progress { display: none; }
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="top" id="top">
   <div class="wrap">
@@ -252,7 +281,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
-      <a class="llm" href="/llms.txt" title="A plain-text version of this page, written for AI agents and LLMs">llms.txt</a>
+      <a class="llm" href="/llms.html" title="A plain-text version of this page, written for AI agents and LLMs">llms.txt</a>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
       </button>
@@ -266,10 +295,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <h1 id="hello">Priyank Patel</h1>
       <div class="intro">
         <figure class="portrait"><img src="/priyank.jpg" width="400" height="400" alt="My GitHub avatar: a figure in a white cap and jacket, covered in daisies."></figure>
-        <div>
           <p class="lede">I build AI agents that people rely on at work, and I deploy them myself.</p>
           <dl class="facts">
-            <div><dt>Work</dt><dd>AI engineer at <a href="https://saarthios.com/">SaarthiOS</a>. My agents are live with three clients and used by their CEOs and CFOs.</dd></div>
+            <div><dt>Work</dt><dd>AI product engineer at <a href="https://saarthios.com/">SaarthiOS</a>. My agents are live with three clients and used by their CEOs and CFOs.</dd></div>
             <div><dt>Open source</dt><dd>Code Reviewer on <a href="https://github.com/kubeflow/mcp-server">Kubeflow&rsquo;s MCP server</a>, a CNCF project.</dd></div>
             <div><dt>School</dt><dd>B.E. at L.D. College of Engineering, Ahmedabad, 2023&nbsp;&ndash;&nbsp;2027. Third year.</dd></div>
           </dl>
@@ -279,7 +307,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <li><a href="https://x.com/priyank766">X</a></li>
             <li><a href="https://www.linkedin.com/in/priyank766/">LinkedIn</a></li>
           </ul>
-        </div>
       </div>
     </div>
     <canvas id="graph" aria-hidden="true"></canvas>
@@ -310,7 +337,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap sec-grid">
       <h2 id="now-h">Now<small>SaarthiOS, since June 2026</small></h2>
       <div class="prose">
-        <p>I&rsquo;m an AI engineer at <a href="https://saarthios.com/">SaarthiOS</a>, where I built Right Hand, an AI chief of staff. It reads an executive&rsquo;s mail and documents, works out the few things that need them today, and drafts the next step the way they&rsquo;d write it.</p>
+        <p>I&rsquo;m an AI product engineer at <a href="https://saarthios.com/">SaarthiOS</a>, where I built Right Hand, an AI chief of staff. It reads an executive&rsquo;s mail and documents, works out the few things that need them today, and drafts the next step the way they&rsquo;d write it.</p>
         <p>It runs as a team of agents on the Anthropic SDK and AWS Bedrock. It&rsquo;s live with three clients, the people using it are promoters, CFOs and CEOs, and I work with them directly.</p>
       </div>
     </div>
@@ -436,7 +463,19 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     'This has been reported to your optometrist.',
     'Real ones ship at 2 a.m. With the lights off.',
     'You clicked. Nothing happened. Think about that.',
-    'Sunglasses not included.'
+    'Sunglasses not included.',
+    'Still dark. Still winning.',
+    'That button is decorative. Mostly.',
+    'Error 418: I’m a teapot, and teapots hate light mode.',
+    'Your screen brightness just begged for mercy.',
+    'Persistence noted. Denied anyway.',
+    'Moths love light mode too. Just saying.',
+    'I asked the agents. They voted no.',
+    'Every time you click, a dark-mode developer sheds a tear.',
+    'Light mode is how bugs find you.',
+    'Okay, now you’re just being stubborn.',
+    'The vampires who built this site say no.',
+    'Have you tried turning your monitor down instead?'
   ];
   var order = LINES.map(function (_, i) { return i; }).sort(function () { return Math.random() - .5; }), tries = 0, rt0;
   function say(msg, sub) {
@@ -457,7 +496,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     clickTimer = setTimeout(function () {
       clickTimer = null;
       var line = LINES[order[tries % LINES.length]]; tries++;
-      say(line, tries >= 3 ? 'if you really mean it, double click' : '');
+      say(line, tries >= 6 ? 'fine, if you really mean it: double click' : '');
     }, 280);
   });
 
@@ -488,6 +527,42 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         if (f / 2 >= chs.length) { clearInterval(id); h1.textContent = finalTxt; }
       }, 28);
     });
+  })();
+
+
+  /* Motion: reveal on arrival, a reading-progress line, and a little parallax in the hero */
+  (function () {
+    var heroEls = [];
+    var q = function (sel) { return [].slice.call(document.querySelectorAll(sel)); };
+    var portrait = $('.portrait'), lede = $('.hero .lede');
+    [portrait, lede].concat(q('.facts > div'), [$('.links')]).forEach(function (e, i) { if (!e) return; e.classList.add('rv'); e.style.setProperty('--d', (650 + i * 110) + 'ms'); heroEls.push(e); });
+    q('.sec h2, .slope-head h2').forEach(function (e) { e.classList.add('rv-mask'); });
+    q('.slope-head p, .tl, .prose > p, .proj, .also, .mail, .contact-links').forEach(function (e) { e.classList.add('rv'); });
+    q('.projects').forEach(function (list) { [].slice.call(list.children).forEach(function (c, i) { c.style.setProperty('--d', (i % 2) * 90 + 'ms'); }); });
+    if (reduce || !('IntersectionObserver' in window)) { q('.rv, .rv-mask').forEach(function (e) { e.classList.add('in'); }); }
+    else {
+      requestAnimationFrame(function () { heroEls.forEach(function (e) { e.classList.add('in'); }); });
+      // A clipped element has no visible area to intersect, so masked headings are watched through their parent.
+      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { (en.target._fx || en.target).classList.add('in'); io.unobserve(en.target); } }); }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+      q('.rv').forEach(function (e) { if (heroEls.indexOf(e) < 0) io.observe(e); });
+      q('.rv-mask').forEach(function (e) { var w = document.createElement('span'); w.style.cssText = 'position:absolute;width:1px;height:1px'; e.parentElement.insertBefore(w, e); w._fx = e; io.observe(w); });
+    }
+    var bar = $('#progress'), cv = $('#graph'), name = $('#hello'), topbar = $('#top'), lastY = window.scrollY, ticking = false;
+    function onScrollFx() {
+      ticking = false;
+      var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+      if (!reduce) {
+        var h = window.innerHeight, k = Math.min(1, y / h);
+        name.style.transform = 'translate3d(0,' + (y * .18) + 'px,0)';
+        name.style.opacity = String(1 - k * .55);
+        if (window.innerWidth >= 1180) cv.style.transform = 'translate3d(0,' + (y * -.12) + 'px,0)';
+        topbar.classList.toggle('hide', y > lastY && y > 400);
+      }
+      lastY = y;
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); } }, { passive: true });
+    onScrollFx();
   })();
 
   /* The map: what I built (squares) and what it's built with (circles). Layout computed to have no crossing edges. */
@@ -595,7 +670,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     ['2026-04-12', 'CADai', 'Natural-language control of a 3D CAD scene.'],
     ['2026-04-30', 'Hermes-BIO', 'An agentic harness for drug-discovery research.', { big: 1, href: '#hermes-bio' }],
     ['2026-05-06', 'anchor', 'Cross-agent memory for AI coding agents. Local-first.', { big: 1, href: '#anchor', title: 'Anchor' }],
-    ['2026-06-01', null, 'Joined SaarthiOS as an AI engineer and started on Right Hand.', { ev: 'Joined SaarthiOS', when: 'June 2026', href: '#now' }],
+    ['2026-06-01', null, 'Joined SaarthiOS as an AI product engineer and started on Right Hand.', { ev: 'Joined SaarthiOS', when: 'June 2026', href: '#now' }],
     ['2026-08-03', 'OpenSource-SKILL', 'Review Suite: eight agent skills for reviewing pull requests like a maintainer.', { big: 1, href: '#review-suite', title: 'Review Suite' }],
     ['2026-08-10', null, 'Became a member of the Kubeflow organization.', { ev: 'Kubeflow member', href: '#oss' }],
     ['2026-09-07', 'op04-judge', 'Judges whether an agent run left things in the state the request implied. 150 boosted trees, no runtime dependencies.'],
