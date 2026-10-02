@@ -632,6 +632,13 @@ main:focus, section:focus, article:focus { outline: none; }
 .ld-fly { position: fixed; z-index: 2; background: var(--accent); pointer-events: none; }
 .ld-caret { width: .07em; height: .8em; }
 .loader-name .ch.dec { color: var(--accent); }
+
+/* landing on a project: an orange bar draws down its left edge while the row warms up, then both fade */
+.proj { position: relative; }
+.proj::after { content: ""; position: absolute; left: -16px; top: 18px; bottom: 18px; width: 3px; border-radius: 2px; background: var(--accent); transform: scaleY(0); transform-origin: 50% 0; opacity: 0; pointer-events: none; }
+.proj.flash::after { animation: proj-mark 1.4s var(--eo) forwards; }
+@keyframes proj-mark { 0% { transform: scaleY(0); opacity: 1; } 35% { transform: scaleY(1); opacity: 1; } 75% { opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+@media (max-width: 899px) { .proj::after { left: -10px; } }
 </style>
 </head>
 <body>
@@ -1814,8 +1821,9 @@ import Lenis from 'lenis';
       var key = hp.x.toFixed(4) + hp.y.toFixed(4) + yy;
       if (key === prev) return; prev = key;
       h1.style.translate = (hp.x * -16).toFixed(2) + 'px ' + (hp.y * -10).toFixed(2) + 'px';
-      intro.style.translate = (hp.x * 8).toFixed(2) + 'px ' + (hp.y * 6 + yy * (mid ? .1 : .06)).toFixed(2) + 'px';
-      cv.style.translate = (hp.x * 26).toFixed(2) + 'px ' + (hp.y * 16 - yy * (wide ? .14 : .08)).toFixed(2) + 'px';
+      // when the graph sits under the intro (narrower screens) the layers must not slide into each other
+      intro.style.translate = (hp.x * 8).toFixed(2) + 'px ' + (hp.y * 6 + (wide ? yy * .1 : 0)).toFixed(2) + 'px';
+      cv.style.translate = (hp.x * 26).toFixed(2) + 'px ' + (hp.y * 16 - (wide ? yy * .14 : 0)).toFixed(2) + 'px';
     });
   })();
 
