@@ -598,24 +598,6 @@ img, canvas, svg { -webkit-user-select: none; user-select: none; -webkit-user-dr
 img::selection { background: transparent; }
 main:focus, section:focus, article:focus { outline: none; }
 
-/* booting straight into Agent mode (refresh on #agent): paper from the first paint, no unroll */
-html.agent-boot, html.agent-boot body { background: #ede0c4; }
-html.agent-boot .sheet { clip-path: inset(0 0 0 0) !important; transition: none !important; }
-html.agent-boot .sheet *, html.agent-boot .sheet-bg { transition: none !important; animation: none !important; }
-
-/* Hover fill for Work and Projects, the same orange slide as the command menu.
-   It grows from the edge the pointer came in through and leaves through the edge it went out of. */
-@media (hover: hover) and (pointer: fine) {
-  .hl-row { position: relative; isolation: isolate; }
-  .hl-row::before { content: ""; position: absolute; z-index: -1; inset: 0 -18px; border-radius: 10px; background: var(--accent); transform: scaleY(0); transform-origin: 50% var(--hl-o, 0%); transition: transform .42s var(--eo); pointer-events: none; }
-  .hl-row.hl::before { transform: scaleY(1); }
-  .hl-row.hl, .hl-row.hl * { -webkit-text-fill-color: #141412 !important; opacity: 1 !important;
-    color: #141412 !important; text-decoration-color: rgba(20, 20, 18, .45) !important; transition: color .18s; }
-  .hl-row.hl .w { color: #141412 !important; }
-  .hl-row.hl a:hover { text-decoration-color: #141412 !important; }
-  .hl-row.hl ::selection { background: #141412; color: var(--accent); }
-}
-@media (prefers-reduced-motion: reduce) { .hl-row::before { transition: none; } }
 </style>
 </head>
 <body>
@@ -1633,17 +1615,6 @@ import Lenis from 'lenis';
   })();
 
 
-  /* ---------- Hover fill on Work and Projects rows ---------- */
-  (function () {
-    if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    var rows = $$('#projects .proj').concat($$('#now .prose > p'));
-    rows.forEach(function (r) {
-      r.classList.add('hl-row');
-      function side(e) { var b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2 ? '0%' : '100%'; }
-      r.addEventListener('pointerenter', function (e) { r.style.setProperty('--hl-o', side(e)); requestAnimationFrame(function () { r.classList.add('hl'); }); });
-      r.addEventListener('pointerleave', function (e) { r.style.setProperty('--hl-o', side(e)); r.classList.remove('hl'); });
-    });
-  })();
 
   /* ---------- Work section: each word lights up as it crosses the reading line ---------- */
   var measureWords = function () {};
