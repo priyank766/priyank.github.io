@@ -28,9 +28,10 @@
 <meta name="twitter:image" content="https://priyank.is-a.dev/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Courier+Prime&display=swap" rel="stylesheet">
 <script>
   document.documentElement.classList.add('js');
+  try { if (!sessionStorage.getItem('pp-seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('loading'); } catch (e) {}
   try {
     var t = localStorage.getItem('pp-theme-choice');
     if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
@@ -266,11 +267,91 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   .js .rv, .js .rv-mask, .js .portrait.rv { opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important; }
   .progress { display: none; }
 }
+
+/* ---- phone nav: never wider than the screen ---- */
+@media (max-width: 420px) {
+  .top nav { gap: 12px; font-size: .8125rem; }
+  .top nav a[href="#now"] { display: none; }
+}
+/* reading line only on phones */
+@media (min-width: 760px) { .progress { display: none; } }
+/* llms button: fill on hover, keep the text readable */
+.llm { appearance: none; background: none; cursor: pointer; }
+.llm:hover { background: var(--llm); color: var(--bg); border-color: var(--llm); }
+
+/* For AI: a sheet of paper that slides over the page */
+.sheet-bg { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity .4s; }
+.sheet-bg.open { opacity: 1; pointer-events: auto; }
+.sheet { position: fixed; z-index: 61; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: #ede0c4; color: #3a2a1a; box-shadow: -30px 0 80px rgba(0,0,0,.45); transform: translateX(104%); transition: transform .6s cubic-bezier(.77,0,.18,1); display: flex; flex-direction: column; color-scheme: light; }
+.sheet.open { transform: none; }
+.sheet-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px dashed #cdb88f; font-family: "Courier Prime", "Courier New", monospace; font-size: 13px; color: #7d6648; }
+.sheet-h div { display: flex; gap: 8px; }
+.sheet-h button { appearance: none; font: inherit; color: #3a2a1a; background: none; border: 1px solid #b89c6c; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+.sheet-h button:hover { background: #3a2a1a; color: #ede0c4; border-color: #3a2a1a; }
+.sheet-body { overflow: auto; padding: 24px 24px 48px; font: 15px/1.7 "Courier Prime", "Courier New", monospace; -webkit-overflow-scrolling: touch; }
+.sheet-body pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+.sheet-body a { color: #7a3e18; }
+.sheet-body .h1 { font-size: 1.45em; }
+.sheet-body .h2 { display: inline-block; margin-top: .3em; }
+.sheet-body .q { color: #5a4126; }
+.sheet ::selection { background: #d9b98a; }
+html.sheet-open body { overflow: hidden; }
+
+/* ---- loading screen ---- */
+.loader { position: fixed; inset: 0; z-index: 100; background: var(--bg); display: grid; place-items: center; clip-path: inset(0 0 0 0); transition: clip-path .9s cubic-bezier(.77,0,.18,1); }
+.loader.out { clip-path: inset(0 0 100% 0); }
+.loader-name { font-family: var(--serif); font-weight: 360; font-size: clamp(2.5rem, 8vw, 6rem); letter-spacing: -.035em; color: var(--ink); white-space: nowrap; }
+.loader-name span { display: inline-block; opacity: 0; transform: translateY(40%); transition: opacity .5s, transform .7s cubic-bezier(.2,.7,.2,1); }
+.loader-name span.on { opacity: 1; transform: none; }
+.loader-meta { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 28px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.loader-meta b { color: var(--ink); font-weight: 400; font-variant-numeric: tabular-nums; }
+.loader-line { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+html.loading body { overflow: hidden; }
+
+/* ---- theme change: a circle wipes the new theme in from the button ---- */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { z-index: 9999; }
+
+/* ---- timeline is scrubbed by scroll on desktop ---- */
+@media (min-width: 760px) {
+  .slope.scrub { height: 230vh; padding: 0; }
+  .slope.scrub > .wrap { position: sticky; top: 56px; min-height: calc(100vh - 56px); display: flex; flex-direction: column; justify-content: center; padding-top: 24px; padding-bottom: 24px; }
+}
+
+/* ---- Now: words light up as you read ---- */
+.js .lit-words .w { opacity: .16; transition: opacity .25s linear; }
+.js .lit-words .w.on { opacity: 1; }
+
+/* ---- cursor ring + magnetic bits + avatar tilt ---- */
+.ring { position: fixed; z-index: 90; left: 0; top: 0; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 1px solid var(--ink); border-radius: 50%; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: width .3s cubic-bezier(.2,.7,.2,1), height .3s cubic-bezier(.2,.7,.2,1), margin .3s cubic-bezier(.2,.7,.2,1), opacity .3s, background-color .3s; }
+.ring.on { opacity: .9; }
+.ring.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--ink); }
+.ring.down { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+.mag { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.portrait { perspective: 600px; }
+.portrait img { transition: transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s; will-change: transform; }
+.portrait:hover img { box-shadow: 0 24px 60px -20px rgba(0,0,0,.7); }
+.hero h1 .ch { transition: none; will-change: transform; }
+@media (hover: none), (pointer: coarse) { .ring { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .loader { display: none; }
+  .slope.scrub { height: auto; }
+  .slope.scrub > .wrap { position: static; min-height: 0; }
+  .js .lit-words .w { opacity: 1; }
+  .ring { display: none; }
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
+<div class="loader" id="loader" aria-hidden="true"><div class="loader-name" id="loader-name"></div><div class="loader-meta"><span>priyank.is-a.dev</span><span><b id="loader-n">000</b> / 100</span></div><div class="loader-line" id="loader-line"></div></div>
+<div class="ring" id="ring" aria-hidden="true"></div>
+<div class="sheet-bg" id="sheet-bg"></div>
+<aside class="sheet" id="ai-sheet" role="dialog" aria-modal="true" aria-label="This page, written for AI" tabindex="-1">
+  <div class="sheet-h"><span>beep boop &middot; this page, written for your AI. Paste it in and ask about me.</span><div><button type="button" id="ai-copy">Copy</button><button type="button" id="ai-close" aria-label="Close">Close</button></div></div>
+  <div class="sheet-body"><pre id="ai-txt">Loading&hellip;</pre></div>
+</aside>
 
 <header class="top" id="top">
   <div class="wrap">
@@ -281,7 +362,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
-      <a class="llm" href="/llms.html" title="A plain-text version of this page, written for AI agents and LLMs">llms.txt</a>
+      <button class="llm" id="forai" type="button" aria-haspopup="dialog" aria-controls="ai-sheet" title="This page, rewritten for your AI">beep boop</button>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
       </button>
@@ -313,7 +394,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="graph-cap">squares are things I built, circles are what they&rsquo;re built with<br>point at one to trace it, click a square to jump to it</div>
   </section>
 
-  <section class="slope" aria-labelledby="slope-h">
+  <section class="slope scrub" id="slope" aria-labelledby="slope-h">
     <div class="wrap">
       <div class="slope-head">
         <h2 id="slope-h"><span id="span-word">Fifteen</span> months on GitHub</h2>
@@ -336,7 +417,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section class="sec" id="now" aria-labelledby="now-h">
     <div class="wrap sec-grid">
       <h2 id="now-h">Now<small>SaarthiOS, since June 2026</small></h2>
-      <div class="prose">
+      <div class="prose lit-words">
         <p>I&rsquo;m an AI product engineer at <a href="https://saarthios.com/">SaarthiOS</a>, where I built Right Hand, an AI chief of staff. It reads an executive&rsquo;s mail and documents, works out the few things that need them today, and drafts the next step the way they&rsquo;d write it.</p>
         <p>It runs as a team of agents on the Anthropic SDK and AWS Bedrock. It&rsquo;s live with three clients, the people using it are promoters, CFOs and CEOs, and I work with them directly.</p>
       </div>
@@ -449,6 +530,34 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   var C = {};
   function readC() { C = { ink: css('--ink'), ink2: css('--ink-2'), muted: css('--muted'), tick: css('--tick'), red: css('--accent'), bg: css('--bg') }; }
   readC();
+  // Anything that should wait for the loading screen queues here until it's gone.
+  window.__alq = []; window.__afterLoad = function (fn) { window.__alq.push(fn); };
+
+
+  /* For AI: the same summary agents read at /llms.txt, shown on a sheet of paper without leaving the page */
+  (function () {
+    var b = $('#forai'), sh = $('#ai-sheet'), bg = $('#sheet-bg'), pre = $('#ai-txt'), raw = '', last = null;
+    function load() {
+      if (raw) return;
+      fetch('/llms.txt').then(function (r) { return r.text(); }).then(function (t) {
+        raw = t;
+        var esc = function (x) { return x.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); };
+        pre.innerHTML = esc(t).replace(/^# (.*)$/gm, '<span class="h1"># $1</span>').replace(/^## (.*)$/gm, '<span class="h2">## $1</span>')
+          .replace(/^&gt; (.*)$/gm, '<span class="q">&gt; $1</span>').replace(/https?:\/\/[^\s)]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; });
+      }).catch(function () { pre.textContent = 'Could not load it. It lives at /llms.txt.'; });
+    }
+    function open() { last = document.activeElement; load(); sh.classList.add('open'); bg.classList.add('open'); root.classList.add('sheet-open'); setTimeout(function () { sh.focus(); }, 50); }
+    function close() { sh.classList.remove('open'); bg.classList.remove('open'); root.classList.remove('sheet-open'); if (last) last.focus(); }
+    b.addEventListener('click', open);
+    bg.addEventListener('click', close);
+    $('#ai-close').addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sh.classList.contains('open')) close(); });
+    $('#ai-copy').addEventListener('click', function () {
+      var btn = this, done = function (m) { btn.textContent = m; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+      if (navigator.clipboard && raw) navigator.clipboard.writeText(raw).then(function () { done('Copied'); }, function () { done('Select it'); });
+      else done('Select it');
+    });
+  })();
 
   /* Theme. Dark is the default. Going light takes a double click; a single click gets you roasted. */
   var btn = $('#theme');
@@ -482,7 +591,17 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     roast.innerHTML = msg + (sub ? '<small>' + sub + '</small>' : '');
     roast.classList.add('show'); clearTimeout(rt0); rt0 = setTimeout(function () { roast.classList.remove('show'); }, 2200);
   }
-  function setTheme(t) {
+  function wipe(apply) {
+    var r = btn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    var R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    if (!document.startViewTransition || reduce) { apply(); return; }
+    var vt = document.startViewTransition(apply);
+    vt.ready.then(function () {
+      root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + R + 'px at ' + x + 'px ' + y + 'px)'] }, { duration: 750, easing: 'cubic-bezier(.77,0,.18,1)', pseudoElement: '::view-transition-new(root)' });
+    }).catch(function () {});
+  }
+  function setTheme(t, animate) {
+    if (animate) { wipe(function () { setTheme(t); }); return; }
     if (t === 'light') root.setAttribute('data-theme', 'light'); else root.removeAttribute('data-theme');
     try { if (t === 'light') localStorage.setItem('pp-theme-choice', 'light'); else localStorage.removeItem('pp-theme-choice'); } catch (e) {}
     btn.setAttribute('aria-label', t === 'light' ? 'Back to dark mode' : 'Switch to light mode (double click)');
@@ -491,8 +610,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   setTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
   var clickTimer = null;
   btn.addEventListener('click', function () {
-    if (root.getAttribute('data-theme') === 'light') { setTheme('dark'); say('Welcome back.'); return; }
-    if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; setTheme('light'); say('Fine. You asked for it.', 'click once to come back'); return; }
+    if (root.getAttribute('data-theme') === 'light') { setTheme('dark', true); say('Welcome back.'); return; }
+    if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; setTheme('light', true); say('Fine. You asked for it.', 'click once to come back'); return; }
     clickTimer = setTimeout(function () {
       clickTimer = null;
       var line = LINES[order[tries % LINES.length]]; tries++;
@@ -518,17 +637,98 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var finalTxt = h1.textContent, letters = finalTxt.replace(/ /g, '').split('');
     h1.innerHTML = finalTxt.split('').map(function (c) { return c === ' ' ? ' ' : '<span class="ch">' + c + '</span>'; }).join('');
     var chs = [].slice.call(h1.querySelectorAll('.ch'));
-    (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+    window.__afterLoad(function () {
       chs.forEach(function (c) { c.style.width = c.getBoundingClientRect().width + 'px'; });
       var glyph = '01<>/{}[]#*+=_', f = 0;
       var id = setInterval(function () {
         f++;
         chs.forEach(function (c, i) { c.textContent = i < f / 2 ? letters[i] : glyph[(Math.random() * glyph.length) | 0]; });
-        if (f / 2 >= chs.length) { clearInterval(id); h1.textContent = finalTxt; }
+        if (f / 2 >= chs.length) { clearInterval(id); chs.forEach(function (c, i) { c.textContent = letters[i]; }); }
       }, 28);
     });
   })();
 
+
+
+  /* Loading screen: once per session. Everything that animates on arrival waits for it. */
+  (function () {
+    var waiting = window.__alq, done = false;
+    window.__afterLoad = function (fn) { done ? fn() : waiting.push(fn); };
+    function finish() { done = true; root.classList.remove('loading'); waiting.splice(0).forEach(function (f) { f(); }); }
+    var L = $('#loader');
+    if (!root.classList.contains('loading')) { L.remove(); (document.fonts ? document.fonts.ready : Promise.resolve()).then(finish); return; }
+    try { sessionStorage.setItem('pp-seen', '1'); } catch (e) {}
+    var nm = $('#loader-name'), n = $('#loader-n'), line = $('#loader-line');
+    nm.innerHTML = 'Priyank Patel'.split('').map(function (c) { return '<span>' + (c === ' ' ? '&nbsp;' : c) + '</span>'; }).join('');
+    var sp = [].slice.call(nm.children);
+    sp.forEach(function (e, i) { setTimeout(function () { e.classList.add('on'); }, 120 + i * 45); });
+    var t0 = performance.now(), D = 1500;
+    (function tick(t) {
+      var k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      n.textContent = String(Math.round(e * 100)).padStart(3, '0'); line.style.transform = 'scaleX(' + e + ')';
+      if (k < 1) requestAnimationFrame(tick);
+      else { L.classList.add('out'); setTimeout(finish, 350); setTimeout(function () { L.remove(); }, 1000); }
+    })(t0);
+  })();
+
+  /* Scroll scatters the name: each letter drifts, turns and blurs away on its own path. */
+  var seeds = [];
+  function scatter(k) {
+    var chs = h1.querySelectorAll('.ch');
+    if (!chs.length) return;
+    if (seeds.length !== chs.length) { seeds = [].map.call(chs, function () { return [Math.random() * 2 - 1, Math.random() * .8 + .4, Math.random() * 2 - 1]; }); }
+    var e = k * k;
+    [].forEach.call(chs, function (c, i) {
+      var sd = seeds[i];
+      c.style.transform = k ? 'translate3d(' + (sd[0] * 60 * e) + 'px,' + (-sd[1] * 140 * e) + 'px,0) rotate(' + (sd[2] * 28 * e) + 'deg)' : '';
+      c.style.filter = k ? 'blur(' + (e * 8) + 'px)' : '';
+      c.style.opacity = String(1 - e * .9);
+    });
+  }
+
+  /* Now: split into words; light each one as it crosses the middle of the screen. */
+  (function () {
+    var box = $('.lit-words'); if (!box || reduce) return;
+    [].forEach.call(box.querySelectorAll('p'), function (p) {
+      var walk = document.createTreeWalker(p, NodeFilter.SHOW_TEXT), nodes = [];
+      while (walk.nextNode()) nodes.push(walk.currentNode);
+      nodes.forEach(function (tn) {
+        var frag = document.createDocumentFragment();
+        tn.textContent.split(/(\s+)/).forEach(function (w) { if (!w) return; if (/^\s+$/.test(w)) frag.appendChild(document.createTextNode(w)); else { var sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w; frag.appendChild(sp); } });
+        tn.parentNode.replaceChild(frag, tn);
+      });
+    });
+    var words = [].slice.call(box.querySelectorAll('.w'));
+    function light() {
+      var line = window.innerHeight * .62;
+      words.forEach(function (w) { var r = w.getBoundingClientRect(); w.classList.toggle('on', r.top < line); });
+    }
+    window.addEventListener('scroll', function () { requestAnimationFrame(light); }, { passive: true }); light();
+  })();
+
+  /* Cursor ring, magnetic links and an avatar that tilts toward the pointer (mouse only). */
+  (function () {
+    if (reduce || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var ring = $('#ring'), x = -100, y = -100, rx = -100, ry = -100;
+    document.addEventListener('pointermove', function (e) { x = e.clientX; y = e.clientY; ring.classList.add('on'); });
+    document.addEventListener('pointerleave', function () { ring.classList.remove('on'); });
+    document.addEventListener('pointerdown', function () { ring.classList.add('down'); });
+    document.addEventListener('pointerup', function () { ring.classList.remove('down'); });
+    document.addEventListener('pointerover', function (e) { ring.classList.toggle('big', !!e.target.closest('a, button, .band .nm, .band .ms')); });
+    (function loop() { rx += (x - rx) * .2; ry += (y - ry) * .2; ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)'; requestAnimationFrame(loop); })();
+
+    [].forEach.call(document.querySelectorAll('.links a, .contact-links a, .top nav a, .theme, .mail'), function (a) {
+      a.classList.add('mag');
+      a.addEventListener('pointermove', function (e) { var r = a.getBoundingClientRect(); a.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .25) + 'px,' + ((e.clientY - r.top - r.height / 2) * .35) + 'px)'; });
+      a.addEventListener('pointerleave', function () { a.style.transform = ''; });
+    });
+
+    var fig = $('.portrait'), img = fig && fig.querySelector('img');
+    if (img) {
+      fig.addEventListener('pointermove', function (e) { var r = fig.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5; img.style.transform = 'rotateY(' + (px * 18) + 'deg) rotateX(' + (-py * 18) + 'deg) scale(1.04)'; });
+      fig.addEventListener('pointerleave', function () { img.style.transform = ''; });
+    }
+  })();
 
   /* Motion: reveal on arrival, a reading-progress line, and a little parallax in the hero */
   (function () {
@@ -541,7 +741,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     q('.projects').forEach(function (list) { [].slice.call(list.children).forEach(function (c, i) { c.style.setProperty('--d', (i % 2) * 90 + 'ms'); }); });
     if (reduce || !('IntersectionObserver' in window)) { q('.rv, .rv-mask').forEach(function (e) { e.classList.add('in'); }); }
     else {
-      requestAnimationFrame(function () { heroEls.forEach(function (e) { e.classList.add('in'); }); });
+      window.__afterLoad(function () { heroEls.forEach(function (e) { e.classList.add('in'); }); });
       // A clipped element has no visible area to intersect, so masked headings are watched through their parent.
       var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { (en.target._fx || en.target).classList.add('in'); io.unobserve(en.target); } }); }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
       q('.rv').forEach(function (e) { if (heroEls.indexOf(e) < 0) io.observe(e); });
@@ -554,8 +754,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
       if (!reduce) {
         var h = window.innerHeight, k = Math.min(1, y / h);
-        name.style.transform = 'translate3d(0,' + (y * .18) + 'px,0)';
-        name.style.opacity = String(1 - k * .55);
+        scatter(Math.min(1, y / (h * .7)));
         if (window.innerWidth >= 1180) cv.style.transform = 'translate3d(0,' + (y * -.12) + 'px,0)';
         topbar.classList.toggle('hide', y > lastY && y > 400);
       }
@@ -817,7 +1016,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     items.forEach(function (it, k) { var d = Math.abs(it.px - x); if (d < bd) { bd = d; best = k; } });
     return best;
   }
-  band.addEventListener('pointermove', function (e) { if (mode !== 'h' || e.pointerType !== 'mouse') return; if (playing) stopPlay(); select(nearestX(e.clientX)); });
+  band.addEventListener('pointermove', function (e) { if (mode !== 'h' || e.pointerType !== 'mouse') return; if (band.classList.contains('pre')) return; select(nearestX(e.clientX)); });
   band.addEventListener('keydown', function (e) {
     var k = e.key, n = cur;
     if (k === 'ArrowRight' || k === 'ArrowDown') n = cur + 1;
@@ -868,10 +1067,19 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   var rw = window.innerWidth, rt;
   window.addEventListener('resize', function () { if (window.innerWidth === rw) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(function () { if (playing) stopPlay(); render(); }, 120); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!playing) render(); });
-  if (mode === 'h' && !reduce && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); setTimeout(play, 200); } }, { threshold: 0.5 });
-    io.observe(band);
-  } else { stopPlay(); select(mode === 'h' ? items.length - 1 : 0); }
+  var slope = document.getElementById('slope'), scrubbing = mode === 'h' && !reduce;
+  if (!scrubbing) { slope.classList.remove('scrub'); stopPlay(); select(mode === 'h' ? items.length - 1 : 0); }
+  function scrub() {
+    if (!scrubbing || mode !== 'h') return;
+    var r = slope.getBoundingClientRect(), span = r.height - window.innerHeight;
+    var p = Math.max(0, Math.min(1, -r.top / (span > 0 ? span : 1)));
+    var idx = Math.round(p * (items.length - 1));
+    items.forEach(function (it, k) { it.els.forEach(function (e) { if (!e.style) return; var on = k <= idx; e.style.opacity = on ? '1' : ''; if (e.classList.contains('nm')) e.style.transform = on ? 'rotate(180deg)' : ''; }); });
+    if (r.top < window.innerHeight) select(idx);
+    if (p >= 1) { scrubbing = false; stopPlay(); }
+  }
+  window.addEventListener('scroll', function () { requestAnimationFrame(scrub); }, { passive: true });
+  scrub();
 })();
 </script>
 </body>
