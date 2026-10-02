@@ -604,12 +604,27 @@ img, canvas, svg { -webkit-user-select: none; user-select: none; -webkit-user-dr
 img::selection { background: transparent; }
 main:focus, section:focus, article:focus { outline: none; }
 
+
+/* loader entrance variants */
+.ld-bg i b { display: none; }
+.loader.iv1 .ld-bg i, .loader.iv3 .ld-bg i, .loader.iv2 .ld-bg i { background: var(--bg); border-left-color: transparent !important; }
+.loader.iv1 .ld-bg i::after, .loader.iv2 .ld-bg i::after, .loader.iv3 .ld-bg i::after { opacity: 0; transition: opacity .2s; }
+.loader.iv1.lifting .ld-bg i::after, .loader.iv2.lifting .ld-bg i::after, .loader.iv3.lifting .ld-bg i::after { opacity: 1; }
+.loader.iv1 .ld-bg i b { display: block; position: absolute; left: -1px; top: 0; width: 1px; height: 100%; background: var(--tick); transform-origin: 50% 0; }
+.loader.iv1 .ld-bg i:first-child b { display: none; }
+.ld-graph { position: absolute; left: 50%; top: 50%; width: min(420px, 70vw); translate: -50% -55%; overflow: visible; }
+.ld-graph path { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 1; }
+.ld-graph circle { fill: var(--bg); stroke: var(--accent); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
+.ld-graph .hub { fill: var(--accent); transform-box: fill-box; transform-origin: center; }
+.ld-graph text { font: 400 8px var(--mono); fill: var(--muted); }
+.ld-caret { display: inline-block; width: .06em; height: .78em; margin-left: .05em; vertical-align: -.02em; background: var(--accent); animation: blink 1s steps(1) infinite; }
+.ld-caret.done { opacity: 0; transition: opacity .3s; animation: none; }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
-<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"><i></i><i></i><i></i><i></i><i></i></div><div class="ld-top"><span>AI product engineer</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
+<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div><div class="ld-top"><span>AI product engineer</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
 <div class="shutter" id="shutter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 <div class="sheet-bg" id="sheet-bg"></div>
 <aside class="sheet" id="ai-sheet" role="dialog" aria-modal="true" aria-label="This page, written for AI" tabindex="-1">
@@ -1605,8 +1620,53 @@ import Lenis from 'lenis';
       $$('.ld-top > *, .ld-meta > *').forEach(function (e, i) { e.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 900, delay: 100 + i * 80, easing: EO, fill: 'backwards' }); });
       // every hidden state now exists as an animation, so the loader can be shown
       L.classList.add('go');
-      // the strips arrive one after another, like pages being laid down
-      [].forEach.call(stripEls, function (c, i) { c.animate({ transform: ['translateY(-101%)', 'none'] }, { duration: 760 * QQ, delay: i * 85 * QQ, easing: EIO, fill: 'backwards' }); });
+      // Entrance. Try ?intro=1, ?intro=2 or ?intro=3; with no parameter the strips drop in.
+      var IV = (location.search.match(/[?&]intro=(\d)/) || [])[1] || '0';
+      L.classList.add('iv' + IV);
+      var restart = function (delay) {
+        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
+        nmChs.forEach(function (c, i) { c.animate({ transform: ['translate3d(0,1.3em,0) rotate(8deg)', 'none'] }, { duration: 1100 * QQ, delay: (delay + i * 42) * QQ, easing: EO, fill: 'backwards' }); });
+      };
+      if (IV === '1') {
+        // 1. Seams draw down where the strips will split, and the name decodes out of code characters.
+        [].forEach.call(stripEls, function (c, i) { if (i) c.querySelector('b').animate({ transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 900 * QQ, delay: (120 + i * 140) * QQ, easing: EIO, fill: 'backwards' }); });
+        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
+        var finalCh = nmChs.map(function (c) { return c.textContent; }), G = '01<>/{}[]#*+=_', f0 = performance.now();
+        (function dec(t) {
+          var k = (t - f0) / (1100 * QQ);
+          nmChs.forEach(function (c, i) { c.textContent = k * nmChs.length > i + 1 ? finalCh[i] : (k * nmChs.length > i - 3 ? G[(Math.random() * G.length) | 0] : '\u00a0'); });
+          if (k < 1.15) requestAnimationFrame(dec); else nmChs.forEach(function (c, i) { c.textContent = finalCh[i]; });
+        })(f0);
+      } else if (IV === '2') {
+        // 2. A piece of the graph wires itself up (Right Hand and what it's built with), then gives way to the name.
+        var NS = 'http://www.w3.org/2000/svg', gv = document.createElementNS(NS, 'svg');
+        gv.setAttribute('viewBox', '0 0 240 150'); gv.setAttribute('class', 'ld-graph');
+        var hub = [120, 78], spokes = [[34, 30, 'multi-agent'], [206, 26, 'ms graph'], [40, 128, 'bedrock'], [204, 126, 'python']];
+        spokes.forEach(function (sp, i) {
+          var ln = document.createElementNS(NS, 'path'); ln.setAttribute('d', 'M' + hub + 'L' + sp[0] + ' ' + sp[1]); ln.setAttribute('pathLength', '1'); gv.appendChild(ln);
+          ln.animate({ strokeDashoffset: [1, 0] }, { duration: 520 * QQ, delay: (220 + i * 110) * QQ, easing: EO, fill: 'backwards' });
+          var cn = document.createElementNS(NS, 'circle'); cn.setAttribute('cx', sp[0]); cn.setAttribute('cy', sp[1]); cn.setAttribute('r', 3.2); gv.appendChild(cn);
+          cn.animate({ opacity: [0, 1], transform: ['scale(0)', 'none'] }, { duration: 380 * QQ, delay: (560 + i * 110) * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
+          var tx = document.createElementNS(NS, 'text'); tx.setAttribute('x', sp[0]); tx.setAttribute('y', sp[1] + (sp[1] < 78 ? -9 : 16)); tx.setAttribute('text-anchor', 'middle'); tx.textContent = sp[2]; gv.appendChild(tx);
+          tx.animate({ opacity: [0, 1] }, { duration: 300 * QQ, delay: (640 + i * 110) * QQ, fill: 'backwards' });
+        });
+        var sq = document.createElementNS(NS, 'rect'); sq.setAttribute('x', hub[0] - 6); sq.setAttribute('y', hub[1] - 6); sq.setAttribute('width', 12); sq.setAttribute('height', 12); sq.setAttribute('class', 'hub'); gv.appendChild(sq);
+        sq.animate({ transform: ['scale(0) rotate(45deg)', 'none'] }, { duration: 520 * QQ, delay: 60 * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
+        L.appendChild(gv);
+        gv.animate({ opacity: [1, 0], transform: ['none', 'scale(.92)'] }, { duration: 420 * QQ, delay: 1250 * QQ, easing: EO, fill: 'forwards' });
+        nm.animate({ opacity: [0, 1] }, { duration: 220, delay: 1300 * QQ, fill: 'backwards' });
+        restart(1350);
+      } else if (IV === '3') {
+        // 3. A cursor types the name, the way Agent mode types itself out.
+        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); c.style.visibility = 'hidden'; });
+        var caret = document.createElement('span'); caret.className = 'ld-caret'; nm.appendChild(caret);
+        var t1 = 260 * QQ;
+        nmChs.forEach(function (c, i) { setTimeout(function () { c.style.visibility = ''; c.parentNode.insertBefore(caret, c.nextSibling); if (c.parentNode.lastElementChild === caret && c.parentNode.nextSibling) { } }, t1 + i * 70 * QQ + (i > 6 ? 120 * QQ : 0)); });
+        setTimeout(function () { caret.classList.add('done'); }, t1 + nmChs.length * 70 * QQ + 500 * QQ);
+      } else {
+        // 0. The strips arrive one after another, like pages being laid down.
+        [].forEach.call(stripEls, function (c, i) { c.animate({ transform: ['translateY(-101%)', 'none'] }, { duration: 760 * QQ, delay: i * 85 * QQ, easing: EIO, fill: 'backwards' }); });
+      }
       // A small piece of the graph draws itself as things load, and the line under it resolves.
       var e1 = mark.querySelector('.ld-e1'), e2 = mark.querySelector('.ld-e2'), n0 = mark.querySelector('.ld-n0'), n1 = mark.querySelector('.ld-n1'), n2 = mark.querySelector('.ld-n2');
       var PH = [[0, 'reading llms.txt'], [34, 'loading the agents'], [70, 'drawing the graph'], [100, 'ready']], ph = 0, decId;
