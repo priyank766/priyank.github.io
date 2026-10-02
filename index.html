@@ -48,8 +48,8 @@
   --tick: #46443f;
   --accent: #ff4d2e;
   --accent-ink: #ff6a4f;
-  --select: rgba(255, 168, 96, .32);
-  --llm: #c08a5a;
+  --select: #ffb07a; --select-ink: #141412;
+  --llm: #ffa36b;
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
@@ -59,7 +59,7 @@
 }
 :root[data-theme="light"] {
   --bg: #f4f3ef; --bg-2: #ebe9e3; --ink: #141412; --ink-2: #3f3d38; --muted: #6b6862;
-  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(255, 150, 70, .30); --llm: #8a5a32;
+  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: #ffc79c; --select-ink: #141412; --llm: #c95a1c;
   color-scheme: light;
 }
 
@@ -71,7 +71,7 @@ body {
   font-family: var(--serif); font-size: 1.1875rem; line-height: 1.55;
   font-optical-sizing: auto; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
 }
-::selection { background: var(--select); }
+::selection { background: var(--select); color: var(--select-ink); }
 a { color: inherit; text-decoration-line: underline; text-decoration-color: var(--tick); text-decoration-thickness: 1px; text-underline-offset: .2em; transition: text-decoration-color .15s, color .15s; }
 a:hover { text-decoration-color: var(--accent); color: var(--accent-ink); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
@@ -206,7 +206,7 @@ code { font-family: var(--mono); font-size: .78em; }
 /* Projects */
 .projects { display: grid; }
 .proj { display: grid; grid-template-columns: 1fr; gap: 6px 40px; padding: 30px 0; border-top: 1px solid var(--rule); scroll-margin-top: 72px; border-radius: 4px; transition: background-color .8s; }
-.proj.flash { background: var(--select); }
+.proj.flash { background: color-mix(in srgb, var(--select) 22%, transparent); }
 .proj:first-child { border-top: 0; padding-top: 8px; }
 @media (min-width: 700px) { .proj { grid-template-columns: 180px minmax(0, 1fr); } }
 @media (min-width: 900px) {
