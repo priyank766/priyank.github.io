@@ -650,7 +650,7 @@ main:focus, section:focus, article:focus { outline: none; }
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command menu">
   <div class="cmdk-s"><svg class="cmdk-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input id="cmdk-q" type="text" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" aria-label="Search commands" placeholder="Jump to a section, open a project, copy my email" autocomplete="off" autocapitalize="off" spellcheck="false"><kbd>esc</kbd></div>
   <ul class="cmdk-l" id="cmdk-list" role="listbox" aria-label="Commands" data-lenis-prevent></ul>
-  <div class="cmdk-f" aria-hidden="true"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd>move</span><span><kbd>&crarr;</kbd>run</span><span class="cmdk-n" id="cmdk-n"></span></div>
+  <div class="cmdk-f" aria-hidden="true"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd>move</span><span><kbd>&crarr;</kbd>run</span><span><kbd>Ctrl F</kbd>again to search the page</span><span class="cmdk-n" id="cmdk-n"></span></div>
 </div>
 
 <header class="top" id="top">
@@ -1409,6 +1409,11 @@ import Lenis from 'lenis';
         if (isOpen) { close(); return; }
         if (root.classList.contains('sheet-open')) { closeSheet(); setTimeout(open, 450); return; }
         open(); return;
+      }
+      // Ctrl/⌘+F opens this menu too. Pressed again while it's open, it closes the menu and the browser's own find takes over.
+      if ((e.key === 'f' || e.key === 'F') && (e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && !root.classList.contains('sheet-open')) {
+        if (isOpen) { close(); return; }
+        e.preventDefault(); open(); return;
       }
       if (e.key === '/' && !isOpen && !e.metaKey && !e.ctrlKey && !e.altKey) {
         var t = e.target, tag = t && t.tagName;
