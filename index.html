@@ -35,7 +35,7 @@
     var r = document.documentElement; r.classList.add('js');
     // A refresh inside Agent mode comes back to the main page, with the normal loader.
     if (location.hash === '#agent') try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
-    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); if (sessionStorage.getItem('pp-seen')) r.classList.add('repeat'); } catch (e) {}
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); var last = +(localStorage.getItem('pp-intro') || 0); if (Date.now() - last < 12 * 3600e3) r.classList.add('repeat'); } catch (e) {}
     setTimeout(function () { if (!window.__ppReady) r.classList.remove('loading', 'quick'); }, 5000);
     try { if (localStorage.getItem('pp-theme-choice') === 'light') r.setAttribute('data-theme', 'light'); } catch (e) {}
   })();
@@ -1237,10 +1237,16 @@ import Lenis from 'lenis';
         if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(ok, bad); else bad();
       } },
       { g: 'Actions', l: 'Agent mode', h: 'llms.txt', ic: 'doc', k: 'ai llm', run: function () { openSheet(); } },
-      { g: 'Actions', l: 'Toggle theme', h: '', ic: 'theme', k: 'dark light mode', wait: 430, run: function (row, at) {
+      { g: 'Actions', l: 'Toggle theme', h: 'press twice for light', ic: 'theme', k: 'dark light mode', stay: true, run: function (row, at) {
         var light = root.getAttribute('data-theme') === 'light';
-        setTheme(light ? 'dark' : 'light', true, at);
-        setTimeout(function () { say(light ? nextBack() : nextLight(), light ? '' : 'click once to come back'); }, 200);
+        function go(t) { close(true); setTimeout(function () { setTheme(t, true, at); setTimeout(function () { say(t === 'dark' ? nextBack() : nextLight(), t === 'dark' ? '' : 'click once to come back'); }, 200); }, 430); }
+        if (light) { go('dark'); return; }
+        // first press: a roast in the row itself; a second press within a few seconds really switches
+        if (row._armed && Date.now() - row._armed < 3000) { row._armed = 0; row.hint.textContent = row.h; go('light'); return; }
+        row._armed = Date.now();
+        row.hint.textContent = LINES[order[tries++ % LINES.length]].replace(/\.$/, '') + ' · again?';
+        if (!reduce) row.el.animate({ transform: ['translateX(0)', 'translateX(-6px)', 'translateX(5px)', 'translateX(-2px)', 'translateX(0)'] }, { duration: 360, easing: 'ease-out' });
+        clearTimeout(row._t); row._t = setTimeout(function () { row._armed = 0; row.hint.textContent = row.h; }, 3000);
       } },
       { g: 'Elsewhere', l: 'GitHub', h: 'github.com/priyank766', ic: 'out', run: function () { ext('https://github.com/priyank766'); } },
       { g: 'Elsewhere', l: 'X', h: 'x.com/priyank766', ic: 'out', k: 'twitter', run: function () { ext('https://x.com/priyank766'); } },
@@ -1575,12 +1581,19 @@ import Lenis from 'lenis';
     function done() { root.classList.remove('loading', 'quick', 'go'); if (L) L.remove(); if (S) S.remove(); if (lenis) { lenis.start(); resync(true); } }
     var failsafe = setTimeout(function () { h1.style.visibility = ''; done(); fireLoaded(); }, 9000);
     var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+    // A hard refresh (Ctrl+Shift+R) always gets the full intro. It re-downloads the page instead of revalidating it,
+    // so the document comes back with its whole body instead of a tiny 304.
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'reload' && nav.encodedBodySize > 0 && nav.transferSize > nav.encodedBodySize * .5) root.classList.remove('repeat');
+    } catch (e) {}
     if (root.classList.contains('loading')) {
-      try { sessionStorage.setItem('pp-seen', '1'); } catch (e) {}
+      try { if (!root.classList.contains('repeat')) localStorage.setItem('pp-intro', String(Date.now())); } catch (e) {}
       if (lenis) lenis.stop();
       var nm = $('#loader-name'), line = $('#loader-line'), msg = $('#ld-msg'), mark = L.querySelector('.ld-mark');
       var nmChs = splitChars(nm);
-      nmChs.forEach(function (c, i) { c.animate({ transform: ['translate3d(0,1.3em,0) rotate(8deg)', 'none'] }, { duration: 1100, delay: 150 + i * 42, easing: EO, fill: 'backwards' }); });
+      var QQ = root.classList.contains('repeat') ? .45 : 1;
+      nmChs.forEach(function (c, i) { c.animate({ transform: ['translate3d(0,1.3em,0) rotate(8deg)', 'none'] }, { duration: 1100 * QQ, delay: (150 + i * 42) * QQ, easing: EO, fill: 'backwards' }); });
       $$('.ld-top > *, .ld-meta > *').forEach(function (e, i) { e.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 900, delay: 100 + i * 80, easing: EO, fill: 'backwards' }); });
       // every hidden state now exists as an animation, so the loader can be shown
       L.classList.add('go');
@@ -1603,14 +1616,15 @@ import Lenis from 'lenis';
       setTimeout(function () { ready = true; }, 3800);
       var p = 0, t0 = performance.now();
       (function count(t) {
-        var k = Math.min(1, (t - t0) / (root.classList.contains('repeat') ? 1050 : 1900)), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
+        var k = Math.min(1, (t - t0) / (root.classList.contains('repeat') ? 600 : 1900)), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
         p += (goal - p) * .14;
         if (goal - p < .25) p = goal;
         setP(p);
-        if (p >= 100) { setTimeout(exit, 380); return; }
+        if (p >= 100) { setTimeout(exit, root.classList.contains('repeat') ? 120 : 380); return; }
         requestAnimationFrame(count);
       })(t0);
       function exit() {
+        var Q = root.classList.contains('repeat') ? .5 : 1; // quick refresh: same moves, half the time
         try {
           clearTimeout(failsafe);
           var bgEl = L.querySelector('.ld-bg'), H = innerHeight;
@@ -1622,14 +1636,14 @@ import Lenis from 'lenis';
           if (flip) {
             var s = (b.right - a.left) / (lb.right - la.left);
             var dx = a.left - (O.left + (la.left - O.left) * s), dy = a.top - (O.top + (la.top - O.top) * s);
-            nm.animate({ transform: ['none', 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')'] }, { duration: 1150, delay: 120, easing: EIO, fill: 'forwards' });
+            nm.animate({ transform: ['none', 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')'] }, { duration: 1150 * Q, delay: 120 * Q, easing: EIO, fill: 'forwards' });
           } else {
-            nmChs.forEach(function (c, i) { c.animate({ transform: ['none', 'translate3d(0,-1.3em,0) rotate(-6deg)'] }, { duration: 700, delay: i * 25, easing: EIO, fill: 'forwards' }); });
+            nmChs.forEach(function (c, i) { c.animate({ transform: ['none', 'translate3d(0,-1.3em,0) rotate(-6deg)'] }, { duration: 700 * Q, delay: i * 25 * Q, easing: EIO, fill: 'forwards' }); });
           }
-          [].forEach.call(bgEl.children, function (c, i) { c.animate({ transform: ['none', 'translateY(-100%)'] }, { duration: 950, delay: 200 + i * 70, easing: EIO, fill: 'forwards' }); });
+          [].forEach.call(bgEl.children, function (c, i) { c.animate({ transform: ['none', 'translateY(-100%)'] }, { duration: 950 * Q, delay: (200 + i * 70) * Q, easing: EIO, fill: 'forwards' }); });
           line.animate({ transform: ['scaleX(1)', 'scaleX(1)'], opacity: [1, 0] }, { duration: 420, delay: 180, easing: EO, fill: 'forwards' });
-          setTimeout(function () { fireLoaded(); }, 380);
-          setTimeout(function () { h1.style.visibility = ''; done(); }, 1150 + 220);
+          setTimeout(function () { fireLoaded(); }, 380 * Q);
+          setTimeout(function () { h1.style.visibility = ''; done(); }, (1150 + 220) * Q);
           afterLoad.flip = flip;
         } catch (e) { console.error(e); h1.style.visibility = ''; done(); fireLoaded(); }
       }
