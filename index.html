@@ -103,6 +103,7 @@ code { font-family: var(--mono); font-size: .78em; }
 .hero-in a, .hero-in img { pointer-events: auto; }
 .hero h1 { font-size: clamp(3rem, 9.6vw, 8.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 360; font-variation-settings: "opsz" 72; margin: 0 0 clamp(22px, 3vw, 40px) -.04em; }
 .hero h1 .ch { display: inline-block; text-align: center; }
+.hero h1 .wd { display: inline-block; white-space: nowrap; }
 .intro { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 0 32px; align-items: start; max-width: 600px; }
 .portrait { margin: 0; padding-top: 6px; grid-row: 1 / span 3; }
 .intro > .lede, .intro > .facts, .intro > .links { grid-column: 2; }
@@ -282,13 +283,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 /* For AI: a sheet of paper that slides over the page */
 .sheet-bg { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity .4s; }
 .sheet-bg.open { opacity: 1; pointer-events: auto; }
-.sheet { position: fixed; z-index: 61; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: #ede0c4; color: #3a2a1a; box-shadow: -30px 0 80px rgba(0,0,0,.45); transform: translateX(104%); transition: transform .6s cubic-bezier(.77,0,.18,1); display: flex; flex-direction: column; color-scheme: light; }
-.sheet.open { transform: none; }
-.sheet-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px dashed #cdb88f; font-family: "Courier Prime", "Courier New", monospace; font-size: 13px; color: #7d6648; }
+.sheet { position: fixed; z-index: 61; inset: 0; background: #ede0c4; color: #3a2a1a; clip-path: inset(100% 0 0 0); transition: clip-path .8s cubic-bezier(.77,0,.18,1); display: flex; flex-direction: column; color-scheme: light; }
+.sheet.open { clip-path: inset(0 0 0 0); }
+
+.sheet-h { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 820px; margin: 0 auto; padding: 18px 24px; border-bottom: 1px dashed #cdb88f; font-family: "Courier Prime", "Courier New", monospace; font-size: 13px; color: #7d6648; }
 .sheet-h div { display: flex; gap: 8px; }
 .sheet-h button { appearance: none; font: inherit; color: #3a2a1a; background: none; border: 1px solid #b89c6c; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
 .sheet-h button:hover { background: #3a2a1a; color: #ede0c4; border-color: #3a2a1a; }
-.sheet-body { overflow: auto; padding: 24px 24px 48px; font: 15px/1.7 "Courier Prime", "Courier New", monospace; -webkit-overflow-scrolling: touch; }
+.sheet-body { overflow: auto; flex: 1; padding: 28px max(24px, calc(50% - 386px)) 64px; font: 15px/1.7 "Courier Prime", "Courier New", monospace; -webkit-overflow-scrolling: touch; }
 .sheet-body pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 .sheet-body a { color: #7a3e18; }
 .sheet-body .h1 { font-size: 1.45em; }
@@ -322,34 +324,31 @@ html.loading body { overflow: hidden; }
 .js .lit-words .w { opacity: .16; transition: opacity .25s linear; }
 .js .lit-words .w.on { opacity: 1; }
 
-/* ---- cursor ring + magnetic bits + avatar tilt ---- */
-.ring { position: fixed; z-index: 90; left: 0; top: 0; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 1px solid var(--ink); border-radius: 50%; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: width .3s cubic-bezier(.2,.7,.2,1), height .3s cubic-bezier(.2,.7,.2,1), margin .3s cubic-bezier(.2,.7,.2,1), opacity .3s, background-color .3s; }
-.ring.on { opacity: .9; }
-.ring.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--ink); }
-.ring.down { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+/* ---- magnetic bits + avatar tilt ---- */
 .mag { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
 .portrait { perspective: 600px; }
 .portrait img { transition: transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s; will-change: transform; }
 .portrait:hover img { box-shadow: 0 24px 60px -20px rgba(0,0,0,.7); }
 .hero h1 .ch { transition: none; will-change: transform; }
-@media (hover: none), (pointer: coarse) { .ring { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .loader { display: none; }
   .slope.scrub { height: auto; }
   .slope.scrub > .wrap { position: static; min-height: 0; }
   .js .lit-words .w { opacity: 1; }
-  .ring { display: none; }
 }
+
+/* no visible scrollbars anywhere; scrolling still works */
+html, .sheet-body { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar, .sheet-body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <div class="loader" id="loader" aria-hidden="true"><div class="loader-name" id="loader-name"></div><div class="loader-meta"><span>priyank.is-a.dev</span><span><b id="loader-n">000</b> / 100</span></div><div class="loader-line" id="loader-line"></div></div>
-<div class="ring" id="ring" aria-hidden="true"></div>
 <div class="sheet-bg" id="sheet-bg"></div>
 <aside class="sheet" id="ai-sheet" role="dialog" aria-modal="true" aria-label="This page, written for AI" tabindex="-1">
-  <div class="sheet-h"><span>beep boop &middot; this page, written for your AI. Paste it in and ask about me.</span><div><button type="button" id="ai-copy">Copy</button><button type="button" id="ai-close" aria-label="Close">Close</button></div></div>
+  <div class="sheet-h"><span>Agent mode &middot; this is what my agents, and yours, read about me</span><div><button type="button" id="ai-copy">Copy</button><button type="button" id="ai-close">Back to human mode</button></div></div>
   <div class="sheet-body"><pre id="ai-txt">Loading&hellip;</pre></div>
 </aside>
 
@@ -362,7 +361,7 @@ html.loading body { overflow: hidden; }
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
-      <button class="llm" id="forai" type="button" aria-haspopup="dialog" aria-controls="ai-sheet" title="This page, rewritten for your AI">beep boop</button>
+      <button class="llm" id="forai" type="button" aria-haspopup="dialog" aria-controls="ai-sheet" title="See this page the way an AI agent reads it">Agent mode</button>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
       </button>
@@ -635,7 +634,7 @@ html.loading body { overflow: hidden; }
   (function () {
     if (reduce) return;
     var finalTxt = h1.textContent, letters = finalTxt.replace(/ /g, '').split('');
-    h1.innerHTML = finalTxt.split('').map(function (c) { return c === ' ' ? ' ' : '<span class="ch">' + c + '</span>'; }).join('');
+    h1.innerHTML = finalTxt.split(' ').map(function (w) { return '<span class="wd">' + w.split('').map(function (c) { return '<span class="ch">' + c + '</span>'; }).join('') + '</span>'; }).join(' ');
     var chs = [].slice.call(h1.querySelectorAll('.ch'));
     window.__afterLoad(function () {
       chs.forEach(function (c) { c.style.width = c.getBoundingClientRect().width + 'px'; });
@@ -706,16 +705,9 @@ html.loading body { overflow: hidden; }
     window.addEventListener('scroll', function () { requestAnimationFrame(light); }, { passive: true }); light();
   })();
 
-  /* Cursor ring, magnetic links and an avatar that tilts toward the pointer (mouse only). */
+  /* Magnetic links and an avatar that tilts toward the pointer (mouse only). */
   (function () {
     if (reduce || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    var ring = $('#ring'), x = -100, y = -100, rx = -100, ry = -100;
-    document.addEventListener('pointermove', function (e) { x = e.clientX; y = e.clientY; ring.classList.add('on'); });
-    document.addEventListener('pointerleave', function () { ring.classList.remove('on'); });
-    document.addEventListener('pointerdown', function () { ring.classList.add('down'); });
-    document.addEventListener('pointerup', function () { ring.classList.remove('down'); });
-    document.addEventListener('pointerover', function (e) { ring.classList.toggle('big', !!e.target.closest('a, button, .band .nm, .band .ms')); });
-    (function loop() { rx += (x - rx) * .2; ry += (y - ry) * .2; ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)'; requestAnimationFrame(loop); })();
 
     [].forEach.call(document.querySelectorAll('.links a, .contact-links a, .top nav a, .theme, .mail'), function (a) {
       a.classList.add('mag');
