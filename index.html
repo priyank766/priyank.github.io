@@ -970,7 +970,7 @@ import Lenis from 'lenis';
       (function tick(t) {
         if (id !== typing || !isOpen()) return;
         if (t >= start) {
-          n = Math.min(total, n + 3 + ((Math.random() * 4) | 0)); // slightly uneven, like a real stream
+          n = Math.min(total, n + 4 + ((Math.random() * 5) | 0)); // slightly uneven, like a real stream
           pre.innerHTML = render(lines, n);
           var c = pre.querySelector('.caret');
           if (c && c.getBoundingClientRect().bottom > body.getBoundingClientRect().bottom - 48) body.scrollTop += 26;
