@@ -285,6 +285,12 @@ html.lenis, html.lenis body { scroll-behavior: auto !important; height: auto; }
 
 .progress { position: fixed; z-index: 11; top: 0; left: 0; right: 0; height: 2px; background: var(--glow); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
 @media (min-width: 760px) { .progress { display: none; } }
+/* phone nav: never wider than the screen */
+@media (max-width: 420px) {
+  .top nav { gap: 12px; font-size: .8125rem; }
+  .top nav a[href="#now"] { display: none; }
+}
+@media (max-width: 360px) { .top .me { display: none; } .top .wrap { justify-content: flex-end; } }
 
 /* split text: words never break, letters are their own boxes */
 .sx .wd { display: inline-block; white-space: nowrap; }
@@ -329,7 +335,7 @@ html.lenis, html.lenis body { scroll-behavior: auto !important; height: auto; }
 .rc { display: inline-block; position: relative; transition: transform .6s var(--eo); transition-delay: calc(var(--i, 0) * 14ms); }
 .rc::after { content: attr(data-c); position: absolute; left: 0; top: 100%; }
 @media (hover: hover) { a:hover .rc, button:hover .rc { transform: translateY(-100%); } }
-:focus-visible .rc { transform: translateY(-100%); }
+a:focus-visible .rc, button:focus-visible .rc { transform: translateY(-100%); }
 a:active .rl, button:active .rl { scale: .94; }
 .top nav a, .links a, .contact-links a { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .45s var(--eo), color .2s; padding-bottom: 1px; }
 .links a, .contact-links a { background-size: 100% 1px; background-image: linear-gradient(color-mix(in srgb, currentColor 35%, transparent), color-mix(in srgb, currentColor 35%, transparent)); }
@@ -387,14 +393,14 @@ a:active .rl, button:active .rl { scale: .94; }
 .sheet-bg.open { opacity: 1; pointer-events: auto; }
 .sheet { position: fixed; z-index: 61; inset: 0; background-color: #ede0c4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .23 0 0 0 0 .16 0 0 0 0 .1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); color: #3a2a1a; clip-path: inset(0 0 100% 0); visibility: hidden; transition: clip-path .95s var(--eio), visibility 0s linear .95s; display: flex; flex-direction: column; color-scheme: light; }
 .sheet.open { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path .95s var(--eio), visibility 0s; }
-.sheet::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #ff5a3c; }
+.sheet::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); }
 .sheet-h, .sheet-body { transform: translateY(-80px); transition: transform .95s var(--eio); }
 .sheet.open .sheet-h, .sheet.open .sheet-body { transform: none; }
 .sheet-h { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 820px; margin: 0 auto; padding: 18px 24px; border-bottom: 1px dashed #cdb88f; font-family: "Courier Prime", "Courier New", monospace; font-size: 13px; color: #7d6648; }
 .sheet-h div { display: flex; gap: 8px; }
 .sheet-h button { appearance: none; font: inherit; color: #3a2a1a; background: none; border: 1px solid #b89c6c; border-radius: 4px; padding: 4px 10px; cursor: pointer; position: relative; overflow: hidden; isolation: isolate; transition: color .35s var(--eo), border-color .35s, scale .2s var(--eo); }
 .sheet-h button:active { scale: .93; }
-.sheet-h button:focus-visible { outline: 2px solid #ff5a3c; outline-offset: 2px; }
+.sheet-h button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .bfill { position: absolute; inset: -1px; z-index: -1; pointer-events: none; clip-path: circle(0 at var(--fx, 50%) var(--fy, 50%)); transition: clip-path .6s var(--eo); }
 /* Back to human mode: ink floods in from wherever the pointer entered */
 #ai-close .bfill { background: #3a2a1a; }
@@ -405,12 +411,13 @@ a:active .rl, button:active .rl { scale: .94; }
 /* Copy: an orange fill bursts from the click point and the label rolls to Copied with a drawn check */
 #ai-copy { min-width: 0; }
 #ai-copy:hover { border-color: #3a2a1a; }
-#ai-copy .bfill { background: #ff5a3c; transition: clip-path .7s var(--eo); }
+#ai-copy .bfill { background: var(--accent); transition: clip-path .7s var(--eo); }
 #ai-copy.done .bfill { clip-path: circle(160% at var(--fx, 50%) var(--fy, 50%)); }
-#ai-copy.done { border-color: #ff5a3c; }
+#ai-copy.done { border-color: var(--accent); }
 #ai-copy.back .bfill { transition: clip-path .55s var(--eio); }
 .cp-lab { display: grid; overflow: hidden; }
-.cp-lab > span { grid-area: 1 / 1; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
+.cp-lab > span { grid-area: 1 / 1; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.cp-b svg { margin-right: 5px; }
 .cp-lab .rc2 { display: inline-block; transition: transform .55s var(--eo); transition-delay: calc(var(--i, 0) * 28ms); }
 .cp-b .rc2 { transform: translateY(115%); }
 #ai-copy.done .cp-a .rc2 { transform: translateY(-115%); }
@@ -432,6 +439,50 @@ a:active .rl, button:active .rl { scale: .94; }
 .sheet-body .caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -3px; background: #3a2a1a; animation: blink 1s steps(1) infinite; }
 .sheet ::selection { background: rgba(255, 90, 60, .996); color: #141412; }
 html.sheet-open body { overflow: hidden; }
+
+/* command menu: opens on Ctrl/Cmd+K or "/" */
+.kbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted); transition: color .2s, scale .2s var(--eo); }
+.kbtn kbd { display: inline-block; font-family: var(--mono); font-size: 11px; line-height: 1; padding: 4px 6px 3px; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px; transition: border-color .2s, translate .15s; }
+.kbtn:hover { color: var(--ink); }
+.kbtn:hover kbd { border-color: var(--tick); }
+.kbtn:active kbd { translate: 0 1px; border-bottom-width: 1px; margin-bottom: 1px; }
+@media (max-width: 759px), (hover: none) { .kbtn { display: none; } }
+.cmdk-bg { position: fixed; inset: 0; z-index: 70; background: rgba(0, 0, 0, .5); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: opacity .4s var(--eo); }
+.cmdk-bg.open { opacity: 1; pointer-events: auto; }
+.cmdk { position: fixed; z-index: 71; left: 0; right: 0; top: max(64px, 13vh); margin: 0 auto; width: min(620px, calc(100vw - 32px)); background: var(--bg-2); color: var(--ink); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 40px 120px -24px rgba(0, 0, 0, .65); font-family: var(--sans); overflow: hidden; visibility: hidden; opacity: 0; transform: translateY(-16px) scale(.96); transform-origin: 50% 0; clip-path: inset(0 0 100% 0 round 14px); transition: opacity .25s var(--eo), transform .6s var(--eo), clip-path .55s var(--eio), visibility 0s .6s; }
+.cmdk.open { visibility: visible; opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 14px); transition: opacity .25s var(--eo), transform .6s var(--eo), clip-path .6s var(--eo), visibility 0s; }
+.cmdk-s { position: relative; display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
+.cmdk-s::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--rule); }
+.cmdk-s::before { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform .9s var(--eio) .15s; }
+.cmdk.open .cmdk-s::before { transform: scaleX(var(--qk, .12)); transition: transform .5s var(--eo); }
+.cmdk-ic { width: 16px; height: 16px; color: var(--muted); flex: none; transition: color .2s; }
+.cmdk-s:focus-within .cmdk-ic { color: var(--accent); }
+.cmdk-s input { flex: 1; min-width: 0; appearance: none; background: none; border: 0; outline: 0; color: var(--ink); font: 400 16px/1.4 var(--sans); caret-color: var(--accent); padding: 0; }
+.cmdk-s input::placeholder { color: var(--muted); opacity: 1; }
+.cmdk kbd { font-family: var(--mono); font-size: 10.5px; line-height: 1; color: var(--ink-2); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 3px 5px 2px; }
+.cmdk-l { list-style: none; margin: 0; padding: 6px; max-height: min(392px, 56vh); overflow: auto; position: relative; scrollbar-width: none; overscroll-behavior: contain; }
+.cmdk-l::-webkit-scrollbar { display: none; }
+.cmdk-g { font-family: var(--mono); font-size: 11px; color: var(--muted); padding: 10px 10px 5px; }
+.ck { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: var(--ink-2); font-size: 14.5px; line-height: 1.35; transition: color .2s; user-select: none; -webkit-user-select: none; }
+.ck svg { width: 15px; height: 15px; flex: none; color: var(--muted); transition: color .2s; }
+.ck .ck-l { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ck .ck-h { font-family: var(--mono); font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%; transition: color .2s; }
+.ck mark { background: none; color: var(--accent); }
+.ck[aria-selected="true"] { color: #141412; }
+.ck[aria-selected="true"] svg, .ck[aria-selected="true"] .ck-h { color: #141412; }
+.cmdk-l [hidden] { display: none !important; }
+.ck[aria-selected="true"] mark { color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em; }
+.ck.ok .ck-h { color: #141412; }
+.ck-pill { position: absolute; z-index: 0; left: 6px; right: 6px; top: 0; height: 0; border-radius: 8px; background: var(--accent); pointer-events: none; transition: transform .38s var(--eo), height .38s var(--eo); }
+.cmdk.open .ck:not([hidden]) { animation: ck-in .55s var(--eo) backwards; animation-delay: calc(var(--n, 0) * 22ms + 120ms); }
+@keyframes ck-in { from { opacity: 0; transform: translateY(8px); } }
+.cmdk-e { padding: 30px 16px 34px; text-align: center; color: var(--muted); font-size: 14px; }
+.cmdk-e b { color: var(--ink); font-weight: 500; }
+.cmdk-f { display: flex; gap: 16px; align-items: center; padding: 9px 14px; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.cmdk-f kbd { margin-right: 4px; }
+.cmdk-n { margin-left: auto; display: inline-block; font-variant-numeric: tabular-nums; }
+@media (max-width: 599px) { .cmdk-f { display: none; } .ck .ck-h { display: none; } }
+html.cmdk-open body { overflow: hidden; }
 
 /* loading screen: first visit of a session */
 .loader { display: none; }
@@ -463,8 +514,8 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
 
 /* timeline is scrubbed by scroll on desktop */
 @media (min-width: 760px) {
-  .slope.scrub { height: 230vh; padding: 0; }
-  .slope.scrub > .wrap { position: sticky; top: 56px; min-height: calc(100vh - 56px); display: flex; flex-direction: column; justify-content: center; padding-top: 24px; padding-bottom: 24px; }
+  .js .slope.scrub { height: 230vh; padding: 0; }
+  .js .slope.scrub > .wrap { position: sticky; top: 56px; min-height: calc(100vh - 56px); display: flex; flex-direction: column; justify-content: center; padding-top: 24px; padding-bottom: 24px; }
 }
 
 /* Now: words light up as you read */
@@ -475,10 +526,10 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
   *, *::before, *::after { transition-duration: .01ms !important; transition-delay: 0s !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
   .loader, .shutter, .progress { display: none !important; }
   html.loading body { overflow: auto; }
-  .slope.scrub { height: auto; }
-  .slope.scrub > .wrap { position: static; min-height: 0; }
+  .js .slope.scrub { height: auto; }
+  .js .slope.scrub > .wrap { position: static; min-height: 0; }
   .js .lit-words .w { color: inherit; }
-  .sheet-body .pl { animation: none !important; }
+  .sheet-body .pl, .cmdk .ck { animation: none !important; }
   .sheet-h, .sheet-body { transform: none; }
 }
 
@@ -501,6 +552,12 @@ main:focus, section:focus, article:focus { outline: none; }
   <div class="sheet-h"><span>Agent mode &middot; this is what my agents, and yours, read about me</span><div><button type="button" id="ai-copy" aria-label="Copy"><span class="bfill" aria-hidden="true"></span><span class="cp-lab" aria-hidden="true"><span class="cp-a">Copy</span><span class="cp-b"><svg viewBox="0 0 12 12"><path d="M2 6.6 4.7 9.2 10 3.2"/></svg><span class="cp-t">Copied</span></span></span></button><button type="button" id="ai-close"><span class="bfill" aria-hidden="true"></span><span class="arw" aria-hidden="true"><svg viewBox="0 0 14 10" width="11" height="9"><path d="M13 5H1.5M5 1 1 5l4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Back to human mode</span></button></div><span class="vh" role="status" id="ai-status"></span></div>
   <div class="sheet-body" data-lenis-prevent><pre id="ai-txt">Loading&hellip;</pre></div>
 </aside>
+<div class="cmdk-bg" id="cmdk-bg"></div>
+<div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command menu">
+  <div class="cmdk-s"><svg class="cmdk-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input id="cmdk-q" type="text" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" aria-label="Search commands" placeholder="Jump to a section, open a project, copy my email" autocomplete="off" autocapitalize="off" spellcheck="false"><kbd>esc</kbd></div>
+  <ul class="cmdk-l" id="cmdk-list" role="listbox" aria-label="Commands" data-lenis-prevent></ul>
+  <div class="cmdk-f" aria-hidden="true"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd>move</span><span><kbd>&crarr;</kbd>run</span><span class="cmdk-n" id="cmdk-n"></span></div>
+</div>
 
 <header class="top" id="top">
   <div class="wrap">
@@ -511,6 +568,7 @@ main:focus, section:focus, article:focus { outline: none; }
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
+      <button class="kbtn" id="kbtn" type="button" aria-haspopup="dialog" aria-controls="cmdk" aria-expanded="false" aria-keyshortcuts="Control+K Meta+K /" aria-label="Open the command menu" hidden><kbd>Ctrl K</kbd></button>
       <button class="llm" id="forai" type="button" aria-haspopup="dialog" aria-controls="ai-sheet" title="See this page the way an AI agent reads it">Agent mode</button>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
@@ -688,7 +746,7 @@ import Lenis from 'lenis';
   var EO = 'cubic-bezier(.16,1,.3,1)', EIO = 'cubic-bezier(.77,0,.18,1)';
   var expoOut = function (k) { return k >= 1 ? 1 : 1 - Math.pow(2, -10 * k); };
   var backOut = function (k) { var c = 1.70158; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
-  var quintIO = function (k) { return k < .5 ? 16 * k * k * k * k * k : 1 - Math.pow(-2 * k + 2, 5) / 2; };
+  var quartIO = function (k) { return k < .5 ? 8 * k * k * k * k : 1 - Math.pow(-2 * k + 2, 4) / 2; };
   var esc = function (x) { return x.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 
   /* Anything that should wait for the loading screen or the shutters queues here. */
@@ -720,9 +778,9 @@ import Lenis from 'lenis';
     if (opt.center && !stacked && el.offsetHeight < window.innerHeight - 120) y = flowTop(el) - (window.innerHeight - el.offsetHeight) / 2;
     y = Math.max(0, Math.min(y, document.documentElement.scrollHeight - window.innerHeight));
     if (!lenis) { window.scrollTo({ top: y, behavior: 'auto' }); return; }
-    var dist = Math.abs(y - window.scrollY), dur = clamp(.85 + dist / 4200, .9, 2.1);
+    var dist = Math.abs(y - window.scrollY), dur = clamp(.9 + dist / 3200, 1, 2.4);
     jumping = true; if (top) top.classList.remove('hide');
-    lenis.scrollTo(y, { duration: dur, easing: quintIO, force: true, onComplete: function () { jumping = false; arrive(el); } });
+    lenis.scrollTo(y, { duration: dur, easing: quartIO, force: true, onComplete: function () { jumping = false; arrive(el); } });
     clearTimeout(jumpT); jumpT = setTimeout(function () { jumping = false; }, dur * 1000 + 400);
   }
   var jumping = false, jumpT = null;
@@ -787,6 +845,7 @@ import Lenis from 'lenis';
     el.textContent = ''; el.appendChild(vh); el.appendChild(rl);
   }
 
+  var openSheet = function () {}, closeSheet = function () {};
   /* ---------- Agent mode: the same summary agents read at /llms.txt, on paper that unrolls and prints ---------- */
   (function () {
     var b = $('#forai'), sh = $('#ai-sheet'), bg = $('#sheet-bg'), pre = $('#ai-txt'), raw = '', last = null, body = sh.querySelector('.sheet-body');
@@ -808,22 +867,41 @@ import Lenis from 'lenis';
         pre.innerHTML = lines.map(function (ln, i) { return '<span class="pl" style="--i:' + i + '">' + fmt(ln) + (i === lines.length - 1 ? '<span class="caret" aria-hidden="true"></span>' : '') + '</span>'; }).join('');
       }).catch(function () { pre.textContent = 'Could not load it. It lives at /llms.txt.'; });
     }
-    function open() {
-      last = document.activeElement; load(); body.scrollTop = 0;
+    // Agent mode lives in history (#agent), so Back, the swipe-back gesture and the Back button all return to the page.
+    var pushed = false, keepY = 0;
+    function isOpen() { return sh.classList.contains('open'); }
+    function open(fromHistory) {
+      if (isOpen()) return;
+      last = document.activeElement; keepY = window.scrollY; load(); body.scrollTop = 0;
+      if (!fromHistory) { history.pushState({ agent: 1 }, '', '#agent'); pushed = true; }
       sh.classList.add('open'); bg.classList.add('open'); root.classList.add('sheet-open');
       if (lenis) lenis.stop();
       setTimeout(function () { sh.focus({ preventScroll: true }); }, 60);
     }
     function shut() {
-      if (!sh.classList.contains('open')) return;
+      if (!isOpen()) return;
       sh.classList.remove('open'); bg.classList.remove('open'); root.classList.remove('sheet-open');
       if (lenis) lenis.start();
-      if (last) last.focus({ preventScroll: true });
+      if (Math.abs(window.scrollY - keepY) > 1) { if (lenis) lenis.scrollTo(keepY, { immediate: true, force: true }); else window.scrollTo(0, keepY); }
+      if (last && last.focus) last.focus({ preventScroll: true });
     }
-    b.addEventListener('click', open);
-    bg.addEventListener('click', shut);
-    close.addEventListener('click', shut);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sh.classList.contains('open')) shut(); });
+    // Every way out goes through history when we added the entry, so a second Back leaves the site as usual.
+    function requestClose() {
+      if (!isOpen()) return;
+      if (pushed) { pushed = false; history.back(); }
+      else { shut(); if (location.hash === '#agent') history.replaceState(history.state && history.state.agent ? null : history.state, '', location.pathname + location.search); }
+    }
+    window.addEventListener('popstate', function () {
+      if (location.hash === '#agent') { if (!isOpen()) { open(true); pushed = true; } }
+      else if (isOpen()) { pushed = false; shut(); }
+    });
+    if (location.hash === '#agent') afterLoad(function () { open(true); pushed = false; });
+    openSheet = function () { open(false); };
+    closeSheet = requestClose;
+    b.addEventListener('click', function () { open(false); });
+    bg.addEventListener('click', requestClose);
+    close.addEventListener('click', requestClose);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen() && !root.classList.contains('cmdk-open')) requestClose(); });
     // Fills grow from where the pointer touched the button.
     function at(btn, e) {
       var r = btn.getBoundingClientRect(), kb = !e || (e.clientX === 0 && e.clientY === 0);
@@ -912,8 +990,8 @@ import Lenis from 'lenis';
   }
   // The wipe: a circle of the new theme grows from the button with a glowing rim, the old page recedes,
   // and letters on screen flip as the edge of the circle passes them.
-  function wipe(apply) {
-    var c = btnCenter(), x = c.x, y = c.y;
+  function wipe(apply, origin) {
+    var c = origin || btnCenter(), x = c.x, y = c.y;
     var R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)), DUR = 1150;
     if (reduce) { apply(); return; }
     if (!document.startViewTransition) {
@@ -951,8 +1029,8 @@ import Lenis from 'lenis';
     vt.finished.then(function () { if (ring) ring.remove(); }, function () { if (ring) ring.remove(); });
   }
   var meta = document.querySelector('meta[name="theme-color"]');
-  function setTheme(t, animate) {
-    if (animate) { wipe(function () { setTheme(t); }); return; }
+  function setTheme(t, animate, origin) {
+    if (animate) { wipe(function () { setTheme(t); }, origin); return; }
     if (t === 'light') root.setAttribute('data-theme', 'light'); else root.removeAttribute('data-theme');
     try { if (t === 'light') localStorage.setItem('pp-theme-choice', 'light'); else localStorage.removeItem('pp-theme-choice'); } catch (e) {}
     btn.setAttribute('aria-label', t === 'light' ? 'Back to dark mode' : 'Switch to light mode (double click)');
@@ -971,6 +1049,176 @@ import Lenis from 'lenis';
       say(line, tries >= 6 ? 'fine, if you really mean it: double click' : '');
     }, 280);
   });
+
+  /* ---------- Command menu: Ctrl/Cmd+K or "/" ---------- */
+  (function () {
+    var kb = $('#kbtn'), dlg = $('#cmdk'), bgd = $('#cmdk-bg'), q = $('#cmdk-q'), list = $('#cmdk-list'), cnt = $('#cmdk-n'), last = null, isOpen = false, sel = 0, shown = [];
+    var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    kb.querySelector('kbd').textContent = mac ? '\u2318K' : 'Ctrl K'; kb.hidden = false;
+    var IC = {
+      go: '<path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+      sq: '<rect x="4.5" y="4.5" width="7" height="7" fill="currentColor"/>',
+      copy: '<rect x="5.5" y="5.5" width="7.5" height="7.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 10.5V4a1 1 0 0 1 1-1h6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+      doc: '<path d="M4 2.5h5.5L12.5 5.5V13a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 8h4.5M6 10.5h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+      theme: '<circle cx="8" cy="8" r="5.25" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 2.75a5.25 5.25 0 0 1 0 10.5z" fill="currentColor"/>',
+      out: '<path d="M6 3.5H3.5v9h9V10M9 3h4v4M13 3 7.5 8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+      ok: '<path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"><animate attributeName="stroke-dashoffset" from="1" to="0" dur=".4s" fill="freeze"/></path>'
+    };
+    function jump(id, center) { var el = $(id); if (!el) return; scrollToEl(el, { center: center }); if (center) setTimeout(function () { el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1200); }, 1100); }
+    function ext(u) { window.open(u, '_blank', 'noopener'); }
+    var EMAIL = 'priyank8445@gmail.com';
+    var items = [
+      { g: 'Go to', l: 'Work', h: 'SaarthiOS, since June 2026', ic: 'go', run: function () { jump('#now'); } },
+      { g: 'Go to', l: 'Projects', h: 'Built on my own time', ic: 'go', run: function () { jump('#projects'); } },
+      { g: 'Go to', l: 'Open source', h: 'Kubeflow, a CNCF project', ic: 'go', run: function () { jump('#oss'); } },
+      { g: 'Go to', l: 'Contact', h: 'UTC+5:30', ic: 'go', run: function () { jump('#contact'); } },
+      { g: 'Projects', l: 'Anchor', h: 'May 2026', ic: 'sq', run: function () { jump('#anchor', true); } },
+      { g: 'Projects', l: 'RLM', h: 'May 2026', ic: 'sq', run: function () { jump('#rlm', true); } },
+      { g: 'Projects', l: 'Hermes-BIO', h: 'April 2026', ic: 'sq', run: function () { jump('#hermes-bio', true); } },
+      { g: 'Projects', l: 'Review Suite', h: 'August 2026', ic: 'sq', run: function () { jump('#review-suite', true); } },
+      { g: 'Projects', l: 'Cortex', h: 'March 2026', ic: 'sq', run: function () { jump('#cortex', true); } },
+      { g: 'Actions', l: 'Copy email', h: EMAIL, ic: 'copy', stay: true, k: 'mail address', run: function (row) {
+        var ok = function () { confirm(row, 'Copied'); }, bad = function () { confirm(row, 'Press Ctrl+C', true); };
+        if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(ok, bad); else bad();
+      } },
+      { g: 'Actions', l: 'Agent mode', h: 'llms.txt', ic: 'doc', k: 'ai llm', run: function () { openSheet(); } },
+      { g: 'Actions', l: 'Toggle theme', h: '', ic: 'theme', k: 'dark light mode', run: function (row, at) {
+        var light = root.getAttribute('data-theme') === 'light';
+        setTheme(light ? 'dark' : 'light', true, at);
+        setTimeout(function () { say(light ? 'Welcome back.' : 'Fine. You asked for it.', light ? '' : 'click once to come back'); }, 200);
+      } },
+      { g: 'Elsewhere', l: 'GitHub', h: 'github.com/priyank766', ic: 'out', run: function () { ext('https://github.com/priyank766'); } },
+      { g: 'Elsewhere', l: 'X', h: 'x.com/priyank766', ic: 'out', k: 'twitter', run: function () { ext('https://x.com/priyank766'); } },
+      { g: 'Elsewhere', l: 'LinkedIn', h: 'linkedin.com/in/priyank766', ic: 'out', run: function () { ext('https://www.linkedin.com/in/priyank766/'); } }
+    ];
+    // Build every row once; filtering only hides, reorders nothing, and glides what stays.
+    var groups = {}, pill = document.createElement('li'), empty = document.createElement('li');
+    pill.className = 'ck-pill'; pill.setAttribute('aria-hidden', 'true'); list.appendChild(pill);
+    items.forEach(function (it, i) {
+      if (!groups[it.g]) { var gh = document.createElement('li'); gh.className = 'cmdk-g'; gh.setAttribute('role', 'presentation'); gh.textContent = it.g; list.appendChild(gh); groups[it.g] = { el: gh, rows: [] }; }
+      var li = document.createElement('li'); li.className = 'ck'; li.id = 'ck-' + i; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false');
+      li.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true">' + IC[it.ic] + '</svg><span class="ck-l"></span><span class="ck-h"></span>';
+      it.el = li; it.lab = li.querySelector('.ck-l'); it.hint = li.querySelector('.ck-h'); it.svg = li.querySelector('svg');
+      it.hint.textContent = it.h; it.lab.textContent = it.l;
+      li.addEventListener('pointermove', function () { if (shown[sel] !== it) select(shown.indexOf(it)); });
+      li.addEventListener('click', function () { select(shown.indexOf(it)); run(); });
+      list.appendChild(li); groups[it.g].rows.push(it);
+    });
+    empty.className = 'cmdk-e'; empty.setAttribute('role', 'presentation'); empty.hidden = true; list.appendChild(empty);
+    // Fuzzy match: letters in order, consecutive and word-start hits score higher; matches are marked in orange.
+    function match(it, s) {
+      if (!s) return { score: 0, idx: [] };
+      var l = it.l.toLowerCase(), idx = [], j = 0, score = 0, prev = -2;
+      for (var i = 0; i < l.length && j < s.length; i++) if (l[i] === s[j]) { idx.push(i); score += (i === prev + 1 ? 3 : 1) + (i === 0 || l[i - 1] === ' ' || l[i - 1] === '-' ? 2 : 0); prev = i; j++; }
+      if (j === s.length) return { score: score, idx: idx };
+      var hay = (it.h + ' ' + (it.k || '') + ' ' + it.g).toLowerCase();
+      return hay.indexOf(s) >= 0 ? { score: .5, idx: [] } : null;
+    }
+    function filter(animate) {
+      var s = q.value.trim().toLowerCase(), before = new Map();
+      if (animate) items.forEach(function (it) { if (!it.el.hidden) before.set(it, it.el.offsetTop); });
+      shown = [];
+      Object.keys(groups).forEach(function (g) {
+        var any = false;
+        groups[g].rows.forEach(function (it) {
+          var m = match(it, s), on = !!m, was = !it.el.hidden;
+          it.el.hidden = !on;
+          if (on) {
+            any = true; shown.push(it);
+            it.lab.innerHTML = m.idx.length ? Array.from(it.l).map(function (c, i) { return m.idx.indexOf(i) >= 0 ? '<mark>' + esc(c) + '</mark>' : esc(c); }).join('') : esc(it.l);
+            if (!was) it.el.style.setProperty('--n', 0);
+          }
+        });
+        groups[g].el.hidden = !any;
+      });
+      empty.hidden = shown.length > 0;
+      if (!shown.length) empty.innerHTML = 'Nothing matches <b>' + esc(q.value.trim()) + '</b>';
+      if (animate && !reduce) shown.forEach(function (it) {
+        var y0 = before.get(it); if (y0 == null) return;
+        var dy = y0 - it.el.offsetTop; if (Math.abs(dy) > .5) it.el.animate({ transform: ['translateY(' + dy + 'px)', 'none'] }, { duration: 380, easing: EO });
+      });
+      var n = cnt.textContent, nn = shown.length + (shown.length === 1 ? ' result' : ' results');
+      if (n !== nn) { cnt.textContent = nn; if (animate && !reduce) cnt.animate({ transform: ['translateY(-7px)', 'none'], opacity: [0, 1] }, { duration: 320, easing: EO }); }
+      dlg.style.setProperty('--qk', s ? Math.min(1, .12 + s.length / 14).toFixed(3) : '.12');
+      select(0, true);
+    }
+    function select(i, jumpPill) {
+      if (!shown.length) { pill.style.opacity = '0'; q.removeAttribute('aria-activedescendant'); return; }
+      sel = (i + shown.length) % shown.length;
+      items.forEach(function (it) { it.el.setAttribute('aria-selected', it === shown[sel] ? 'true' : 'false'); });
+      var el = shown[sel].el;
+      q.setAttribute('aria-activedescendant', el.id);
+      pill.style.opacity = '1';
+      if (jumpPill) pill.style.transition = 'none';
+      pill.style.transform = 'translateY(' + el.offsetTop + 'px)'; pill.style.height = el.offsetHeight + 'px';
+      if (jumpPill) { void pill.offsetWidth; pill.style.transition = ''; }
+      var t = el.offsetTop, b = t + el.offsetHeight;
+      if (t < list.scrollTop + 6) list.scrollTop = t - 30; else if (b > list.scrollTop + list.clientHeight - 6) list.scrollTop = b - list.clientHeight + 8;
+    }
+    function confirm(row, msg, fail) {
+      var it = shown[sel]; if (!it) return;
+      it.el.classList.add('ok'); it.hint.textContent = msg;
+      if (!fail) it.svg.innerHTML = IC.ok;
+      it.hint.animate({ transform: ['translateY(8px)', 'none'], opacity: [0, 1] }, { duration: 360, easing: EO });
+      setTimeout(function () { close(); setTimeout(function () { it.el.classList.remove('ok'); it.hint.textContent = it.h; it.svg.innerHTML = IC[it.ic]; }, 500); }, fail ? 1600 : 850);
+    }
+    function run() {
+      var it = shown[sel];
+      if (!it) { if (!reduce) dlg.querySelector('.cmdk-s').animate({ transform: ['translateX(0)', 'translateX(-7px)', 'translateX(6px)', 'translateX(-3px)', 'translateX(0)'] }, { duration: 380, easing: 'ease-out' }); return; }
+      var r = it.el.getBoundingClientRect(), at = { x: r.left + 24, y: r.top + r.height / 2 };
+      it.el.animate({ scale: [1, .97, 1] }, { duration: 260, easing: EO });
+      if (it.stay) { it.run(it, at); return; }
+      close(true);
+      setTimeout(function () { it.run(it, at); }, 90);
+    }
+    function open() {
+      if (isOpen) return; isOpen = true;
+      last = document.activeElement;
+      q.value = '';
+      var th = items[11]; th.h = root.getAttribute('data-theme') === 'light' ? 'back to dark' : 'switch to light'; th.hint.textContent = th.h;
+      items.forEach(function (it, i) { it.el.style.setProperty('--n', i); });
+      filter(false); list.scrollTop = 0;
+      dlg.classList.add('open'); bgd.classList.add('open'); root.classList.add('cmdk-open'); kb.setAttribute('aria-expanded', 'true');
+      if (lenis) lenis.stop();
+      q.focus({ preventScroll: true });
+      requestAnimationFrame(function () { select(0, true); });
+    }
+    function close(forAction) {
+      if (!isOpen) return; isOpen = false;
+      dlg.classList.remove('open'); bgd.classList.remove('open'); root.classList.remove('cmdk-open'); kb.setAttribute('aria-expanded', 'false');
+      if (lenis && !root.classList.contains('sheet-open')) lenis.start();
+      if (!forAction && last && last !== document.body && last.focus) last.focus({ preventScroll: true });
+      else q.blur();
+    }
+    kb.addEventListener('click', open);
+    bgd.addEventListener('click', function () { close(); });
+    q.addEventListener('input', function () { filter(true); if (!reduce) dlg.querySelector('.cmdk-ic').animate({ scale: [1, 1.18, 1] }, { duration: 260, easing: EO }); });
+    q.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); select(sel + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); select(sel - 1); }
+      else if (e.key === 'Home' && e.ctrlKey) { e.preventDefault(); select(0); }
+      else if (e.key === 'End' && e.ctrlKey) { e.preventDefault(); select(shown.length - 1); }
+      else if (e.key === 'Enter') { e.preventDefault(); run(); }
+      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+      else if (e.key === 'Tab') e.preventDefault();
+    });
+    // keep focus inside while open
+    dlg.addEventListener('focusout', function (e) { if (isOpen && !dlg.contains(e.relatedTarget)) setTimeout(function () { if (isOpen) q.focus({ preventScroll: true }); }, 0); });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey) && !e.altKey) {
+        e.preventDefault();
+        if (isOpen) { close(); return; }
+        if (root.classList.contains('sheet-open')) { closeSheet(); setTimeout(open, 450); return; }
+        open(); return;
+      }
+      if (e.key === '/' && !isOpen && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        var t = e.target, tag = t && t.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable) || root.classList.contains('sheet-open')) return;
+        e.preventDefault(); open();
+      }
+    });
+    window.addEventListener('resize', function () { if (isOpen) select(sel, true); });
+  })();
 
   /* ---------- Top bar ---------- */
   var top = $('#top'), h1 = $('#hello');
@@ -1029,7 +1277,7 @@ import Lenis from 'lenis';
   }
 
   /* ---------- Text roll and magnetic pull (pointer devices) ---------- */
-  if (!reduce) $$('.top nav a, .top .me, .links a, .contact-links a, #forai').forEach(function (a) { roll(a); });
+  if (!reduce) $$('.top nav a, .links a, .contact-links a, #forai').forEach(function (a) { roll(a); });
   roll($('#ai-close .lbl'));
   var mags = [], active = new Set();
   if (fine && !reduce) {
@@ -1270,10 +1518,12 @@ import Lenis from 'lenis';
     function count(p) {
       [].forEach.call(p.querySelectorAll('.num'), function (n) {
         var fin = n.textContent, to = parseInt(fin.replace(/\D/g, ''), 10), pct = /%$/.test(fin), comma = /,/.test(fin);
+        // count up from the smallest number with the same digits, so the width never jumps
+        var from = Math.pow(10, String(to).length - 1);
         n.style.minWidth = n.getBoundingClientRect().width + 'px'; n.style.textAlign = 'right';
         var t0 = performance.now() + 250, D = 1600;
         (function step(t) {
-          var k = clamp((t - t0) / D, 0, 1), v = Math.round(to * expoOut(k)), s = comma ? v.toLocaleString('en-US') : String(v);
+          var k = clamp((t - t0) / D, 0, 1), v = Math.round(from + (to - from) * expoOut(k)), s = comma ? v.toLocaleString('en-US') : String(v);
           n.textContent = s + (pct ? '%' : '');
           if (k < 1) requestAnimationFrame(step); else { n.textContent = fin; n.style.minWidth = ''; n.style.textAlign = ''; }
         })(t0);
@@ -1292,7 +1542,7 @@ import Lenis from 'lenis';
     });
 
     // Headings lean with scroll velocity (only those on screen, only with smooth scrolling).
-    if (lenis) {
+    if (lenis && fine) {
       var skewEls = heads.concat($$('.proj h3')), vis = new Set(), sk = 0, applied = false;
       var io2 = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) vis.add(en.target); else { vis.delete(en.target); en.target.style.transform = ''; } }); });
       skewEls.forEach(function (e) { io2.observe(e); });
