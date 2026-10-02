@@ -1,19 +1,13 @@
 # priyank.is-a.dev
 
-Personal site of Priyank Patel, AI Engineer and Forward Deployed Engineer.
+Personal site of Priyank Patel.
 
-One static page. The hero is a live graph of things I've built (squares) and what they're built with (circles): hover a node to trace its connections, click a square to jump to its section. Below it, plain text sections for Work, Open source, Projects and Contact. ⌘K (or `/`) opens a command menu. Light and dark themes follow the system, with a manual toggle.
-
-## Structure
-
-- `index.html` is the whole site: markup, styles (palette as custom properties at the top of the `<style>` block) and the graph script.
-- `public/` holds the CNAME, icons and social image; Vite copies it into `dist/`.
-
-## Develop
+One static page (`index.html`, inline CSS and JS) built with Vite. The middle of the page shows every public repo I've started since June 2025, each name standing on the day it was created, with a few milestones under the line. Hover it on desktop, scroll through it on a phone, or focus it and use the arrow keys. Light and dark themes follow the system, with a manual toggle.
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run dev     # local preview
+npm run build   # writes ./dist, which the Pages workflow deploys
 ```
 
-`npm run build` writes the site to `dist/`. Pushing to `main` deploys it to GitHub Pages through `.github/workflows/deploy-pages.yml`.
+`public/` holds the CNAME, icons, the avatar and the 1200×630 social image.
