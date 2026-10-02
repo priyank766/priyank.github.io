@@ -87,7 +87,7 @@ code { font-family: var(--mono); font-size: .78em; }
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
 
 /* Top bar */
-.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 86%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 95%, transparent); border-bottom: 1px solid transparent; transition: border-color .2s; }
 .top.scrolled { border-bottom-color: var(--rule); }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; font-family: var(--sans); font-size: .875rem; }
 .top .me { text-decoration: none; font-weight: 500; opacity: 0; transition: opacity .25s; }
@@ -860,7 +860,7 @@ import Lenis from 'lenis';
   var lenis = null;
   if (!reduce) {
     // One engine for every scroll: smooth wheel on mouse and trackpad, native touch on phones, and all jumps.
-    lenis = new Lenis({ lerp: .085, wheelMultiplier: .85, smoothWheel: fine, autoRaf: false, autoResize: true });
+    lenis = new Lenis({ lerp: .13, wheelMultiplier: 1, smoothWheel: fine, autoRaf: false, autoResize: true });
     window.__lenis = lenis;
   }
   // Re-measure whenever the page can have changed size, and start from a clean target.
@@ -1963,7 +1963,7 @@ import Lenis from 'lenis';
     var W = 0, H = 0, mx = -1e4, my = -1e4, hover = null, vis = true;
     var introT0 = reduce ? -1e9 : null, armed = false, speed = 1, pulses = [], rings = [];
     function size() {
-      var r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+      var r = cv.getBoundingClientRect(), d = Math.min(1.5, window.devicePixelRatio || 1);
       W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; g.setTransform(d, 0, 0, d, 0, 0);
       var narrow = W < 520, bx = narrow ? 10 : 16, by = narrow ? 18 : 10, bw = W - bx - (narrow ? 100 : 150), bh = H - by - (narrow ? 28 : 70);
       N.forEach(function (n) { var q = (narrow ? M : D)[n.id]; n.hx = bx + q[0] * bw; n.hy = by + q[1] * bh; n.px = n.hx; n.py = n.hy; });
@@ -2041,9 +2041,13 @@ import Lenis from 'lenis';
     };
     var glyph = '01<>/{}[]#*+=_';
     var near = new Set();
+    var odd = false;
     function frame(t) {
       requestAnimationFrame(frame);
       if (!W || !vis || introT0 === null) { if (introT0 === null && W) g.clearRect(0, 0, W, H); return; }
+      // when nothing is happening the drift only needs 30fps; hover, pulses and the intro run at full rate
+      odd = !odd;
+      if (odd && t - introT0 > 2600 && !hover && !pulses.length && !rings.length && mx < -1e3) return;
       var s = t / 1000, it = t - introT0; g.clearRect(0, 0, W, H);
       hover = pick(mx, my, it);
       cv.style.cursor = hover && hover.to ? 'pointer' : 'default';
