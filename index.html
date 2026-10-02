@@ -32,7 +32,7 @@
 <script>
   (function () {
     var r = document.documentElement; r.classList.add('js');
-    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add(sessionStorage.getItem('pp-seen') ? 'quick' : 'loading'); } catch (e) {}
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); if (sessionStorage.getItem('pp-seen')) r.classList.add('repeat'); } catch (e) {}
     setTimeout(function () { if (!window.__ppReady) r.classList.remove('loading', 'quick'); }, 5000);
     try { if (localStorage.getItem('pp-theme-choice') === 'light') r.setAttribute('data-theme', 'light'); } catch (e) {}
   })();
@@ -490,7 +490,9 @@ html.cmdk-open body { overflow: hidden; }
 .loader { display: none; }
 html.loading .loader { display: block; position: fixed; inset: 0; z-index: 100; pointer-events: none; }
 html.loading body { overflow: hidden; }
-.ld-bg { position: absolute; inset: 0; background: var(--bg); }
+.ld-bg { position: absolute; inset: 0; display: flex; }
+.ld-bg i { flex: 1; background: var(--bg); border-left: 1px solid var(--rule); }
+.ld-bg i:first-child { border-left: 0; }
 .ld-top { position: absolute; left: var(--gutter); right: var(--gutter); top: 22px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); }
 .loader-name { position: absolute; left: 50%; top: 50%; translate: -50% -60%; font-family: var(--serif); font-weight: 360; font-size: clamp(3rem, 9.6vw, 8.5rem); line-height: .92; letter-spacing: -.035em; font-variation-settings: "opsz" 72; color: var(--ink); white-space: nowrap; transform-origin: 0 0; }
 .loader-name .wd { clip-path: inset(-.6em -.3em -.5em -.3em); }
@@ -597,7 +599,7 @@ main:focus, section:focus, article:focus { outline: none; }
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
-<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"></div><div class="ld-top"><span>AI product engineer</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
+<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"><i></i><i></i><i></i><i></i><i></i></div><div class="ld-top"><span>AI product engineer</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
 <div class="shutter" id="shutter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 <div class="sheet-bg" id="sheet-bg"></div>
 <aside class="sheet" id="ai-sheet" role="dialog" aria-modal="true" aria-label="This page, written for AI" tabindex="-1">
@@ -1564,7 +1566,7 @@ import Lenis from 'lenis';
       setTimeout(function () { ready = true; }, 3800);
       var p = 0, t0 = performance.now();
       (function count(t) {
-        var k = Math.min(1, (t - t0) / 1900), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
+        var k = Math.min(1, (t - t0) / (root.classList.contains('repeat') ? 1050 : 1900)), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
         p += (goal - p) * .14;
         if (goal - p < .25) p = goal;
         setP(p);
@@ -1587,8 +1589,8 @@ import Lenis from 'lenis';
           } else {
             nmChs.forEach(function (c, i) { c.animate({ transform: ['none', 'translate3d(0,-1.3em,0) rotate(-6deg)'] }, { duration: 700, delay: i * 25, easing: EIO, fill: 'forwards' }); });
           }
-          bgEl.animate({ clipPath: ['inset(0 0 0 0)', 'inset(0 0 100% 0)'] }, { duration: 1150, delay: 200, easing: EIO, fill: 'forwards' });
-          line.animate({ transform: ['translateY(0)', 'translateY(' + (-H) + 'px)'], opacity: [1, 1, 0] }, { duration: 1150, delay: 200, easing: EIO, fill: 'forwards' });
+          [].forEach.call(bgEl.children, function (c, i) { c.animate({ transform: ['none', 'translateY(-100%)'] }, { duration: 950, delay: 200 + i * 70, easing: EIO, fill: 'forwards' }); });
+          line.animate({ transform: ['scaleX(1)', 'scaleX(1)'], opacity: [1, 0] }, { duration: 420, delay: 180, easing: EO, fill: 'forwards' });
           setTimeout(function () { fireLoaded(); }, 380);
           setTimeout(function () { h1.style.visibility = ''; done(); }, 1150 + 220);
           afterLoad.flip = flip;
