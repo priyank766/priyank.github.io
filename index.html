@@ -536,6 +536,39 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
 }
 @media (prefers-reduced-motion: reduce) { .js .proj > div:first-child { position: static; } }
 
+/* Say hello */
+.hello { container-type: inline-size; min-width: 0; }
+.now-line { font-size: clamp(1.125rem, 1.7vw, 1.375rem); line-height: 1.45; color: var(--ink-2); margin: 0 0 14px; max-width: 34em; text-wrap: pretty; }
+.now-line .t { display: inline-block; color: var(--ink); font-variant-numeric: tabular-nums; }
+#contact .mail { display: inline-block; margin: 0; font-size: clamp(1.4rem, 7.4vw, 4.5rem); font-size: min(9.1cqi, 6rem); letter-spacing: -.03em; line-height: 1.08; white-space: nowrap; overflow-wrap: normal; text-decoration: none; padding-bottom: .08em;
+  background-image: linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--tick), var(--tick)); background-repeat: no-repeat; background-position: 0 100%, 0 100%; background-size: 0 2px, 100% 1px; transition: background-size .7s var(--eo), color .2s; }
+#contact .mail:hover, #contact .mail:focus-visible { background-size: 100% 2px, 100% 1px; letter-spacing: -.03em; }
+.mail-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin: 12px 0 0; font-family: var(--sans); font-size: .875rem; color: var(--muted); }
+.mail-sub .mail-app { color: var(--ink-2); }
+.mail-tip { position: relative; display: inline-flex; align-items: center; min-height: 26px; }
+.mail-hint { transition: opacity .3s, translate .4s var(--eo); }
+.mail-tip.ok .mail-hint { opacity: 0; translate: 0 -6px; }
+.mail-ok { position: absolute; left: 0; top: 50%; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font: 500 12px/1 var(--mono); color: #141412; background: var(--accent); border-radius: 999px; padding: 6px 11px 6px 9px; opacity: 0; transform: translateY(-50%) scale(.85); transform-origin: 0 50%; transition: opacity .25s, transform .5s var(--eb); pointer-events: none; }
+.mail-tip.ok .mail-ok { opacity: 1; transform: translateY(-50%); }
+.mail-ok svg { width: 11px; height: 11px; }
+.mail-ok path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .45s var(--eo) .18s; }
+.mail-tip.ok .mail-ok path { stroke-dashoffset: 0; }
+.compose { position: relative; display: flex; align-items: center; gap: 12px; max-width: 36rem; margin: 30px 0 6px; }
+.compose::before, .compose::after { content: ""; position: absolute; left: 0; right: 56px; bottom: 0; height: 1px; background: var(--rule); pointer-events: none; }
+.compose::after { background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform .8s var(--eio); }
+.compose:focus-within::after { transform: none; }
+.compose input[type="text"] { flex: 1; min-width: 0; appearance: none; background: none; border: 0; border-radius: 0; outline: 0; color: var(--ink); font: 400 clamp(1.125rem, 1.9vw, 1.375rem)/1.4 var(--serif); padding: 12px 0; caret-color: var(--accent); }
+.compose input[type="text"]::placeholder { color: var(--muted); font-style: italic; opacity: 1; }
+.compose button { flex: none; position: relative; overflow: hidden; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule); background: none; color: var(--ink-2); display: grid; place-items: center; cursor: pointer; transition: border-color .3s, background-color .3s, color .3s, scale .2s var(--eo); }
+.compose button svg { width: 18px; height: 18px; }
+.compose button:hover, .compose.ready button { background: var(--accent); border-color: var(--accent); color: #141412; }
+.compose button:active { scale: .9; }
+.compose-note { font: 12px/1.5 var(--mono); color: var(--muted); min-height: 1.5em; margin: 8px 0 26px; }
+#contact .contact-links { gap: 10px 28px; font-size: 1rem; }
+#contact .contact-links a { display: inline-flex; align-items: center; gap: 6px; }
+.go-ic { width: 10px; height: 10px; flex: none; transition: translate .5s var(--eo), color .2s; color: var(--muted); }
+#contact .contact-links a:hover .go-ic, #contact .contact-links a:focus-visible .go-ic { translate: 2px -2px; color: var(--accent); }
+
 /* Now: words light up as you read */
 .js .lit-words .w { color: var(--tick); transition: color .35s linear; }
 .js .lit-words .w.on { color: inherit; }
@@ -724,10 +757,18 @@ main:focus, section:focus, article:focus { outline: none; }
 
   <section class="sec" id="contact" aria-labelledby="contact-h">
     <div class="wrap sec-grid">
-      <h2 id="contact-h">Contact</h2>
-      <div>
-        <p class="prose">Email is the fastest way to reach me. I&rsquo;m on India time (UTC+5:30)<span id="clock-wrap" hidden>, where it&rsquo;s <span id="clock"></span> right now</span>.</p>
-        <a class="mail" href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a>
+      <h2 id="contact-h">Say hello<small>Email is the fastest way to reach me</small></h2>
+      <div class="hello">
+        <p class="prose now-line" id="now-line">I&rsquo;m on India time (UTC+5:30).</p>
+        <a class="mail" id="mail" href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a>
+        <p class="mail-sub"><a href="mailto:priyank8445@gmail.com" class="mail-app">Open in your mail app</a><span class="mail-tip"><span class="mail-hint" id="mail-hint" hidden>or click the address to copy it</span><span class="mail-ok" id="mail-ok" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2 6.6 4.7 9.2 10 3.2" pathLength="1"/></svg>Copied</span></span><span class="vh" role="status" id="mail-status"></span></p>
+        <form class="compose" id="compose" action="mailto:priyank8445@gmail.com" method="get" enctype="text/plain">
+          <input type="hidden" name="subject" value="Hello from your site">
+          <label class="vh" for="msg">Your message</label>
+          <input id="msg" name="body" type="text" placeholder="Write it here, I&rsquo;ll read it." autocomplete="off" enterkeyhint="send">
+          <button type="submit" aria-label="Write it in your mail app"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </form>
+        <p class="compose-note" id="compose-note" role="status"></p>
         <ul class="contact-links">
           <li><a href="https://github.com/priyank766">GitHub</a></li>
           <li><a href="https://www.linkedin.com/in/priyank766/">LinkedIn</a></li>
@@ -1239,6 +1280,75 @@ import Lenis from 'lenis';
     window.addEventListener('resize', function () { if (isOpen) select(sel, true); });
   })();
 
+  /* ---------- Say hello: a live line from Ahmedabad, an address you can copy, a one-line composer ---------- */
+  (function () {
+    var line = $('#now-line'), mail = $('#mail'), tip = $('.mail-tip'), hint = $('#mail-hint'), st = $('#mail-status');
+    var form = $('#compose'), input = $('#msg'), note = $('#compose-note'), sendBtn = form.querySelector('button'), EMAIL = 'priyank8445@gmail.com';
+    // what I'm probably doing, by the hour in Ahmedabad
+    function mood(h) {
+      if (h >= 5 && h < 9) return 'I\u2019m probably on my first chai.';
+      if (h >= 9 && h < 13) return 'I\u2019m probably deep in code.';
+      if (h >= 13 && h < 14) return 'Lunch. Back in a bit.';
+      if (h >= 14 && h < 19) return 'I\u2019m probably shipping something.';
+      if (h >= 19 && h < 23) return 'Evening here, but I still read email.';
+      return 'Late here, so I\u2019m either asleep or debugging. Either way, I\u2019ll reply.';
+    }
+    try {
+      var tf = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
+      var hf = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: 'Asia/Kolkata' });
+      var lastT = '', lastM = '', tEl = null;
+      var live = function () {
+        var d = new Date(), t = tf.format(d).replace(/\s?(am|pm)$/i, function (m) { return ' ' + m.trim().toLowerCase(); }), m = mood(parseInt(hf.format(d), 10));
+        if (m !== lastM) { line.innerHTML = 'It\u2019s <span class="t">' + esc(t) + '</span> in Ahmedabad. ' + esc(m); tEl = line.querySelector('.t'); lastM = m; lastT = t; return; }
+        if (t !== lastT) { tEl.textContent = t; lastT = t; if (!reduce) tEl.animate({ transform: ['translateY(-.5em)', 'none'], opacity: [0, 1] }, { duration: 500, easing: EO }); }
+      };
+      live(); setInterval(live, 5000);
+    } catch (e) {}
+    // the address: letters roll on hover; a click copies it (with a modifier key, or without a clipboard, it opens the mail app)
+    if (!reduce) roll(mail);
+    hint.hidden = !navigator.clipboard;
+    var okT = null;
+    mail.addEventListener('click', function (e) {
+      if (!navigator.clipboard || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      navigator.clipboard.writeText(EMAIL).then(function () {
+        tip.classList.remove('ok'); void tip.offsetWidth; tip.classList.add('ok'); st.textContent = 'Email address copied';
+        if (!reduce) [].forEach.call(mail.querySelectorAll('.rc'), function (c, i) {
+          c.animate({ transform: ['translateY(0)', 'translateY(-.14em)', 'translateY(0)'], color: ['inherit', 'var(--accent)', 'inherit'] }, { duration: 520, delay: i * 22, easing: 'cubic-bezier(.3,0,.2,1)' });
+        });
+        clearTimeout(okT); okT = setTimeout(function () { tip.classList.remove('ok'); st.textContent = ''; }, 1900);
+      }, function () { location.href = 'mailto:' + EMAIL; });
+    });
+    // socials get a small arrow that leans out on hover
+    setTimeout(function () { $$('#contact .contact-links a').forEach(function (a) { a.insertAdjacentHTML('beforeend', '<svg class="go-ic" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'); }); }, 0);
+    // the composer hands your words to your own mail app; nothing is sent from here
+    input.addEventListener('input', function () { form.classList.toggle('ready', !!input.value.trim()); });
+    var noteT = null;
+    function say3(txt) {
+      clearTimeout(noteT); note.textContent = '';
+      if (reduce) { note.textContent = txt; return; }
+      var i = 0, chars = Array.from(txt), id = setInterval(function () { i++; note.textContent = chars.slice(0, i).join(''); if (i >= chars.length) clearInterval(id); }, 18);
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var txt = input.value.trim();
+      if (!txt) {
+        if (!reduce) form.animate({ transform: ['translateX(0)', 'translateX(-7px)', 'translateX(6px)', 'translateX(-3px)', 'translateX(0)'] }, { duration: 380, easing: 'ease-out' });
+        input.focus(); return;
+      }
+      var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Hello from your site') + '&body=' + encodeURIComponent(txt);
+      if (!reduce) {
+        var svg = sendBtn.querySelector('svg');
+        svg.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(26px,-26px)', opacity: 0, offset: .45 }, { transform: 'translate(-26px,26px)', opacity: 0, offset: .46 }, { transform: 'none', opacity: 1 }], { duration: 900, easing: EIO });
+        input.animate({ transform: ['none', 'translateX(28px)', 'none'], opacity: [1, 0, 1], offset: [0, .45, 1] }, { duration: 900, easing: EIO });
+        sendBtn.animate({ boxShadow: ['0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent)', '0 0 0 14px transparent'] }, { duration: 700, easing: EO });
+      }
+      say3('Opening your mail app\u2026');
+      setTimeout(function () { location.href = url; }, reduce ? 0 : 420);
+      noteT = setTimeout(function () { say3('If nothing opened, the address above is the way in.'); }, 4200);
+    });
+  })();
+
   /* ---------- Top bar ---------- */
   var top = $('#top'), h1 = $('#hello');
   function onScroll() { top.classList.toggle('scrolled', window.scrollY > 8); top.classList.toggle('past', h1.getBoundingClientRect().bottom < 40); }
@@ -1249,8 +1359,8 @@ import Lenis from 'lenis';
   try {
     istFmt = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
     var ist = function () { return istFmt.format(new Date()).replace(/\s?(am|pm)$/i, function (m) { return ' ' + m.trim().toLowerCase(); }); };
-    var tick = function () { var t = ist(); $('#clock').textContent = t; $('#topclock').textContent = t + ' IST'; var lc = $('#ld-clock'); if (lc) lc.textContent = t + ' IST'; };
-    tick(); setInterval(tick, 30000); $('#clock-wrap').hidden = false;
+    var tick = function () { var t = ist(); $('#topclock').textContent = t + ' IST'; var lc = $('#ld-clock'); if (lc) lc.textContent = t + ' IST'; };
+    tick(); setInterval(tick, 30000);
   } catch (e) {}
 
   /* ---------- The name: split once, decoded on refresh, scattered by scroll ---------- */
@@ -1534,7 +1644,7 @@ import Lenis from 'lenis';
       var m = pj.querySelector('.meta'); if (m) m.style.setProperty('--d', '160ms');
       pj.querySelectorAll('.body p').forEach(function (p, i) { p.style.setProperty('--d', (120 + i * 140) + 'ms'); });
     });
-    var fades = $$('.tl, .mail, .contact-links li');
+    var fades = $$('.tl, .mail, .mail-sub, .compose, .contact-links li');
     fades.forEach(function (e, i) { e.classList.add('rv'); });
     $$('.contact-links li').forEach(function (li, i) { li.style.setProperty('--d', (i * 80) + 'ms'); });
     function count(p) {
@@ -1607,6 +1717,8 @@ import Lenis from 'lenis';
     var lastPh = -1;
     ticks.push(function (t, y) {
       if (y === lastPh || !pVis.size) return; lastPh = y;
+      // only where the heading sits beside its text; stacked layouts would overlap
+      if (innerWidth < 900) { pVis.forEach(function (h) { h.style.translate = ''; }); return; }
       var vh = innerHeight, list2 = [], tops = [];
       pVis.forEach(function (h) { list2.push(h); tops.push(h.getBoundingClientRect().top - (parseFloat(h.style.translate.split(' ')[1]) || 0)); });
       list2.forEach(function (h, i) { h.style.translate = '0 ' + clamp((tops[i] - vh * .45) * -.07, -28, 28).toFixed(2) + 'px'; });
