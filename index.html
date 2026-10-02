@@ -1072,8 +1072,43 @@ import Lenis from 'lenis';
     'Light mode is how bugs find you.',
     'Okay, now you’re just being stubborn.',
     'The vampires who built this site say no.',
-    'Have you tried turning your monitor down instead?'
+    'Have you tried turning your monitor down instead?',
+    'Light mode? Bold move for someone who reads docs at midnight.',
+    'Access denied. Reason: vibes.',
+    'My agents flagged this click as suspicious.',
+    'This button runs on dark matter. Literally.',
+    'You wouldn’t download a sun.',
+    'Light mode requires a signed waiver.',
+    'Click registered. Feelings ignored.',
+    'The theme is load-bearing. Please don’t.',
+    'Even the CSS is judging you right now.',
+    'Somewhere a terminal just cried.'
   ];
+  // What you hear once you actually get to light mode, and when you come back.
+  var TO_LIGHT = [
+    'Fine. You asked for it.',
+    'Okay, sunshine. Don’t say I didn’t warn you.',
+    'Flashbang deployed.',
+    'Lights on. Enjoy your retinas while they last.',
+    'Granted. My GPU is filing a complaint.',
+    'Welcome to the bright side. It’s a lot.',
+    'Light mode unlocked. Achievement: questionable taste.',
+    'There. Happy? The vampires are not.'
+  ];
+  var BACK = [
+    'Welcome back.',
+    'Ah. Much better.',
+    'Told you.',
+    'Your eyes say thank you.',
+    'Back where you belong.',
+    'Dark mode restored. Order is back.',
+    'Phew. That was a scary few seconds.',
+    'Missed you. The shadows did too.',
+    'Good choice. We’ll pretend that never happened.',
+    'And balance is restored to the force.'
+  ];
+  function deck(arr) { var o = arr.map(function (_, i) { return i; }).sort(function () { return Math.random() - .5; }), k = 0; return function () { return arr[o[k++ % o.length]]; }; }
+  var nextLight = deck(TO_LIGHT), nextBack = deck(BACK);
   var order = LINES.map(function (_, i) { return i; }).sort(function () { return Math.random() - .5; }), tries = 0, rt0, typeId;
   // The roast types itself out; the box is sized to the full line first so it never jitters.
   function say(msg, sub) {
@@ -1160,8 +1195,8 @@ import Lenis from 'lenis';
   setTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
   var clickTimer = null;
   btn.addEventListener('click', function () {
-    if (root.getAttribute('data-theme') === 'light') { setTheme('dark', true); say('Welcome back.'); return; }
-    if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; setTheme('light', true); say('Fine. You asked for it.', 'click once to come back'); return; }
+    if (root.getAttribute('data-theme') === 'light') { setTheme('dark', true); say(nextBack()); return; }
+    if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; setTheme('light', true); say(nextLight(), 'click once to come back'); return; }
     clickTimer = setTimeout(function () {
       clickTimer = null;
       var line = LINES[order[tries % LINES.length]]; tries++;
@@ -1205,7 +1240,7 @@ import Lenis from 'lenis';
       { g: 'Actions', l: 'Toggle theme', h: '', ic: 'theme', k: 'dark light mode', wait: 430, run: function (row, at) {
         var light = root.getAttribute('data-theme') === 'light';
         setTheme(light ? 'dark' : 'light', true, at);
-        setTimeout(function () { say(light ? 'Welcome back.' : 'Fine. You asked for it.', light ? '' : 'click once to come back'); }, 200);
+        setTimeout(function () { say(light ? nextBack() : nextLight(), light ? '' : 'click once to come back'); }, 200);
       } },
       { g: 'Elsewhere', l: 'GitHub', h: 'github.com/priyank766', ic: 'out', run: function () { ext('https://github.com/priyank766'); } },
       { g: 'Elsewhere', l: 'X', h: 'x.com/priyank766', ic: 'out', k: 'twitter', run: function () { ext('https://x.com/priyank766'); } },
