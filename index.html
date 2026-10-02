@@ -48,8 +48,8 @@
   --tick: #46443f;
   --accent: #ff4d2e;
   --accent-ink: #ff6a4f;
-  --select: rgba(255, 186, 140, .996); --select-ink: #141412;
-  --llm: #ffb07a;
+  --select: rgba(255, 159, 67, .996); --select-ink: #141412;
+  --llm: #ff9f43;
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
@@ -59,7 +59,7 @@
 }
 :root[data-theme="light"] {
   --bg: #f4f3ef; --bg-2: #ebe9e3; --ink: #141412; --ink-2: #3f3d38; --muted: #6b6862;
-  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(255, 199, 156, .996); --select-ink: #141412; --llm: #c95a1c;
+  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(255, 170, 90, .996); --select-ink: #141412; --llm: #e0730f;
   color-scheme: light;
 }
 
@@ -296,7 +296,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .sheet-body .h1 { font-size: 1.45em; }
 .sheet-body .h2 { display: inline-block; margin-top: .3em; }
 .sheet-body .q { color: #5a4126; }
-.sheet ::selection { background: rgba(255, 176, 122, .996); color: #3a2a1a; }
+.sheet ::selection { background: rgba(255, 159, 67, .996); color: #2a1c0e; }
 html.sheet-open body { overflow: hidden; }
 
 /* ---- loading screen ---- */
@@ -340,6 +340,9 @@ html.loading body { overflow: hidden; }
 /* no visible scrollbars anywhere; scrolling still works */
 html, .sheet-body { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar, .sheet-body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+img, canvas, svg { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+::selection { text-shadow: none; }
+img::selection { background: transparent; }
 </style>
 </head>
 <body>
