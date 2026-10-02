@@ -1082,7 +1082,7 @@ import Lenis from 'lenis';
         if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(ok, bad); else bad();
       } },
       { g: 'Actions', l: 'Agent mode', h: 'llms.txt', ic: 'doc', k: 'ai llm', run: function () { openSheet(); } },
-      { g: 'Actions', l: 'Toggle theme', h: '', ic: 'theme', k: 'dark light mode', run: function (row, at) {
+      { g: 'Actions', l: 'Toggle theme', h: '', ic: 'theme', k: 'dark light mode', wait: 430, run: function (row, at) {
         var light = root.getAttribute('data-theme') === 'light';
         setTheme(light ? 'dark' : 'light', true, at);
         setTimeout(function () { say(light ? 'Welcome back.' : 'Fine. You asked for it.', light ? '' : 'click once to come back'); }, 200);
@@ -1169,7 +1169,7 @@ import Lenis from 'lenis';
       it.el.animate({ scale: [1, .97, 1] }, { duration: 260, easing: EO });
       if (it.stay) { it.run(it, at); return; }
       close(true);
-      setTimeout(function () { it.run(it, at); }, 90);
+      setTimeout(function () { it.run(it, at); }, it.wait || 90);
     }
     function open() {
       if (isOpen) return; isOpen = true;
@@ -1341,11 +1341,7 @@ import Lenis from 'lenis';
       A(r.querySelector('dd'), { transform: ['translateY(18px)', 'none'], opacity: [0, 1] }, 1000, 700 + i * 110);
     });
     requestAnimationFrame(function () { requestAnimationFrame(function () { facts.classList.add('in'); rows.forEach(function (r) { r.classList.add('in'); }); }); });
-    $$('.links li').forEach(function (li, i) {
-      li.style.clipPath = 'inset(-6px -8px -8px -8px)';
-      A(li.firstElementChild, { transform: ['translateY(120%)', 'none'] }, 1000, 900 + i * 70);
-    });
-    setTimeout(function () { $$('.links li').forEach(function (li) { li.style.clipPath = ''; }); }, end + 50);
+    $$('.links li').forEach(function (li, i) { A(li, { transform: ['translateY(14px)', 'none'], opacity: [0, 1] }, 1000, 900 + i * 70); });
     if (window.__graphIntro) window.__graphIntro(sp);
   }
 
