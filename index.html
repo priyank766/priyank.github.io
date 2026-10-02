@@ -633,12 +633,7 @@ main:focus, section:focus, article:focus { outline: none; }
 .ld-caret { width: .07em; height: .8em; }
 .loader-name .ch.dec { color: var(--accent); }
 
-/* landing on a project: an orange bar draws down its left edge while the row warms up, then both fade */
-.proj { position: relative; }
-.proj::after { content: ""; position: absolute; left: -16px; top: 18px; bottom: 18px; width: 3px; border-radius: 2px; background: var(--accent); transform: scaleY(0); transform-origin: 50% 0; opacity: 0; pointer-events: none; }
-.proj.flash::after { animation: proj-mark 1.4s var(--eo) forwards; }
-@keyframes proj-mark { 0% { transform: scaleY(0); opacity: 1; } 35% { transform: scaleY(1); opacity: 1; } 75% { opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
-@media (max-width: 899px) { .proj::after { left: -10px; } }
+
 </style>
 </head>
 <body>
@@ -911,9 +906,9 @@ import Lenis from 'lenis';
   var jumping = false, jumpT = null, arriveT = null;
   // A small cue when you land: the section's top rule sweeps orange and its heading letters bob once.
   function arrive(el) {
-    if (el.classList.contains('proj')) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1400); }
     if (reduce) return;
-    var sec = el.matches('.sec, .slope') ? el : null;
+    // a project gets the same landing cue as a section: its top rule sweeps orange
+    var sec = el.matches('.sec, .slope, .proj') ? el : null;
     if (sec) { sec.classList.remove('arrive'); void sec.offsetWidth; sec.classList.add('arrive'); setTimeout(function () { sec.classList.remove('arrive'); }, 1700); }
     var h2 = sec && sec.querySelector('h2.sc');
     // a jump can outrun the observer; the heading is always fully revealed when you land
