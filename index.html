@@ -494,6 +494,7 @@ html.loading .loader { display: block; position: fixed; inset: 0; z-index: 100; 
 html.loading body { overflow: hidden; }
 .ld-bg { position: absolute; inset: 0; display: flex; }
 .ld-bg { background: var(--bg); }
+.loader.lifting .ld-bg { background: transparent; }  /* the backdrop goes with the first strip, so the page shows as each strip lifts */
 .ld-bg i { flex: 1; background: var(--bg-2); border-left: 1px solid var(--rule); }
 .ld-bg i:first-child { border-left: 0; }
 .ld-bg i { position: relative; }
@@ -1735,12 +1736,12 @@ import Lenis from 'lenis';
           L.classList.add('lifting');  // each strip carries its own red edge as it lifts
           [].forEach.call(bgEl.children, function (c, i) { c.animate({ transform: ['none', 'translateY(-100%)'] }, { duration: 950 * Q, delay: (200 + i * 70) * Q, easing: EIO, fill: 'forwards' }); });
           line.animate({ transform: ['scaleX(1)', 'scaleX(1)'], opacity: [1, 0] }, { duration: 420, delay: 180, easing: EO, fill: 'forwards' });
-          setTimeout(function () { fireLoaded(); }, 380 * Q);
+          fireLoaded();
           setTimeout(function () { h1.style.visibility = ''; done(); }, (1150 + 220) * Q);
           afterLoad.flip = flip;
         } catch (e) { console.error(e); h1.style.visibility = ''; done(); fireLoaded(); }
       }
-      afterLoad(function () { heroIntro(1, afterLoad.flip); });
+      afterLoad(function () { heroIntro(.62, afterLoad.flip); });
     } else if (root.classList.contains('quick') && S) {
       var go = false, start = function () {
         if (go) return; go = true; clearTimeout(failsafe);
