@@ -619,6 +619,17 @@ main:focus, section:focus, article:focus { outline: none; }
 .ld-graph text { font: 400 8px var(--mono); fill: var(--muted); }
 .ld-caret { display: inline-block; width: .06em; height: .78em; margin-left: .05em; vertical-align: -.02em; background: var(--accent); animation: blink 1s steps(1) infinite; }
 .ld-caret.done { opacity: 0; transition: opacity .3s; animation: none; }
+
+/* combined entrance */
+.loader.combo .ld-bg i { background: var(--bg); border-left-color: transparent !important; }
+.loader.combo .ld-bg i::after { opacity: 0; transition: opacity .2s; }
+.loader.combo.lifting .ld-bg i::after { opacity: 1; }
+.loader.combo .ld-bg i b { display: block; position: absolute; left: -1px; top: 0; width: 1px; height: 100%; background: var(--tick); transform-origin: 50% 0; }
+.loader.combo .ld-bg i:first-child b { display: none; }
+.ld-graph .hub-l { font: 500 8.5px var(--mono); fill: var(--accent); }
+.ld-graph text { font-size: 8.5px; }
+.ld-fly { position: fixed; z-index: 2; background: var(--accent); pointer-events: none; }
+.ld-caret { width: .07em; height: .8em; }
 </style>
 </head>
 <body>
@@ -1612,7 +1623,7 @@ import Lenis from 'lenis';
     if (root.classList.contains('loading')) {
       try { if (!root.classList.contains('repeat')) localStorage.setItem('pp-intro', String(Date.now())); } catch (e) {}
       if (lenis) lenis.stop();
-      var stripEls = L.querySelector('.ld-bg').children;
+      var stripEls = L.querySelector('.ld-bg').children, introMin = 0;
       var nm = $('#loader-name'), line = $('#loader-line'), msg = $('#ld-msg'), mark = L.querySelector('.ld-mark');
       var nmChs = splitChars(nm);
       var QQ = root.classList.contains('repeat') ? .45 : 1;
@@ -1620,53 +1631,59 @@ import Lenis from 'lenis';
       $$('.ld-top > *, .ld-meta > *').forEach(function (e, i) { e.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 900, delay: 100 + i * 80, easing: EO, fill: 'backwards' }); });
       // every hidden state now exists as an animation, so the loader can be shown
       L.classList.add('go');
-      // Entrance. Try ?intro=1, ?intro=2 or ?intro=3; with no parameter the strips drop in.
-      var IV = (location.search.match(/[?&]intro=(\d)/) || [])[1] || '0';
-      L.classList.add('iv' + IV);
-      var restart = function (delay) {
-        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
-        nmChs.forEach(function (c, i) { c.animate({ transform: ['translate3d(0,1.3em,0) rotate(8deg)', 'none'] }, { duration: 1100 * QQ, delay: (delay + i * 42) * QQ, easing: EO, fill: 'backwards' }); });
-      };
-      if (IV === '1') {
-        // 1. Seams draw down where the strips will split, and the name decodes out of code characters.
-        [].forEach.call(stripEls, function (c, i) { if (i) c.querySelector('b').animate({ transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 900 * QQ, delay: (120 + i * 140) * QQ, easing: EIO, fill: 'backwards' }); });
-        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
-        var finalCh = nmChs.map(function (c) { return c.textContent; }), G = '01<>/{}[]#*+=_', f0 = performance.now();
-        (function dec(t) {
-          var k = (t - f0) / (1100 * QQ);
-          nmChs.forEach(function (c, i) { c.textContent = k * nmChs.length > i + 1 ? finalCh[i] : (k * nmChs.length > i - 3 ? G[(Math.random() * G.length) | 0] : '\u00a0'); });
-          if (k < 1.15) requestAnimationFrame(dec); else nmChs.forEach(function (c, i) { c.textContent = finalCh[i]; });
-        })(f0);
-      } else if (IV === '2') {
-        // 2. A piece of the graph wires itself up (Right Hand and what it's built with), then gives way to the name.
-        var NS = 'http://www.w3.org/2000/svg', gv = document.createElementNS(NS, 'svg');
-        gv.setAttribute('viewBox', '0 0 240 150'); gv.setAttribute('class', 'ld-graph');
-        var hub = [120, 78], spokes = [[34, 30, 'multi-agent'], [206, 26, 'ms graph'], [40, 128, 'bedrock'], [204, 126, 'python']];
-        spokes.forEach(function (sp, i) {
-          var ln = document.createElementNS(NS, 'path'); ln.setAttribute('d', 'M' + hub + 'L' + sp[0] + ' ' + sp[1]); ln.setAttribute('pathLength', '1'); gv.appendChild(ln);
-          ln.animate({ strokeDashoffset: [1, 0] }, { duration: 520 * QQ, delay: (220 + i * 110) * QQ, easing: EO, fill: 'backwards' });
-          var cn = document.createElementNS(NS, 'circle'); cn.setAttribute('cx', sp[0]); cn.setAttribute('cy', sp[1]); cn.setAttribute('r', 3.2); gv.appendChild(cn);
-          cn.animate({ opacity: [0, 1], transform: ['scale(0)', 'none'] }, { duration: 380 * QQ, delay: (560 + i * 110) * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
-          var tx = document.createElementNS(NS, 'text'); tx.setAttribute('x', sp[0]); tx.setAttribute('y', sp[1] + (sp[1] < 78 ? -9 : 16)); tx.setAttribute('text-anchor', 'middle'); tx.textContent = sp[2]; gv.appendChild(tx);
-          tx.animate({ opacity: [0, 1] }, { duration: 300 * QQ, delay: (640 + i * 110) * QQ, fill: 'backwards' });
+      // Entrance, in three beats (half speed on a quick refresh):
+      //   1. a piece of the graph wires itself up: Right Hand, then what it's built with
+      //   2. the seams where the strips will split draw down behind it
+      //   3. the graph folds back into Right Hand's square, which becomes the cursor that types the name
+      L.classList.add('combo');
+      nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); c.style.visibility = 'hidden'; });
+      var NS = 'http://www.w3.org/2000/svg', gv = document.createElementNS(NS, 'svg'), parts = [];
+      gv.setAttribute('viewBox', '0 0 260 160'); gv.setAttribute('class', 'ld-graph');
+      var hub = [130, 82], spokes = [[34, 28, 'multi-agent'], [226, 24, 'ms graph'], [40, 138, 'bedrock'], [222, 134, 'python']];
+      spokes.forEach(function (sp, i) {
+        var d0 = (380 + i * 220) * QQ;
+        var ln = document.createElementNS(NS, 'path'); ln.setAttribute('d', 'M' + hub + 'L' + sp[0] + ' ' + sp[1]); ln.setAttribute('pathLength', '1'); gv.appendChild(ln);
+        ln.animate({ strokeDashoffset: [1, 0] }, { duration: 760 * QQ, delay: d0, easing: EIO, fill: 'backwards' });
+        var cn = document.createElementNS(NS, 'circle'); cn.setAttribute('cx', sp[0]); cn.setAttribute('cy', sp[1]); cn.setAttribute('r', 3.4); gv.appendChild(cn);
+        cn.animate({ opacity: [0, 1], transform: ['scale(0)', 'none'] }, { duration: 460 * QQ, delay: d0 + 620 * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
+        var tx = document.createElementNS(NS, 'text'); tx.setAttribute('x', sp[0]); tx.setAttribute('y', sp[1] + (sp[1] < 82 ? -10 : 18)); tx.setAttribute('text-anchor', 'middle'); tx.textContent = sp[2]; gv.appendChild(tx);
+        tx.animate({ opacity: [0, 1], transform: ['translateY(4px)', 'none'] }, { duration: 420 * QQ, delay: d0 + 720 * QQ, easing: EO, fill: 'backwards' });
+        parts.push(ln, cn, tx);
+      });
+      var lab = document.createElementNS(NS, 'text'); lab.setAttribute('x', hub[0] + 14); lab.setAttribute('y', hub[1] + 4); lab.setAttribute('class', 'hub-l'); lab.textContent = 'Right Hand'; gv.appendChild(lab);
+      lab.animate({ opacity: [0, 1] }, { duration: 400 * QQ, delay: 260 * QQ, fill: 'backwards' }); parts.push(lab);
+      var sq = document.createElementNS(NS, 'rect'); sq.setAttribute('x', hub[0] - 6); sq.setAttribute('y', hub[1] - 6); sq.setAttribute('width', 12); sq.setAttribute('height', 12); sq.setAttribute('class', 'hub'); gv.appendChild(sq);
+      sq.animate({ transform: ['scale(0) rotate(45deg)', 'none'] }, { duration: 620 * QQ, delay: 80 * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
+      L.appendChild(gv);
+      // seams draw down behind the graph
+      [].forEach.call(stripEls, function (c, i) { if (i) c.querySelector('b').animate({ transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 1100 * QQ, delay: (700 + i * 160) * QQ, easing: EIO, fill: 'backwards' }); });
+      // fold the graph back into the hub
+      var fold = 1950 * QQ;
+      parts.forEach(function (e) { e.animate({ opacity: [1, 0] }, { duration: 360 * QQ, delay: fold, easing: EO, fill: 'forwards' }); });
+      // the hub travels to where the name starts and becomes the cursor
+      var caret = document.createElement('span'); caret.className = 'ld-caret'; caret.style.visibility = 'hidden';
+      nmChs[0].parentNode.insertBefore(caret, nmChs[0]);
+      setTimeout(function () {
+        var from = sq.getBoundingClientRect(), to = caret.getBoundingClientRect();
+        var fly = document.createElement('i'); fly.className = 'ld-fly'; L.appendChild(fly);
+        fly.style.left = from.left + 'px'; fly.style.top = from.top + 'px'; fly.style.width = from.width + 'px'; fly.style.height = from.height + 'px';
+        sq.style.visibility = 'hidden';
+        fly.animate({ left: [from.left + 'px', to.left + 'px'], top: [from.top + 'px', to.top + 'px'], width: [from.width + 'px', to.width + 'px'], height: [from.height + 'px', to.height + 'px'] }, { duration: 520 * QQ, easing: EIO, fill: 'forwards' })
+          .finished.then(function () { fly.remove(); caret.style.visibility = ''; type(); });
+        gv.animate({ opacity: [1, 0] }, { duration: 300 * QQ, delay: 220 * QQ, fill: 'forwards' });
+      }, fold + 260 * QQ);
+      function type() {
+        var step = 58 * QQ;
+        nmChs.forEach(function (c, i) {
+          setTimeout(function () {
+            c.style.visibility = '';
+            c.animate({ opacity: [0, 1], transform: ['translateY(.12em)', 'none'] }, { duration: 260 * QQ, easing: EO });
+            c.parentNode.insertBefore(caret, c.nextSibling);
+          }, i * step + (i >= 7 ? 140 * QQ : 0));
         });
-        var sq = document.createElementNS(NS, 'rect'); sq.setAttribute('x', hub[0] - 6); sq.setAttribute('y', hub[1] - 6); sq.setAttribute('width', 12); sq.setAttribute('height', 12); sq.setAttribute('class', 'hub'); gv.appendChild(sq);
-        sq.animate({ transform: ['scale(0) rotate(45deg)', 'none'] }, { duration: 520 * QQ, delay: 60 * QQ, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'backwards' });
-        L.appendChild(gv);
-        gv.animate({ opacity: [1, 0], transform: ['none', 'scale(.92)'] }, { duration: 420 * QQ, delay: 1250 * QQ, easing: EO, fill: 'forwards' });
-        nm.animate({ opacity: [0, 1] }, { duration: 220, delay: 1300 * QQ, fill: 'backwards' });
-        restart(1350);
-      } else if (IV === '3') {
-        // 3. A cursor types the name, the way Agent mode types itself out.
-        nmChs.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); c.style.visibility = 'hidden'; });
-        var caret = document.createElement('span'); caret.className = 'ld-caret'; nm.appendChild(caret);
-        var t1 = 260 * QQ;
-        nmChs.forEach(function (c, i) { setTimeout(function () { c.style.visibility = ''; c.parentNode.insertBefore(caret, c.nextSibling); if (c.parentNode.lastElementChild === caret && c.parentNode.nextSibling) { } }, t1 + i * 70 * QQ + (i > 6 ? 120 * QQ : 0)); });
-        setTimeout(function () { caret.classList.add('done'); }, t1 + nmChs.length * 70 * QQ + 500 * QQ);
-      } else {
-        // 0. The strips arrive one after another, like pages being laid down.
-        [].forEach.call(stripEls, function (c, i) { c.animate({ transform: ['translateY(-101%)', 'none'] }, { duration: 760 * QQ, delay: i * 85 * QQ, easing: EIO, fill: 'backwards' }); });
+        setTimeout(function () { caret.classList.add('done'); }, nmChs.length * step + 900 * QQ);
       }
+      introMin = fold + 260 * QQ + 520 * QQ + nmChs.length * 58 * QQ + 420 * QQ;
       // A small piece of the graph draws itself as things load, and the line under it resolves.
       var e1 = mark.querySelector('.ld-e1'), e2 = mark.querySelector('.ld-e2'), n0 = mark.querySelector('.ld-n0'), n1 = mark.querySelector('.ld-n1'), n2 = mark.querySelector('.ld-n2');
       var PH = [[0, 'reading llms.txt'], [34, 'loading the agents'], [70, 'drawing the graph'], [100, 'ready']], ph = 0, decId;
@@ -1686,11 +1703,11 @@ import Lenis from 'lenis';
       setTimeout(function () { ready = true; }, 3800);
       var p = 0, t0 = performance.now();
       (function count(t) {
-        var k = Math.min(1, (t - t0) / (root.classList.contains('repeat') ? 600 : 1900)), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
+        var k = Math.min(1, (t - t0) / Math.max(introMin, root.classList.contains('repeat') ? 600 : 1900)), g = (k + Math.sin(k * Math.PI * 3) * .045) * 100, goal = Math.min(ready ? 100 : 88, g);
         p += (goal - p) * .14;
         if (goal - p < .25) p = goal;
         setP(p);
-        if (p >= 100) { setTimeout(exit, root.classList.contains('repeat') ? 120 : 380); return; }
+        if (p >= 100) { setTimeout(exit, root.classList.contains('repeat') ? 80 : 160); return; }
         requestAnimationFrame(count);
       })(t0);
       function exit() {
