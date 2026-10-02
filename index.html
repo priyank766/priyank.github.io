@@ -33,8 +33,9 @@
 <script>
   (function () {
     var r = document.documentElement; r.classList.add('js');
-    var agent = location.hash === '#agent'; if (agent) r.classList.add('agent-boot');
-    try { if (!agent && !matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); if (sessionStorage.getItem('pp-seen')) r.classList.add('repeat'); } catch (e) {}
+    // A refresh inside Agent mode comes back to the main page, with the normal loader.
+    if (location.hash === '#agent') try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); if (sessionStorage.getItem('pp-seen')) r.classList.add('repeat'); } catch (e) {}
     setTimeout(function () { if (!window.__ppReady) r.classList.remove('loading', 'quick'); }, 5000);
     try { if (localStorage.getItem('pp-theme-choice') === 'light') r.setAttribute('data-theme', 'light'); } catch (e) {}
   })();
@@ -1034,11 +1035,6 @@ import Lenis from 'lenis';
       if (location.hash === '#agent') { if (!isOpen()) { open(true); pushed = true; } }
       else if (isOpen()) { pushed = false; shut(); }
     });
-    if (location.hash === '#agent') {
-      open(true); pushed = false;
-      // the paper was already up on first paint; give closing its animation back once it's settled
-      setTimeout(function () { root.classList.remove('agent-boot'); }, 120);
-    }
     openSheet = function () { open(false); };
     closeSheet = requestClose;
     b.addEventListener('click', function () { open(false); });
