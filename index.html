@@ -199,15 +199,8 @@ body{margin:0}
     <div class="s-body">
       <h2>Right Hand</h2>
       <div class="meta">An AI chief of staff, live with three clients · <a href="https://saarthios.com/" target="_blank" rel="noopener">saarthios.com</a></div>
-      <p>Right Hand reads an executive's mail and documents, works out what needs them today, and recommends the next step in the way they usually write. <b>Promoters, CFOs and CEOs use it.</b></p>
-      <p>It runs as three agents on the Anthropic SDK and AWS Bedrock. A <b>Profiler</b> learns how each executive works from their past mail. An <b>Interpreter</b> groups related emails into one situation. A <b>Chief of Staff</b> narrows 100+ open situations to the five that need action today.</p>
-      <p>The first version was a rule-based context graph that cited every answer to its source line. It stopped scaling at the second client, because every new supplier needed new rules. The agents replaced it, and a new client now needs only configuration.</p>
-      <dl>
-        <dt>Ingestion</dt><dd>Microsoft Graph mail every 15 minutes, plus event triggers. A Context Builder agent turns DOCX, PDF, CSV, XLSX and PPTX into source-linked Markdown, across corpora of 4,000+ documents.</dd>
-        <dt>Guardrails</dt><dd>Read-only tools limited to one person's data, hard step and cost limits, and an explicit “can't tell” when the evidence runs out.</dd>
-        <dt>Delivery</dt><dd>WhatsApp Business API, as text or voice.</dd>
-        <dt>In the field</dt><dd>I scope requirements with client executives directly, set up the second client's GCP infrastructure, and turn recurring field issues into product changes.</dd>
-      </dl>
+      <p>Right Hand reads an executive's mail and documents, works out the few things that need them today, and drafts the next step the way they'd write it. <b>Promoters, CFOs and CEOs use it.</b></p>
+      <p>I built it as a multi-agent system on the Anthropic SDK and AWS Bedrock, and I work directly with the client executives who use it.</p>
     </div>
   </section>
 
