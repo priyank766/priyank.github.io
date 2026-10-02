@@ -125,7 +125,7 @@ code { font-family: var(--mono); font-size: .78em; }
 @media (min-width: 1180px) {
   #graph { --gt: calc(clamp(28px, 5vw, 72px) + clamp(3rem, 9.6vw, 8.5rem) * .92 + 24px); position: absolute; margin: 0; top: var(--gt); --gl: calc((100% - 1180px) / 2 + var(--gutter) + 712px); left: var(--gl); width: calc(100% - var(--gl)); height: calc(100% - var(--gt)); opacity: .55; }
   #graph.lit { opacity: 1; }
-  .graph-cap { display: block; position: absolute; z-index: 1; right: var(--gutter); bottom: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; pointer-events: none; }
+  .graph-cap { display: none; position: absolute; z-index: 1; right: var(--gutter); bottom: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; pointer-events: none; }
 }
 @media (max-width: 599px) {
   .intro { grid-template-columns: 104px minmax(0, 1fr); gap: 0 18px; }
@@ -181,10 +181,9 @@ code { font-family: var(--mono); font-size: .78em; }
 .band .tk.it, .band .dot, .band path { transition: opacity .3s ease, background-color .15s; }
 .band.pre.h .nm { transform: rotate(180deg) translateY(-14px); }
 .band.h .nm { writing-mode: vertical-rl; transform: rotate(180deg); padding: 2px 0; }
-.band.h .ms::before { left: 0; top: -14px; height: 12px; width: 1px; }
-.band.h .ms { padding-left: 8px; border-left: 1px solid var(--ink); }
-.band.h .ms.right { padding-left: 0; border-left: 0; padding-right: 8px; border-right: 1px solid var(--ink); text-align: right; }
-.band.h .ms.right::before { left: auto; right: -1px; }
+.band.h .ms::before { display: none; }
+.band.h .ms { padding-left: 9px; border: 0; }
+.band.h .ms.right { padding-left: 0; padding-right: 9px; text-align: right; }
 .band.v .nm { padding: 2px 0; font-size: 13px; line-height: 16px; }
 .band.v .nm.big { font-size: 14px; }
 .band.v .ms { font-size: 13px; }
@@ -656,7 +655,7 @@ main:focus, section:focus, article:focus { outline: none; }
       </div>
     </div>
     <canvas id="graph" aria-hidden="true"></canvas>
-    <div class="graph-cap">squares are things I built, circles are what they&rsquo;re built with<br>point at one to trace it, click a square to jump to it</div>
+    <div class="graph-cap" hidden></div>
   </section>
 
   <section class="slope scrub" id="slope" aria-labelledby="slope-h">
@@ -2082,7 +2081,7 @@ import Lenis from 'lenis';
         while (r < 2 && rows[r].some(function (iv) { return a < iv[1] + 14 && b > iv[0] - 14; })) r++;
         rows[r].push([a, b]); used = Math.max(used, r + 1);
         var tp = axisY + 40 + r * 40; s.style.top = tp + 'px'; it.els.push(s);
-        path('M' + x + ' ' + (axisY + 4) + ' L' + x + ' ' + tp, it);
+        path('M' + x + ' ' + (axisY + 4) + ' L' + x + ' ' + (tp + s.offsetHeight), it); svg.lastChild.style.stroke = 'var(--ink-2)';
       });
       band.style.height = (axisY + 40 + used * 40 + 4) + 'px';
       svg.setAttribute('width', W); svg.setAttribute('height', axisY + 130);
