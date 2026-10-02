@@ -48,8 +48,8 @@
   --tick: #46443f;
   --accent: #ff4d2e;
   --accent-ink: #ff6a4f;
-  --select: #ffb07a; --select-ink: #141412;
-  --llm: #ffa36b;
+  --select: rgba(255, 186, 140, .996); --select-ink: #141412;
+  --llm: #ffb07a;
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
@@ -59,7 +59,7 @@
 }
 :root[data-theme="light"] {
   --bg: #f4f3ef; --bg-2: #ebe9e3; --ink: #141412; --ink-2: #3f3d38; --muted: #6b6862;
-  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: #ffc79c; --select-ink: #141412; --llm: #c95a1c;
+  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(255, 199, 156, .996); --select-ink: #141412; --llm: #c95a1c;
   color-scheme: light;
 }
 
@@ -135,7 +135,7 @@ code { font-family: var(--mono); font-size: .78em; }
 }
 
 /* llms.txt button and the light-mode roast */
-.llm { font-family: var(--mono); font-size: .75rem; color: var(--llm); text-decoration: none; border: 1px solid color-mix(in srgb, var(--llm) 45%, transparent); border-radius: 4px; padding: 3px 8px; }
+.llm { font-family: var(--mono); font-size: .75rem; color: var(--llm); text-decoration: none; border: 1px solid var(--llm); border-radius: 4px; padding: 3px 8px; }
 .llm:hover { color: var(--llm); border-color: var(--llm); background: color-mix(in srgb, var(--llm) 12%, transparent); }
 .roast { position: fixed; z-index: 30; top: 60px; right: var(--gutter); max-width: min(320px, calc(100vw - 32px)); font-family: var(--mono); font-size: .8125rem; line-height: 1.45; color: var(--ink); background: var(--bg-2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; box-shadow: 0 12px 40px rgba(0,0,0,.35); opacity: 0; transform: translateY(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
 .roast.show { opacity: 1; transform: none; }
@@ -356,7 +356,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sheet-body::-webkit-scrollbar
   <div class="wrap">
     <a class="me" href="#main">Priyank Patel</a>
     <nav aria-label="Sections">
-      <a href="#now">Now</a>
+      <a href="#now">Work</a>
       <a href="#projects">Projects</a>
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
@@ -415,7 +415,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sheet-body::-webkit-scrollbar
 
   <section class="sec" id="now" aria-labelledby="now-h">
     <div class="wrap sec-grid">
-      <h2 id="now-h">Now<small>SaarthiOS, since June 2026</small></h2>
+      <h2 id="now-h">Work<small>SaarthiOS, since June 2026</small></h2>
       <div class="prose lit-words">
         <p>I&rsquo;m an AI product engineer at <a href="https://saarthios.com/">SaarthiOS</a>, where I built Right Hand, an AI chief of staff. It reads an executive&rsquo;s mail and documents, works out the few things that need them today, and drafts the next step the way they&rsquo;d write it.</p>
         <p>It runs as a team of agents on the Anthropic SDK and AWS Bedrock. It&rsquo;s live with three clients, the people using it are promoters, CFOs and CEOs, and I work with them directly.</p>
