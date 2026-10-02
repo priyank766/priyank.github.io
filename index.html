@@ -904,6 +904,7 @@ import Lenis from 'lenis';
   var jumping = false, jumpT = null, arriveT = null;
   // A small cue when you land: the section's top rule sweeps orange and its heading letters bob once.
   function arrive(el) {
+    if (el.classList.contains('proj')) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1400); }
     if (reduce) return;
     var sec = el.matches('.sec, .slope') ? el : null;
     if (sec) { sec.classList.remove('arrive'); void sec.offsetWidth; sec.classList.add('arrive'); setTimeout(function () { sec.classList.remove('arrive'); }, 1700); }
@@ -1254,7 +1255,7 @@ import Lenis from 'lenis';
       out: '<path d="M6 3.5H3.5v9h9V10M9 3h4v4M13 3 7.5 8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
       ok: '<path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"><animate attributeName="stroke-dashoffset" from="1" to="0" dur=".4s" fill="freeze"/></path>'
     };
-    function jump(id, center) { var el = $(id); if (!el) return; scrollToEl(el, { center: center }); if (center) setTimeout(function () { el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1200); }, 1100); }
+    function jump(id, center) { var el = $(id); if (!el) return; scrollToEl(el, { center: center }); }
     function ext(u) { window.open(u, '_blank', 'noopener'); }
     var EMAIL = 'priyank8445@gmail.com';
     var items = [
@@ -2009,17 +2010,25 @@ import Lenis from 'lenis';
     }
     // Clicking a node sends pulses down its edges and one hop beyond; clicking empty space sends a shockwave.
     cv.addEventListener('click', function (e) {
-      var r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now(), best = null, bd = 1600;
-      N.forEach(function (n) { var d = (n.px - x) * (n.px - x) + (n.py - y) * (n.py - y); if (d < bd) { bd = d; best = n; } });
+      var r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, t = performance.now(), best = pick(x, y, Infinity);
       if (reduce) { if (best && best.to) go(best); return; }
       rings.push({ x: best ? best.px : x, y: best ? best.py : y, t0: t, dur: best ? 800 : 1100, max: best ? 64 : 180 });
       shock(x, y, best ? 130 : 240, best ? 5 : 11);
       if (best) { pulseFrom(best, t, 0, null); if (best.to) setTimeout(function () { go(best); }, 520); }
     });
+    function pick(x, y, it) {
+      var hit = null, bd = 1600;
+      N.forEach(function (n) {
+        if (it < n.bd) return;
+        if (n.lw && x >= Math.min(n.px, n.lx) - 8 && x <= Math.max(n.px, n.lx + n.lw) + 6 && Math.abs(y - n.py) <= 11) { if (!hit || (n.w && !hit.w)) hit = n; }
+      });
+      if (hit) return hit;
+      N.forEach(function (n) { if (it < n.bd) return; var d = (n.px - x) * (n.px - x) + (n.py - y) * (n.py - y); if (d < bd) { bd = d; hit = n; } });
+      return hit;
+    }
     function go(n) {
       var el = $(n.to); if (!el) return;
       scrollToEl(el, { center: el.classList.contains('proj') });
-      if (el.classList.contains('proj')) setTimeout(function () { el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1200); }, 900);
     }
     // Theme change: a wave crosses the graph from the button and every node flashes as it passes.
     window.__graphWave = function (cx, cy) {
@@ -2033,8 +2042,7 @@ import Lenis from 'lenis';
       requestAnimationFrame(frame);
       if (!W || !vis || introT0 === null) { if (introT0 === null && W) g.clearRect(0, 0, W, H); return; }
       var s = t / 1000, it = t - introT0; g.clearRect(0, 0, W, H);
-      hover = null; var best = 1600;
-      N.forEach(function (n) { if (it < n.bd) return; var d = (n.px - mx) * (n.px - mx) + (n.py - my) * (n.py - my); if (d < best) { best = d; hover = n; } });
+      hover = pick(mx, my, it);
       cv.style.cursor = hover && hover.to ? 'pointer' : 'default';
       near.clear(); if (hover) { near.add(hover); edges.forEach(function (e) { if (e.a === hover) near.add(e.b); if (e.b === hover) near.add(e.a); }); }
       N.forEach(function (n) {
@@ -2103,6 +2111,7 @@ import Lenis from 'lenis';
           label = n.l.slice(0, sh) + (sh < L ? glyph[(Math.random() * glyph.length) | 0] : '');
           if (left) lx = n.px - 12 - g.measureText(n.l).width;
         }
+        n.lx = lx; n.lw = g.measureText(n.l).width;
         g.strokeStyle = C.bg; g.lineWidth = 5; g.lineJoin = 'round'; g.strokeText(label, lx, n.py); g.fillText(label, lx, n.py);
       });
       g.globalAlpha = 1;
