@@ -493,10 +493,11 @@ html.cmdk-open body { overflow: hidden; }
 html.loading .loader { display: block; position: fixed; inset: 0; z-index: 100; pointer-events: none; }
 html.loading body { overflow: hidden; }
 .ld-bg { position: absolute; inset: 0; display: flex; }
-.ld-bg i { flex: 1; background: var(--bg); border-left: 1px solid var(--rule); }
+.ld-bg { background: var(--bg); }
+.ld-bg i { flex: 1; background: var(--bg-2); border-left: 1px solid var(--rule); }
 .ld-bg i:first-child { border-left: 0; }
 .ld-bg i { position: relative; }
-.ld-bg i::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); transform: scaleX(var(--f, 0)); transform-origin: 0 50%; }
+.ld-bg i::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); transform: none; }
 .ld-bg i { border-left-color: transparent; transition: border-color .5s; }
 .loader.go .ld-bg i { border-left-color: var(--rule); }
 .loader.go .ld-bg i:nth-child(2) { transition-delay: .08s; } .loader.go .ld-bg i:nth-child(3) { transition-delay: .16s; } .loader.go .ld-bg i:nth-child(4) { transition-delay: .24s; } .loader.go .ld-bg i:nth-child(5) { transition-delay: .32s; }
@@ -1604,6 +1605,8 @@ import Lenis from 'lenis';
       $$('.ld-top > *, .ld-meta > *').forEach(function (e, i) { e.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 900, delay: 100 + i * 80, easing: EO, fill: 'backwards' }); });
       // every hidden state now exists as an animation, so the loader can be shown
       L.classList.add('go');
+      // the strips arrive one after another, like pages being laid down
+      [].forEach.call(stripEls, function (c, i) { c.animate({ transform: ['translateY(-101%)', 'none'] }, { duration: 760 * QQ, delay: i * 85 * QQ, easing: EIO, fill: 'backwards' }); });
       // A small piece of the graph draws itself as things load, and the line under it resolves.
       var e1 = mark.querySelector('.ld-e1'), e2 = mark.querySelector('.ld-e2'), n0 = mark.querySelector('.ld-n0'), n1 = mark.querySelector('.ld-n1'), n2 = mark.querySelector('.ld-n2');
       var PH = [[0, 'reading llms.txt'], [34, 'loading the agents'], [70, 'drawing the graph'], [100, 'ready']], ph = 0, decId;
@@ -1613,7 +1616,6 @@ import Lenis from 'lenis';
       }
       function setP(v) {
         line.style.transform = 'scaleX(' + (v / 100) + ')';
-        [].forEach.call(stripEls, function (c, i) { c.style.setProperty('--f', clamp(v / 20 - i, 0, 1)); });
         e1.style.strokeDashoffset = String(1 - clamp(v / 50, 0, 1)); e2.style.strokeDashoffset = String(1 - clamp((v - 50) / 50, 0, 1));
         n0.setAttribute('class', 'ld-n0 ' + (v < 50 ? 'hot' : 'on')); n1.setAttribute('class', 'ld-n1' + (v >= 50 ? (v < 100 ? ' hot' : ' on') : '')); n2.setAttribute('class', 'ld-n2' + (v >= 100 ? ' hot' : ''));
         while (ph < PH.length - 1 && v >= PH[ph + 1][0]) { ph++; say2(PH[ph][1]); }
