@@ -192,6 +192,70 @@ body{margin:0}
 .pj.sm p{font-size:15px;margin-bottom:10px}
 .all{align-self:flex-start}
 @media (max-width:900px){.pj{grid-template-columns:1fr;gap:18px}.pj-pair{grid-template-columns:1fr;gap:48px}}
+
+/* project covers: each echoes the project's own site or app, redrawn in this site's palette */
+.cv{container-type:inline-size;position:relative;color:var(--fg);font-family:var(--sans);text-align:left;transition:border-color .3s}
+.cv .cv-in{display:flex;flex-direction:column;gap:3.2cqw;padding:5.5cqw;height:100%}
+.cv-cortex .cv-in{padding:0}
+.pj:hover .cv{border-color:var(--dim)}
+.cv>*,.cv span{display:block}
+.cv .cv-row{display:flex;justify-content:space-between;align-items:center;gap:2cqw}
+.cv .cv-k{font:400 max(9px,2.15cqw)/1.35 var(--mono);color:var(--faint);letter-spacing:.01em}
+.cv .cv-k b{color:var(--fg);font-weight:500}
+.cv .cv-k b.red{color:var(--red)}
+.cv .cv-foot{margin-top:auto}
+.cv .cv-cmd{font:400 max(9px,2.4cqw) var(--mono);color:var(--fg);border:1px solid var(--line2);border-radius:1.2cqw;padding:2cqw 2.6cqw;width:max-content;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;background:var(--bg)}
+.cv .cv-cmd i{font-style:normal;color:var(--red);margin-right:1.4cqw}
+.cv .cv-tag{font:400 max(9px,2cqw) var(--mono);color:var(--red);border:1px solid var(--red);border-radius:1cqw;padding:.5cqw 1.6cqw}
+/* Anchor */
+.cv-anc-h{font-weight:500;font-size:8.6cqw;line-height:.98;letter-spacing:-.045em;margin-top:2cqw}
+.cv-anc-h span{color:var(--dim);font-weight:400}
+.cv-anc-glyph{position:absolute;right:5cqw;top:14cqw;width:24cqw;height:auto;fill:none;stroke:var(--line2);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+/* Hermes-BIO */
+.cv-q{font-weight:500;font-size:4.4cqw;letter-spacing:-.02em}
+.cv-bio{display:grid!important;grid-template-columns:1.25fr 1fr;gap:2.4cqw}
+.cv-panel{border:1px solid var(--line2);border-radius:1.4cqw;padding:2.6cqw;display:flex!important;flex-direction:column;gap:1.4cqw;background:var(--bg)}
+.cv-big{font:500 7cqw/1 var(--mono);letter-spacing:-.03em}
+.cv-helix svg{width:100%;height:12cqw;fill:none;stroke:var(--red);stroke-width:2;stroke-linecap:round;opacity:.9}
+
+.cv-table{display:flex!important;flex-direction:column;border-top:1px solid var(--line2)}
+.cv-table>span{display:grid!important;grid-template-columns:1fr auto auto;gap:3cqw;padding:1.6cqw 0;border-bottom:1px solid var(--line);font:400 max(9px,2.2cqw) var(--mono);color:var(--dim)}
+.cv-table b{font-weight:500;color:var(--fg)}
+.cv-table i{font-style:normal;color:var(--red)}
+.cv-table em{font-style:normal;color:var(--faint)}
+/* RLM */
+.cv-rlm-h{font-weight:500;font-size:5cqw;line-height:1.08;letter-spacing:-.03em;max-width:88%;text-wrap:balance}
+.cv-chart{display:block;width:100%;height:auto;margin-top:auto;overflow:visible;max-height:30cqw}
+.cv-chart text{font:400 7px var(--mono);fill:var(--faint)}
+.cv-chart text.lg{fill:var(--red)}
+.cv-chart .ax{stroke:var(--line2)}
+.cv-chart .gr{stroke:var(--line);stroke-dasharray:2 3}
+.cv-chart polyline{fill:none;stroke-width:1.6;stroke-linejoin:round}
+.cv-chart .va{stroke:var(--faint)}
+.cv-chart .rl{stroke:var(--red)}
+.cv-chart .rlp{fill:var(--red)}
+/* Review Suite */
+.cv-rev-h{font-weight:700;font-size:8.4cqw;line-height:.95;letter-spacing:-.04em;text-transform:uppercase}
+.cv-rev{display:flex!important;align-items:center;gap:3cqw;margin-top:auto}
+.cv-dots{display:grid!important;grid-template-columns:repeat(6,2.2cqw);gap:1.3cqw}
+.cv-dots i{display:block;width:2.2cqw;height:2.2cqw;border-radius:50%;background:var(--line2)}
+.cv-dots i.r{background:var(--red)}
+/* Cortex */
+.cv-cx{display:grid!important;grid-template-columns:1fr 1.7fr 1fr;height:100%}
+.cv-cx>span{padding:3.6cqw 3cqw;display:flex!important;flex-direction:column;gap:1.6cqw;min-width:0}
+.cv-cx-side{border-right:1px solid var(--line2)}
+.cv-cx-side:last-child{border-right:0;border-left:1px solid var(--line2)}
+.cv-file{font:400 max(8px,2cqw) var(--mono);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-file.d{color:var(--fg)}
+.cv-step{font:400 max(8px,2cqw) var(--mono);color:var(--dim)}
+.cv-step::before{content:"✓";color:var(--red);margin-right:1.2cqw}
+.cv-gap{margin-top:2cqw}
+.cv-cx-chat{gap:2.4cqw!important}
+.cv-msg{font-size:max(9px,2.3cqw);line-height:1.4;color:var(--dim);border:1px solid var(--line2);border-radius:1.6cqw;padding:2cqw 2.4cqw;background:var(--bg)}
+.cv-msg.me{align-self:flex-end;color:var(--fg);max-width:85%}
+.cv-msg b{font-weight:500;color:var(--fg);font-family:var(--mono);font-size:.92em}
+.cv-input{margin-top:auto;font-size:max(9px,2.2cqw);color:var(--faint);border:1px solid var(--line2);border-radius:1.6cqw;padding:2cqw 2.4cqw}
+@container (max-width:440px){.cv-table>span:nth-child(2){display:none!important}.cv-cx{grid-template-columns:1fr 1.6fr!important}.cv-cx>span:last-child{display:none!important}.cv-anc-glyph{width:20cqw}}
 </style>
   </head>
   <body>
@@ -243,7 +307,13 @@ body{margin:0}
     <div class="s-label"><b>Projects</b>Built on my own time</div>
     <div class="pjs">
       <article class="pj" id="p-anc">
-        <a class="shot" href="https://anchormem.me/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/projects/anchor.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></a>
+        <a class="shot cv cv-anchor" href="https://anchormem.me/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="cv-in">
+          <span class="cv-row"><span class="cv-k">anchor · cross-agent memory</span><span class="cv-k">v0.1 · MIT</span></span>
+          <span class="cv-anc-h">Long memory,<br><span>short prompts.</span></span>
+          <span class="cv-cmd"><i>$</i> npx @anchormem/anchor init</span>
+          <span class="cv-row cv-foot"><span class="cv-k">98,200 → 2,239 tokens</span><span class="cv-k">SQLite · FTS5 · local</span></span>
+          <svg class="cv-anc-glyph" viewBox="0 0 100 120" aria-hidden="true"><circle cx="50" cy="14" r="9"/><path d="M50 23 V108 M28 44 H72 M14 78 C16 100 34 110 50 110 C66 110 84 100 86 78 M14 78 l-6 10 M14 78 l11 4 M86 78 l6 10 M86 78 l-11 4"/></svg></span>
+        </a>
         <div class="pj-text">
           <h3><a href="https://anchormem.me/" target="_blank" rel="noopener">Anchor<span class="arrow">↗</span></a></h3>
           <p>A local-first MCP server that gives coding agents shared memory across sessions. Claude Code, Cursor, Cline and Codex start from the same facts and decisions, so switching agents doesn’t mean starting over.</p>
@@ -252,7 +322,18 @@ body{margin:0}
         </div>
       </article>
       <article class="pj" id="p-bio">
-        <a class="shot" href="https://github.com/priyank766/Hermes-BIO" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/projects/hermes.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></a>
+        <a class="shot cv cv-hermes" href="https://github.com/priyank766/Hermes-BIO" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="cv-in">
+          <span class="cv-row"><span class="cv-k">hermes-bio · discovery run</span><span class="cv-tag">completed</span></span>
+          <span class="cv-q">type 2 diabetes mellitus</span>
+          <span class="cv-bio">
+            <span class="cv-panel"><span class="cv-k">selected target</span><span class="cv-big">PPARG</span><span class="cv-k">uniprot P37231 · druggability 0.850</span></span>
+            <span class="cv-panel cv-helix"><svg viewBox="0 0 120 64" aria-hidden="true"><path d="M4 52 C6 4,22 4,20 40 C19 60,13 60,15 44 C19 4,35 4,33 40 C32 60,26 60,28 44 C32 4,48 4,46 40 C45 60,39 60,41 44 C45 4,61 4,59 40 C58 60,52 60,54 44 C58 4,74 4,72 40 C71 60,65 60,67 44 C71 4,87 4,85 40 C84 60,78 60,80 44 C84 4,100 4,98 40 C97 60,91 60,93 44 C97 4,113 4,111 40 C110 60,104 60,106 44"/></svg><span class="cv-k">structure · PDB 1FM6</span></span>
+          </span>
+          <span class="cv-table">
+            <span><b>LY-510929</b><i>−9.88</i><em>FDA</em></span>
+            <span><b>ROSIGLITAZONE</b><i>−7.53</i><em>FDA</em></span>
+          </span></span>
+        </a>
         <div class="pj-text">
           <h3><a href="https://github.com/priyank766/Hermes-BIO" target="_blank" rel="noopener">Hermes-BIO<span class="arrow">↗</span></a></h3>
           <p>Give it a disease and it picks a target, pulls the structure, screens approved drugs first and ranks candidates, by chaining UniProt, OpenTargets, RCSB PDB, AlphaFold DB and ChEMBL through one Gemini function-calling loop.</p>
@@ -261,7 +342,21 @@ body{margin:0}
         </div>
       </article>
       <article class="pj" id="p-rlm">
-        <a class="shot" href="https://priyank766.github.io/RLM/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/projects/rlm.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></a>
+        <a class="shot cv cv-rlm" href="https://priyank766.github.io/RLM/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="cv-in">
+          <span class="cv-row"><span class="cv-k">working paper · reproducibility study</span><span class="cv-k">v1.0</span></span>
+          <span class="cv-rlm-h">Recursive Language Models on Commodity Hardware</span>
+          <span class="cv-k">accuracy by context length · n = 4 per point</span>
+          <svg class="cv-chart" viewBox="0 0 330 108" aria-hidden="true">
+            <line class="ax" x1="20" y1="10" x2="20" y2="90"/><line class="ax" x1="20" y1="90" x2="290" y2="90"/>
+            <line class="gr" x1="20" y1="10" x2="290" y2="10"/><line class="gr" x1="20" y1="50" x2="290" y2="50"/>
+            <text x="0" y="13">100</text><text x="6" y="53">50</text><text x="12" y="93">0</text>
+            <text x="34" y="104">4K</text><text x="114" y="104">8K</text><text x="194" y="104">16K</text><text x="268" y="104">32K</text>
+            <polyline class="va" points="40,10 120,10 200,10 280,70"/>
+            <polyline class="rl" points="40,10 120,30 200,30 280,50"/>
+            <circle class="rlp" cx="280" cy="50" r="3"/>
+            <text class="lg" x="289" y="52.5">RLM</text><text x="289" y="72.5">vanilla</text>
+          </svg></span>
+        </a>
         <div class="pj-text">
           <h3><a href="https://priyank766.github.io/RLM/" target="_blank" rel="noopener">RLM<span class="arrow">↗</span></a></h3>
           <p>A reproduction of Recursive Language Models (Zhang et al., 2025) with a 2B model on a 6 GB laptop GPU. The document sits in a Python REPL instead of the prompt, and the model writes code to search it and calls itself on the pieces.</p>
@@ -271,13 +366,27 @@ body{margin:0}
       </article>
       <div class="pj-pair">
         <article class="pj sm" id="p-ors">
-          <a class="shot" href="https://priyank766.github.io/OpenSource-SKILL/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/projects/review.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></a>
+          <a class="shot cv cv-review" href="https://priyank766.github.io/OpenSource-SKILL/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="cv-in">
+          <span class="cv-k">for open-source maintainers</span>
+          <span class="cv-rev-h">Review like<br>a maintainer.</span>
+          <span class="cv-rev">
+            <span class="cv-dots" aria-hidden="true"><i></i><i></i><i class="r"></i><i></i><i></i><i></i><i class="r"></i><i></i><i></i><i></i><i class="r"></i><i></i></span>
+            <span class="cv-k"><b>12</b> raw findings → <b class="red">3</b> reach you</span>
+          </span>
+          <span class="cv-cmd"><i>$</i> npx skills add priyank766/OpenSource-SKILL</span></span>
+        </a>
           <h3><a href="https://priyank766.github.io/OpenSource-SKILL/" target="_blank" rel="noopener">Review Suite<span class="arrow">↗</span></a></h3>
           <p>Eight agent skills that review pull requests like a maintainer and post only the few findings worth a comment.</p>
           <div class="stack"><code>npx skills add priyank766/OpenSource-SKILL</code></div>
         </article>
         <article class="pj sm" id="p-cortex">
-          <a class="shot" href="https://github.com/priyank766/Cortex" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="/projects/cortex.webp" alt="" width="1440" height="900" loading="lazy" decoding="async"></a>
+          <a class="shot cv cv-cortex" href="https://github.com/priyank766/Cortex" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span class="cv-in">
+          <span class="cv-cx">
+            <span class="cv-cx-side"><span class="cv-k">working directory</span><span class="cv-file d">TEST/</span><span class="cv-file">company_config.json</span><span class="cv-file d">logs/</span><span class="cv-file">README.md</span><span class="cv-file d">sales/</span><span class="cv-file d">team/</span></span>
+            <span class="cv-cx-chat"><span class="cv-msg me">Add a new employee to team/employees.csv</span><span class="cv-msg">Added the entry to <b>team/employees.csv</b>.</span><span class="cv-input">Describe your task…</span></span>
+            <span class="cv-cx-side"><span class="cv-k">task progress</span><span class="cv-step">file_list</span><span class="cv-step">file_read</span><span class="cv-step">file_write</span><span class="cv-k cv-gap">artifacts</span><span class="cv-file">employees.csv</span></span>
+          </span></span>
+        </a>
           <h3><a href="https://github.com/priyank766/Cortex" target="_blank" rel="noopener">Cortex<span class="arrow">↗</span></a></h3>
           <p>An agent workspace that works inside a real project folder, with scoped file access and a Docker-sandboxed shell behind approvals.</p>
           <div class="stack">Python · FastAPI · React · Docker</div>
