@@ -1008,13 +1008,15 @@ import Lenis from 'lenis';
       if (reduce) { pre.innerHTML = render(lines, total); return; }
       pre.innerHTML = render(lines, 0);
       var start = performance.now() + 650; // let the paper finish unrolling first
+      // narrow screens wrap the same text into far more lines, so they stream it a little faster
+      var narrow = innerWidth < 760, base = narrow ? 6 : 4, jit = 5;
       (function tick(t) {
         if (id !== typing || !isOpen()) return;
         if (t >= start) {
-          n = Math.min(total, n + 4 + ((Math.random() * 5) | 0)); // slightly uneven, like a real stream
+          n = Math.min(total, n + base + ((Math.random() * jit) | 0)); // slightly uneven, like a real stream
           pre.innerHTML = render(lines, n);
           var c = pre.querySelector('.caret');
-          if (c && c.getBoundingClientRect().bottom > body.getBoundingClientRect().bottom - 48) body.scrollTop += 26;
+          if (c) { var over = c.getBoundingClientRect().bottom - (body.getBoundingClientRect().bottom - 48); if (over > 0) body.scrollTop += Math.max(26, over); }
         }
         if (n < total) requestAnimationFrame(tick);
       })(performance.now());
@@ -1196,9 +1198,13 @@ import Lenis from 'lenis';
       };
       return;
     }
+    // Phones: just the circle. The ring, letter flips and graph wave all repaint the live new snapshot
+    // every frame, and the circle's clip-path runs on the main thread, so they make it stutter.
+    var lite = matchMedia('(pointer: coarse), (max-width: 759px)').matches;
     var ring;
     var vt = document.startViewTransition(function () {
       apply();
+      if (lite) return;
       ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); ring.setAttribute('class', 'ring-fx'); ring.setAttribute('aria-hidden', 'true');
       ring.innerHTML = '<circle cx="' + x + '" cy="' + y + '" r="0" fill="none" style="stroke:var(--glow)" stroke-width="18" stroke-opacity=".16"/><circle cx="' + x + '" cy="' + y + '" r="0" fill="none" style="stroke:var(--glow)" stroke-width="2"/>';
       document.body.appendChild(ring);
@@ -1208,6 +1214,7 @@ import Lenis from 'lenis';
       var o = { duration: DUR, easing: EIO };
       root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + R + 'px at ' + x + 'px ' + y + 'px)'] }, Object.assign({ pseudoElement: '::view-transition-new(root)' }, o));
       root.animate({ transform: ['none', 'scale(.93)'], transformOrigin: [x + 'px ' + y + 'px', x + 'px ' + y + 'px'], filter: ['brightness(1)', 'brightness(.55)'] }, Object.assign({ pseudoElement: '::view-transition-old(root)' }, o));
+      if (lite) return;
       [].forEach.call(ring.querySelectorAll('circle'), function (cc, i) { cc.animate({ r: ['0px', (R - (i ? 3 : 10)) + 'px'] }, o); });
       ring.animate({ opacity: [1, 1, 0] }, o);
       // flip each visible letter when the wave reaches it
@@ -1219,7 +1226,7 @@ import Lenis from 'lenis';
         ch.animate({ transform: ['perspective(500px) rotateX(0deg)', 'perspective(500px) rotateX(360deg)'] }, { duration: 850, delay: Math.max(0, k * DUR - 120), easing: EIO, composite: 'add' });
       });
     }).catch(function () {});
-    vt.finished.then(function () { if (ring) ring.remove(); }, function () { if (ring) ring.remove(); });
+    vt.finished.then(function () { if (ring) ring.remove(); if (lite && window.__graphWave) window.__graphWave(x, y); }, function () { if (ring) ring.remove(); });
   }
   var meta = document.querySelector('meta[name="theme-color"]');
   function setTheme(t, animate, origin) {
