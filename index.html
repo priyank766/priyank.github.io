@@ -630,6 +630,7 @@ main:focus, section:focus, article:focus { outline: none; }
 .ld-graph text { font-size: 8.5px; }
 .ld-fly { position: fixed; z-index: 2; background: var(--accent); pointer-events: none; }
 .ld-caret { width: .07em; height: .8em; }
+.loader-name .ch.dec { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -1676,7 +1677,11 @@ import Lenis from 'lenis';
         var step = 58 * QQ;
         nmChs.forEach(function (c, i) {
           setTimeout(function () {
-            c.style.visibility = '';
+            // each letter decodes at the cursor: two quick glyphs, then the real one, so only the newest letter ever flickers
+            var real = c.textContent, G = '01<>/{}[]#*+=_', fl = 0;
+            c.style.visibility = ''; c.classList.add('dec');
+            c.textContent = G[(Math.random() * G.length) | 0];
+            var iv = setInterval(function () { fl++; if (fl < 2) c.textContent = G[(Math.random() * G.length) | 0]; else { clearInterval(iv); c.textContent = real; c.classList.remove('dec'); } }, 45 * QQ + 15);
             c.animate({ opacity: [0, 1], transform: ['translateY(.12em)', 'none'] }, { duration: 260 * QQ, easing: EO });
             c.parentNode.insertBefore(caret, c.nextSibling);
           }, i * step + (i >= 7 ? 140 * QQ : 0));
