@@ -1,0 +1,36 @@
+# Priyank Patel
+
+> AI engineer and forward deployed engineer in Ahmedabad, India. He builds multi-agent systems that executives use at work, reviews code for Kubeflow's MCP server (CNCF), and is in his third year of a B.E. at L.D. College of Engineering (2023 – 2027).
+
+This file is a plain-text summary of https://priyank.is-a.dev/ for AI agents and LLMs. Everything here is also on the page.
+
+## Contact
+
+- Email: priyank8445@gmail.com
+- GitHub: https://github.com/priyank766
+- X: https://x.com/priyank766
+- LinkedIn: https://www.linkedin.com/in/priyank766/
+- Time zone: India (UTC+5:30)
+
+## Work
+
+- AI engineer at SaarthiOS (https://saarthios.com/), since June 2026.
+- Built Right Hand, an AI chief of staff. It reads an executive's mail and documents, works out what needs their attention today, and drafts the next step in their usual tone.
+- Multi-agent system on the Anthropic SDK and AWS Bedrock. Live with three clients; used by promoters, CFOs and CEOs. He works with them directly.
+
+## Open source
+
+- Code Reviewer for Kubeflow's MCP server (https://github.com/kubeflow/mcp-server) and a member of the Kubeflow organization (CNCF).
+- Contributions to kubeflow/mcp-server and kubeflow/sdk: tracing for tool calls, a confirmation step before training jobs are changed, bounded memory when reading job logs, reliability fixes.
+
+## Projects
+
+- [Anchor](https://anchormem.me/): local-first MCP server that gives coding agents (Claude Code, Cursor, Cline, Codex) shared memory per project. Cut 98,200 tokens of transcript to 2,239 across eight scenarios (44x) while keeping every critical fact; recall under 4 ms at 10,000 memories. Install: `npx @anchormem/anchor init`.
+- [RLM](https://priyank766.github.io/RLM/): reproduction of Recursive Language Models (Zhang, Kraska & Khattab, 2025) with a 2B model on a 6 GB laptop GPU. At 64K tokens the recursive setup found the needle 67% of the time vs 33% for the same model reading directly.
+- [Hermes-BIO](https://github.com/priyank766/Hermes-BIO): agentic drug-discovery harness over UniProt, OpenTargets, RCSB PDB, AlphaFold DB and ChEMBL. Recovered the textbook target in 6 of 6 benchmark diseases, about 38 s each.
+- [Review Suite](https://priyank766.github.io/OpenSource-SKILL/): eight agent skills for reviewing pull requests like a maintainer. Install: `npx skills add priyank766/OpenSource-SKILL`.
+- [Cortex](https://github.com/priyank766/Cortex): agent workspace that works inside a real project folder, with scoped file access and a Docker-sandboxed shell behind approvals.
+
+## Skills
+
+Multi-agent systems, MCP, RAG, evals, fine-tuning (QLoRA/SFT), voice agents. Python, TypeScript, Go. Anthropic SDK, LangGraph, Google ADK, PyTorch. FastAPI, React. Docker, GCP, AWS Bedrock.

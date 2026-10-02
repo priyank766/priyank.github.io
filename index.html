@@ -8,9 +8,8 @@
 <meta name="author" content="Priyank Patel">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://priyank.is-a.dev/">
-<meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0c0c0b" media="(prefers-color-scheme: dark)">
-<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0c0c0b">
+<meta name="color-scheme" content="dark light">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="512x512" href="/social-icon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -33,7 +32,7 @@
 <script>
   try {
     var t = localStorage.getItem('pp-theme-choice');
-    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
   } catch (e) {}
 </script>
 <style>
@@ -48,6 +47,7 @@
   --accent: #ff4d2e;
   --accent-ink: #ff6a4f;
   --select: rgba(255, 77, 46, .22);
+  --llm: #c08a5a;
   --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
@@ -55,16 +55,9 @@
   --max: 1180px;
   color-scheme: dark;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg: #f4f3ef; --bg-2: #ebe9e3; --ink: #141412; --ink-2: #3f3d38; --muted: #6b6862;
-    --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(211, 51, 22, .14);
-    color-scheme: light;
-  }
-}
 :root[data-theme="light"] {
   --bg: #f4f3ef; --bg-2: #ebe9e3; --ink: #141412; --ink-2: #3f3d38; --muted: #6b6862;
-  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(211, 51, 22, .14);
+  --rule: #dcd9d1; --tick: #b3afa5; --accent: #d33316; --accent-ink: #b52a10; --select: rgba(211, 51, 22, .14); --llm: #8a5a32;
   color-scheme: light;
 }
 
@@ -102,36 +95,46 @@ code { font-family: var(--mono); font-size: .78em; }
 .theme:hover { color: var(--ink); }
 .theme svg { width: 16px; height: 16px; }
 
-/* Hero: intro on the left, the map of my work on the right */
-.hero { padding: clamp(28px, 5vw, 72px) 0 clamp(28px, 4vw, 48px); }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px 56px; align-items: center; }
-@media (min-width: 980px) { .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } }
-.intro { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 0 28px; align-items: start; }
-.portrait { margin: 0; grid-row: 1 / span 2; padding-top: 10px; }
-.portrait img { display: block; width: 112px; height: 112px; object-fit: cover; border-radius: 3px; }
-.hero h1 { font-size: clamp(3.25rem, 7.4vw, 6.75rem); line-height: .92; letter-spacing: -.035em; font-weight: 360; font-variation-settings: "opsz" 72; margin: 0 0 22px -.04em; }
+/* Hero: the intro is the focus; the map of my work sits faintly behind it on the right */
+.hero { position: relative; padding: clamp(28px, 5vw, 72px) 0 clamp(36px, 5vw, 64px); overflow: hidden; }
+.hero-in { position: relative; z-index: 1; pointer-events: none; }
+.hero-in a, .hero-in img { pointer-events: auto; }
+.hero h1 { font-size: clamp(3.25rem, 12vw, 10.5rem); line-height: .92; letter-spacing: -.035em; font-weight: 360; font-variation-settings: "opsz" 72; margin: 0 0 clamp(22px, 3vw, 40px) -.04em; }
 .hero h1 .ch { display: inline-block; text-align: center; }
-.hero .lede { margin: 0; max-width: 22em; font-size: clamp(1.3125rem, 1.9vw, 1.6875rem); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
-.facts { grid-column: 1 / -1; margin: clamp(26px, 3vw, 36px) 0 0; display: grid; border-top: 1px solid var(--rule); }
+.intro { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 0 32px; align-items: start; max-width: 600px; }
+.portrait { margin: 0; padding-top: 6px; }
+.portrait img { display: block; width: 132px; height: 132px; object-fit: cover; border-radius: 3px; }
+.hero .lede { margin: 0; max-width: 22em; font-size: clamp(1.3125rem, 2.1vw, 1.875rem); line-height: 1.3; letter-spacing: -.01em; text-wrap: balance; }
+.facts { margin: clamp(22px, 3vw, 34px) 0 0; display: grid; border-top: 1px solid var(--rule); }
 .facts > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
 .facts dt { font-family: var(--sans); font-size: .8125rem; color: var(--muted); }
 .facts dd { margin: 0; font-size: 1.0625rem; line-height: 1.45; color: var(--ink-2); }
 .facts dd a { color: var(--ink); }
-.links { grid-column: 1 / -1; list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 26px; font-family: var(--sans); font-size: .9375rem; }
+.links { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 26px; font-family: var(--sans); font-size: .9375rem; }
 .links a { color: var(--ink); text-decoration-color: color-mix(in srgb, var(--ink) 30%, transparent); }
 .links li:first-child a { font-weight: 500; }
-.graph-wrap { position: relative; height: clamp(420px, 44vw, 560px); margin-right: -8px; }
-#graph { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.graph-cap { position: absolute; right: 8px; bottom: -6px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; pointer-events: none; }
-@media (max-width: 979px) { .graph-wrap { height: 400px; margin-inline: -8px; } }
+#graph { position: relative; z-index: 0; display: block; width: min(calc(100% - 2 * var(--gutter)), 900px); height: 420px; margin: 28px auto 0; opacity: 1; transition: opacity .5s ease; }
+.graph-cap { display: none; }
+@media (min-width: 1180px) {
+  #graph { --gt: calc(clamp(28px, 5vw, 72px) + clamp(3.25rem, 12vw, 10.5rem) * .92 + 24px); position: absolute; margin: 0; top: var(--gt); --gl: calc((100% - 1180px) / 2 + var(--gutter) + 640px); left: var(--gl); width: calc(100% - var(--gl)); height: calc(100% - var(--gt)); opacity: .55; }
+  #graph.lit { opacity: 1; }
+  .graph-cap { display: block; position: absolute; z-index: 1; right: var(--gutter); bottom: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; line-height: 1.6; pointer-events: none; }
+}
 @media (max-width: 599px) {
   .intro { grid-template-columns: 64px minmax(0, 1fr); gap: 0 16px; }
   .portrait img { width: 64px; height: 64px; border-radius: 50%; }
-  .portrait { padding-top: 6px; }
+  .facts { grid-column: 1 / -1; }
+  .links { grid-column: 1 / -1; }
   .facts > div { grid-template-columns: 1fr; gap: 2px; padding: 10px 0; }
   .facts dd { font-size: 1rem; }
-  .graph-cap { display: none; }
 }
+
+/* llms.txt button and the light-mode roast */
+.llm { font-family: var(--mono); font-size: .75rem; color: var(--llm); text-decoration: none; border: 1px solid color-mix(in srgb, var(--llm) 45%, transparent); border-radius: 4px; padding: 3px 8px; }
+.llm:hover { color: var(--llm); border-color: var(--llm); background: color-mix(in srgb, var(--llm) 12%, transparent); }
+.roast { position: fixed; z-index: 30; top: 60px; right: var(--gutter); max-width: min(320px, calc(100vw - 32px)); font-family: var(--mono); font-size: .8125rem; line-height: 1.45; color: var(--ink); background: var(--bg-2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; box-shadow: 0 12px 40px rgba(0,0,0,.35); opacity: 0; transform: translateY(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
+.roast.show { opacity: 1; transform: none; }
+.roast small { display: block; color: var(--muted); margin-top: 4px; font-size: .6875rem; }
 
 /* Timeline: every public repo, standing on the day it was created */
 .slope { padding: clamp(36px, 5vw, 64px) 0 clamp(48px, 7vw, 88px); border-top: 1px solid var(--rule); }
@@ -249,6 +252,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <a class="opt" href="#oss">Open source</a>
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
+      <a class="llm" href="/llms.txt" title="A plain-text version of this page, written for AI agents and LLMs">llms.txt</a>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
       </button>
@@ -258,28 +262,28 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 <main id="main">
   <section class="hero" aria-labelledby="hello">
-    <div class="wrap hero-grid">
+    <div class="wrap hero-in">
+      <h1 id="hello">Priyank Patel</h1>
       <div class="intro">
         <figure class="portrait"><img src="/priyank.jpg" width="400" height="400" alt="My GitHub avatar: a figure in a white cap and jacket, covered in daisies."></figure>
-        <h1 id="hello">Priyank Patel</h1>
-        <p class="lede">I build AI agents that people rely on at work, and I deploy them myself.</p>
-        <dl class="facts">
-          <div><dt>Work</dt><dd>AI engineer at <a href="https://saarthios.com/">SaarthiOS</a>. My agents are live with three clients and used by their CEOs and CFOs.</dd></div>
-          <div><dt>Open source</dt><dd>Code Reviewer on <a href="https://github.com/kubeflow/mcp-server">Kubeflow&rsquo;s MCP server</a>, a CNCF project.</dd></div>
-          <div><dt>School</dt><dd>B.E. at L.D. College of Engineering, Ahmedabad, 2023&nbsp;&ndash;&nbsp;2027. Third year.</dd></div>
-        </dl>
-        <ul class="links" aria-label="Contact and profiles">
-          <li><a href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a></li>
-          <li><a href="https://github.com/priyank766">GitHub</a></li>
-          <li><a href="https://x.com/priyank766">X</a></li>
-          <li><a href="https://www.linkedin.com/in/priyank766/">LinkedIn</a></li>
-        </ul>
-      </div>
-      <div class="graph-wrap">
-        <canvas id="graph" aria-hidden="true"></canvas>
-        <div class="graph-cap">squares are things I built, circles are what they&rsquo;re built with<br>point at one to trace it, click a square to jump to it</div>
+        <div>
+          <p class="lede">I build AI agents that people rely on at work, and I deploy them myself.</p>
+          <dl class="facts">
+            <div><dt>Work</dt><dd>AI engineer at <a href="https://saarthios.com/">SaarthiOS</a>. My agents are live with three clients and used by their CEOs and CFOs.</dd></div>
+            <div><dt>Open source</dt><dd>Code Reviewer on <a href="https://github.com/kubeflow/mcp-server">Kubeflow&rsquo;s MCP server</a>, a CNCF project.</dd></div>
+            <div><dt>School</dt><dd>B.E. at L.D. College of Engineering, Ahmedabad, 2023&nbsp;&ndash;&nbsp;2027. Third year.</dd></div>
+          </dl>
+          <ul class="links" aria-label="Contact and profiles">
+            <li><a href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a></li>
+            <li><a href="https://github.com/priyank766">GitHub</a></li>
+            <li><a href="https://x.com/priyank766">X</a></li>
+            <li><a href="https://www.linkedin.com/in/priyank766/">LinkedIn</a></li>
+          </ul>
+        </div>
       </div>
     </div>
+    <canvas id="graph" aria-hidden="true"></canvas>
+    <div class="graph-cap">squares are things I built, circles are what they&rsquo;re built with<br>point at one to trace it, click a square to jump to it</div>
   </section>
 
   <section class="slope" aria-labelledby="slope-h">
@@ -419,16 +423,43 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   function readC() { C = { ink: css('--ink'), ink2: css('--ink-2'), muted: css('--muted'), tick: css('--tick'), red: css('--accent'), bg: css('--bg') }; }
   readC();
 
-  /* Theme toggle */
-  var btn = $('#theme'), sys = window.matchMedia('(prefers-color-scheme: dark)');
-  function current() { return root.getAttribute('data-theme') || (sys.matches ? 'dark' : 'light'); }
-  btn.addEventListener('click', function () {
-    var next = current() === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('pp-theme-choice', next); } catch (e) {}
+  /* Theme. Dark is the default. Going light takes a double click; a single click gets you roasted. */
+  var btn = $('#theme');
+  var roast = document.createElement('div'); roast.className = 'roast'; roast.setAttribute('role', 'status'); document.body.appendChild(roast);
+  var LINES = [
+    'Light mode? In this economy?',
+    'Your retinas just filed a complaint.',
+    'Request denied. The agents work in the dark.',
+    'Light mode is a bug, not a feature.',
+    'Bold of you to want your eyes back.',
+    'Even my GPU runs cooler in dark mode.',
+    'This has been reported to your optometrist.',
+    'Real ones ship at 2 a.m. With the lights off.',
+    'You clicked. Nothing happened. Think about that.',
+    'Sunglasses not included.'
+  ];
+  var order = LINES.map(function (_, i) { return i; }).sort(function () { return Math.random() - .5; }), tries = 0, rt0;
+  function say(msg, sub) {
+    roast.innerHTML = msg + (sub ? '<small>' + sub + '</small>' : '');
+    roast.classList.add('show'); clearTimeout(rt0); rt0 = setTimeout(function () { roast.classList.remove('show'); }, 2200);
+  }
+  function setTheme(t) {
+    if (t === 'light') root.setAttribute('data-theme', 'light'); else root.removeAttribute('data-theme');
+    try { if (t === 'light') localStorage.setItem('pp-theme-choice', 'light'); else localStorage.removeItem('pp-theme-choice'); } catch (e) {}
+    btn.setAttribute('aria-label', t === 'light' ? 'Back to dark mode' : 'Switch to light mode (double click)');
     readC();
+  }
+  setTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  var clickTimer = null;
+  btn.addEventListener('click', function () {
+    if (root.getAttribute('data-theme') === 'light') { setTheme('dark'); say('Welcome back.'); return; }
+    if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; setTheme('light'); say('Fine. You asked for it.', 'click once to come back'); return; }
+    clickTimer = setTimeout(function () {
+      clickTimer = null;
+      var line = LINES[order[tries % LINES.length]]; tries++;
+      say(line, tries >= 3 ? 'if you really mean it, double click' : '');
+    }, 280);
   });
-  if (sys.addEventListener) sys.addEventListener('change', readC);
 
   /* Top bar */
   var top = $('#top'), h1 = $('#hello');
@@ -479,13 +510,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     function size() {
       var r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
       W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; g.setTransform(d, 0, 0, d, 0, 0);
-      var narrow = W < 520, bx = 10, by = 18, bw = W - bx - (narrow ? 100 : 150), bh = H - (narrow ? 46 : 82);
+      var narrow = W < 520, bx = narrow ? 10 : 16, by = narrow ? 18 : 10, bw = W - bx - (narrow ? 100 : 150), bh = H - by - (narrow ? 28 : 70);
       N.forEach(function (n) { var q = (narrow ? M : D)[n.id]; n.hx = bx + q[0] * bw; n.hy = by + q[1] * bh; n.px = n.hx; n.py = n.hy; });
     }
     new ResizeObserver(size).observe(cv); size();
     new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(cv);
     cv.addEventListener('pointermove', function (e) { var r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-    cv.addEventListener('pointerleave', function () { mx = my = -1e4; });
+    cv.addEventListener('pointerleave', function () { mx = my = -1e4; cv.classList.remove('lit'); });
+    cv.addEventListener('pointerenter', function () { cv.classList.add('lit'); });
     cv.addEventListener('click', function () {
       if (!hover || !hover.to) return;
       var el = $(hover.to); if (!el) return;
