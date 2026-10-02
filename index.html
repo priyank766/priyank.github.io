@@ -650,7 +650,7 @@ main:focus, section:focus, article:focus { outline: none; }
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command menu">
   <div class="cmdk-s"><svg class="cmdk-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input id="cmdk-q" type="text" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" aria-label="Search commands" placeholder="Jump to a section, open a project, copy my email" autocomplete="off" autocapitalize="off" spellcheck="false"><kbd>esc</kbd></div>
   <ul class="cmdk-l" id="cmdk-list" role="listbox" aria-label="Commands" data-lenis-prevent></ul>
-  <div class="cmdk-f" aria-hidden="true"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd>move</span><span><kbd>&crarr;</kbd>run</span><span><kbd>Ctrl F</kbd>again to search the page</span><span class="cmdk-n" id="cmdk-n"></span></div>
+  <div class="cmdk-f" aria-hidden="true"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd>move</span><span><kbd>&crarr;</kbd>run</span><span class="cmdk-n" id="cmdk-n"></span></div>
 </div>
 
 <header class="top" id="top">
@@ -1247,7 +1247,7 @@ import Lenis from 'lenis';
   (function () {
     var kb = $('#kbtn'), dlg = $('#cmdk'), bgd = $('#cmdk-bg'), q = $('#cmdk-q'), list = $('#cmdk-list'), cnt = $('#cmdk-n'), last = null, isOpen = false, sel = 0, shown = [];
     var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
-    kb.querySelector('kbd').textContent = '\u2318K'; kb.hidden = false;
+    kb.querySelector('kbd').textContent = '\u2318F'; kb.hidden = false;
     var IC = {
       go: '<path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
       sq: '<rect x="4.5" y="4.5" width="7" height="7" fill="currentColor"/>',
@@ -1275,14 +1275,14 @@ import Lenis from 'lenis';
         if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(ok, bad); else bad();
       } },
       { g: 'Actions', l: 'Agent mode', h: 'llms.txt', ic: 'doc', k: 'ai llm', run: function () { openSheet(); } },
-      { g: 'Actions', l: 'Toggle theme', h: 'press twice for light', ic: 'theme', k: 'dark light mode', stay: true, run: function (row, at) {
+      { g: 'Actions', l: 'Toggle theme', h: 'double-click for light', ic: 'theme', k: 'dark light mode', stay: true, run: function (row, at) {
         var light = root.getAttribute('data-theme') === 'light';
         function go(t) { close(true); setTimeout(function () { setTheme(t, true, at); setTimeout(function () { say(t === 'dark' ? nextBack() : nextLight(), t === 'dark' ? '' : 'click once to come back'); }, 200); }, 430); }
         if (light) { go('dark'); return; }
         // first press: a roast in the row itself; a second press within a few seconds really switches
-        if (row._armed && Date.now() - row._armed < 3000) { row._armed = 0; row.hint.textContent = row.h; go('light'); return; }
+        if (row._armed && Date.now() - row._armed < 450) { row._armed = 0; row.hint.textContent = row.h; go('light'); return; }
         row._armed = Date.now();
-        row.hint.textContent = LINES[order[tries++ % LINES.length]].replace(/\.$/, '') + ' · again?';
+        row.hint.textContent = LINES[order[tries++ % LINES.length]].replace(/\.$/, '') + ' · double-click it';
         if (!reduce) row.el.animate({ transform: ['translateX(0)', 'translateX(-6px)', 'translateX(5px)', 'translateX(-2px)', 'translateX(0)'] }, { duration: 360, easing: 'ease-out' });
         clearTimeout(row._t); row._t = setTimeout(function () { row._armed = 0; row.hint.textContent = row.h; }, 3000);
       } },
@@ -1374,7 +1374,7 @@ import Lenis from 'lenis';
       if (isOpen) return; isOpen = true;
       last = document.activeElement;
       q.value = '';
-      var th = items[11]; th.h = root.getAttribute('data-theme') === 'light' ? 'back to dark' : 'switch to light'; th.hint.textContent = th.h;
+      var th = items[11]; th.h = root.getAttribute('data-theme') === 'light' ? 'back to dark' : 'double-click for light'; th.hint.textContent = th.h;
       items.forEach(function (it, i) { it.el.style.setProperty('--n', i); });
       filter(false); list.scrollTop = 0;
       dlg.classList.add('open'); bgd.classList.add('open'); root.classList.add('cmdk-open'); kb.setAttribute('aria-expanded', 'true');
@@ -1410,10 +1410,11 @@ import Lenis from 'lenis';
         if (root.classList.contains('sheet-open')) { closeSheet(); setTimeout(open, 450); return; }
         open(); return;
       }
-      // Ctrl/⌘+F opens this menu too. Pressed again while it's open, it closes the menu and the browser's own find takes over.
+      // Ctrl/⌘+F opens this menu too. Agent mode keeps the browser's find for reading the text.
       if ((e.key === 'f' || e.key === 'F') && (e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && !root.classList.contains('sheet-open')) {
-        if (isOpen) { close(); return; }
-        e.preventDefault(); open(); return;
+        e.preventDefault();
+        if (isOpen) { q.focus(); q.select(); return; }
+        open(); return;
       }
       if (e.key === '/' && !isOpen && !e.metaKey && !e.ctrlKey && !e.altKey) {
         var t = e.target, tag = t && t.tagName;
