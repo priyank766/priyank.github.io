@@ -436,7 +436,7 @@ a:active .rl, button:active .rl { scale: .94; }
 .sheet-body .h2 { display: inline-block; margin-top: .3em; }
 .sheet-body .q { color: #5a4126; }
 .sheet-body .pl { display: block; min-height: 1.7em; }
-.sheet.open .pl { animation: pl-in .7s var(--eo) backwards; animation-delay: calc(min(var(--i, 0), 48) * 17ms + .45s); }
+.sheet.open .pl:not(.typed) { animation: pl-in .7s var(--eo) backwards; animation-delay: calc(min(var(--i, 0), 48) * 17ms + .45s); }
 @keyframes pl-in { from { opacity: 0; transform: translateY(10px); clip-path: inset(0 100% 0 0); } 40% { opacity: 1; } to { clip-path: inset(0 0 0 0); } }
 .sheet-body .caret { display: inline-block; width: .55em; height: 1.05em; vertical-align: -3px; background: #3a2a1a; animation: blink 1s steps(1) infinite; }
 .sheet ::selection { background: rgba(255, 90, 60, .996); color: #141412; }
@@ -541,7 +541,7 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
 .hello { container-type: inline-size; min-width: 0; }
 .now-line { font-size: clamp(1.125rem, 1.7vw, 1.375rem); line-height: 1.45; color: var(--ink-2); margin: 0 0 14px; max-width: 34em; text-wrap: pretty; }
 .now-line .t { display: inline-block; color: var(--ink); font-variant-numeric: tabular-nums; }
-#contact .mail { display: inline-block; margin: 0; font-size: clamp(1.4rem, 7.4vw, 4.5rem); font-size: min(9.1cqi, 6rem); letter-spacing: -.03em; line-height: 1.08; white-space: nowrap; overflow-wrap: normal; text-decoration: none; padding-bottom: .08em;
+#contact .mail { display: inline-block; margin: 0; font-size: clamp(1.4rem, 7.4vw, 4.5rem); font-size: min(6.2cqi, 3.5rem); letter-spacing: -.03em; line-height: 1.08; white-space: nowrap; overflow-wrap: normal; text-decoration: none; padding-bottom: .08em;
   background-image: linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--tick), var(--tick)); background-repeat: no-repeat; background-position: 0 100%, 0 100%; background-size: 0 2px, 100% 1px; transition: background-size .7s var(--eo), color .2s; }
 #contact .mail:hover, #contact .mail:focus-visible { background-size: 100% 2px, 100% 1px; letter-spacing: -.03em; }
 .mail-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin: 12px 0 0; font-family: var(--sans); font-size: .875rem; color: var(--muted); }
@@ -940,13 +940,48 @@ import Lenis from 'lenis';
       else if (/^&gt; /.test(s)) s = '<span class="q">' + s + '</span>';
       return s.replace(/https?:\/\/[^\s)<]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; });
     }
+    // Typewriter: the summary streams in like a model writing it. A click, scroll or key on the paper finishes it.
+    var typing = 0;
+    function render(lines, upto) {
+      var out = [], left = upto;
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (left >= ln.length) {
+          var lastLine = i === lines.length - 1 || left - ln.length - 1 < 0;
+          out.push('<span class="pl typed">' + fmt(ln) + (lastLine ? '<span class="caret" aria-hidden="true"></span>' : '') + '</span>');
+          left -= ln.length + 1;
+          if (left < 0) break;
+        } else {
+          out.push('<span class="pl typed">' + esc(ln.slice(0, left)) + '<span class="caret" aria-hidden="true"></span></span>');
+          break;
+        }
+      }
+      return out.join('');
+    }
+    function all() { return raw.replace(/\s+$/, ''); }
+    function finishTyping() { if (!raw) return; typing++; pre.innerHTML = render(all().split('\n'), all().length); }
+    function stream() {
+      var txt = all(), lines = txt.split('\n'), total = txt.length, n = 0, id = ++typing;
+      if (reduce) { pre.innerHTML = render(lines, total); return; }
+      pre.innerHTML = render(lines, 0);
+      var start = performance.now() + 650; // let the paper finish unrolling first
+      (function tick(t) {
+        if (id !== typing || !isOpen()) return;
+        if (t >= start) {
+          n = Math.min(total, n + 3 + ((Math.random() * 4) | 0)); // slightly uneven, like a real stream
+          pre.innerHTML = render(lines, n);
+          var c = pre.querySelector('.caret');
+          if (c && c.getBoundingClientRect().bottom > body.getBoundingClientRect().bottom - 48) body.scrollTop += 26;
+        }
+        if (n < total) requestAnimationFrame(tick);
+      })(performance.now());
+    }
+    ['pointerdown', 'wheel', 'touchmove'].forEach(function (ev) { body.addEventListener(ev, function () { if (n_typing()) finishTyping(); }, { passive: true }); });
+    function n_typing() { return isOpen() && raw && pre.querySelector('.caret') && pre.textContent.length < all().length - 2; }
     function load() {
-      if (raw) return;
-      fetch('/llms.txt').then(function (r) { return r.text(); }).then(function (t) {
-        raw = t;
-        var lines = t.replace(/\s+$/, '').split('\n');
-        pre.innerHTML = lines.map(function (ln, i) { return '<span class="pl" style="--i:' + i + '">' + fmt(ln) + (i === lines.length - 1 ? '<span class="caret" aria-hidden="true"></span>' : '') + '</span>'; }).join('');
-      }).catch(function () { pre.textContent = 'Could not load it. It lives at /llms.txt.'; });
+      if (raw) { stream(); return; }
+      fetch('/llms.txt').then(function (r) { return r.text(); }).then(function (t) { raw = t; stream(); })
+        .catch(function () { pre.textContent = 'Could not load it. It lives at /llms.txt.'; });
     }
     // Agent mode lives in history (#agent), so Back, the swipe-back gesture and the Back button all return to the page.
     var pushed = false, keepY = 0;
@@ -982,7 +1017,7 @@ import Lenis from 'lenis';
     b.addEventListener('click', function () { open(false); });
     bg.addEventListener('click', requestClose);
     close.addEventListener('click', requestClose);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen() && !root.classList.contains('cmdk-open')) requestClose(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen() && !root.classList.contains('cmdk-open')) requestClose(); else if (e.key !== 'Tab' && n_typing()) finishTyping(); });
     // Fills grow from where the pointer touched the button.
     function at(btn, e) {
       var r = btn.getBoundingClientRect(), kb = !e || (e.clientX === 0 && e.clientY === 0);
