@@ -296,7 +296,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .sheet-body .h1 { font-size: 1.45em; }
 .sheet-body .h2 { display: inline-block; margin-top: .3em; }
 .sheet-body .q { color: #5a4126; }
-.sheet ::selection { background: #d9b98a; }
+.sheet ::selection { background: rgba(255, 176, 122, .996); color: #3a2a1a; }
 html.sheet-open body { overflow: hidden; }
 
 /* ---- loading screen ---- */
@@ -321,8 +321,8 @@ html.loading body { overflow: hidden; }
 }
 
 /* ---- Now: words light up as you read ---- */
-.js .lit-words .w { opacity: .16; transition: opacity .25s linear; }
-.js .lit-words .w.on { opacity: 1; }
+.js .lit-words .w { color: var(--tick); transition: color .3s linear; }
+.js .lit-words .w.on { color: inherit; }
 
 /* ---- magnetic bits + avatar tilt ---- */
 .mag { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
@@ -334,7 +334,7 @@ html.loading body { overflow: hidden; }
   .loader { display: none; }
   .slope.scrub { height: auto; }
   .slope.scrub > .wrap { position: static; min-height: 0; }
-  .js .lit-words .w { opacity: 1; }
+  .js .lit-words .w { color: inherit; }
 }
 
 /* no visible scrollbars anywhere; scrolling still works */
@@ -636,15 +636,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sheet-body::-webkit-scrollbar
     var finalTxt = h1.textContent, letters = finalTxt.replace(/ /g, '').split('');
     h1.innerHTML = finalTxt.split(' ').map(function (w) { return '<span class="wd">' + w.split('').map(function (c) { return '<span class="ch">' + c + '</span>'; }).join('') + '</span>'; }).join(' ');
     var chs = [].slice.call(h1.querySelectorAll('.ch'));
-    window.__afterLoad(function () {
+    window.__afterLoad(function () { (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
       chs.forEach(function (c) { c.style.width = c.getBoundingClientRect().width + 'px'; });
       var glyph = '01<>/{}[]#*+=_', f = 0;
       var id = setInterval(function () {
         f++;
         chs.forEach(function (c, i) { c.textContent = i < f / 2 ? letters[i] : glyph[(Math.random() * glyph.length) | 0]; });
-        if (f / 2 >= chs.length) { clearInterval(id); chs.forEach(function (c, i) { c.textContent = letters[i]; }); }
+        if (f / 2 >= chs.length) { clearInterval(id); chs.forEach(function (c, i) { c.textContent = letters[i]; c.style.width = ''; }); }
       }, 28);
-    });
+    }); });
   })();
 
 
