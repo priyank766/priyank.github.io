@@ -200,6 +200,7 @@ code { font-family: var(--mono); font-size: .78em; }
 .sec-grid { display: grid; grid-template-columns: 1fr; gap: 18px 48px; }
 @media (min-width: 900px) { .sec-grid { grid-template-columns: 220px minmax(0, 1fr); } }
 .sec h2 { font-size: clamp(1.625rem, 2.6vw, 2rem); letter-spacing: -.015em; line-height: 1.15; }
+.sec h2 { position: relative; z-index: 1; }
 .sec h2 small { display: block; font-family: var(--sans); font-size: .875rem; letter-spacing: 0; color: var(--muted); margin-top: 8px; line-height: 1.4; }
 .prose { max-width: 38em; text-wrap: pretty; }
 .prose p:last-child { margin-bottom: 0; }
@@ -300,7 +301,7 @@ html.lenis, html.lenis body { scroll-behavior: auto !important; height: auto; }
 .hero h1:not(.sc) .ch { will-change: transform; }
 
 /* headings: letters rise out of their word's mask */
-.sc .wd { clip-path: inset(-.45em -.25em -.34em -.25em); }
+.sc .wd { clip-path: inset(-.6em -.3em -.5em -.3em); }
 .sc .ch { transform: translate3d(0, 1.3em, 0) rotate(8deg); transition: transform 1.15s var(--eo); transition-delay: calc(var(--i, 0) * 22ms + var(--d0, 0ms)); }
 .sc.in .ch { transform: none; }
 .sc.done .wd { clip-path: none; }
@@ -366,7 +367,7 @@ a:active .rl, button:active .rl { scale: .94; }
 }
 /* desktop: rows pin and stack, the covered one recedes */
 .projects.stack .proj { position: sticky; top: 64px; background: var(--bg); transform-origin: 50% 0; }
-.projects.stack .proj:first-child { padding-top: 30px; margin-top: -22px; }
+.projects.stack .proj:first-child { padding-top: 30px; }
 /* the covered row dims by colour, never by opacity, so selections stay orange */
 .projects.stack .proj.cov { --mx: calc(100% - var(--k, 0) * 72%); }
 .projects.stack .proj.cov h3 a { color: color-mix(in srgb, var(--ink) var(--mx), var(--bg)); }
@@ -492,7 +493,7 @@ html.loading body { overflow: hidden; }
 .ld-bg { position: absolute; inset: 0; background: var(--bg); }
 .ld-top { position: absolute; left: var(--gutter); right: var(--gutter); top: 22px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); }
 .loader-name { position: absolute; left: 50%; top: 50%; translate: -50% -60%; font-family: var(--serif); font-weight: 360; font-size: clamp(3rem, 9.6vw, 8.5rem); line-height: .92; letter-spacing: -.035em; font-variation-settings: "opsz" 72; color: var(--ink); white-space: nowrap; transform-origin: 0 0; }
-.loader-name .wd { clip-path: inset(-.45em -.25em -.34em -.25em); }
+.loader-name .wd { clip-path: inset(-.6em -.3em -.5em -.3em); }
 html.loading .loader:not(.go) .loader-name, html.loading .loader:not(.go) .ld-top, html.loading .loader:not(.go) .ld-meta { visibility: hidden; }
 html.loading #hello, html.quick:not(.go) #hello { visibility: hidden; }
 .ld-meta { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 26px; display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--mono); font-size: 12px; color: var(--muted); }
@@ -596,7 +597,7 @@ main:focus, section:focus, article:focus { outline: none; }
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
-<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"></div><div class="ld-top"><span>priyank.is-a.dev</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
+<div class="loader" id="loader" aria-hidden="true"><div class="ld-bg"></div><div class="ld-top"><span>AI product engineer</span><span id="ld-clock">Ahmedabad, India</span></div><div class="loader-name" id="loader-name">Priyank Patel</div><div class="ld-meta"><span>Ahmedabad, India</span><div class="ld-status"><svg class="ld-mark" viewBox="0 0 50 12" aria-hidden="true"><path class="ld-e1" d="M6 6H22" pathLength="1"/><path class="ld-e2" d="M28 6H44" pathLength="1"/><rect class="ld-n0" x="1.5" y="3.5" width="5" height="5"/><circle class="ld-n1" cx="25" cy="6" r="2.5"/><circle class="ld-n2" cx="47" cy="6" r="2.5"/></svg><span id="ld-msg">reading llms.txt</span></div></div><div class="loader-line" id="loader-line"></div></div>
 <div class="shutter" id="shutter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 <div class="sheet-bg" id="sheet-bg"></div>
 <aside class="sheet" id="ai-sheet" role="dialog" aria-modal="true" aria-label="This page, written for AI" tabindex="-1">
@@ -781,7 +782,7 @@ main:focus, section:focus, article:focus { outline: none; }
 
 <footer>
   <div class="wrap">
-    <span>Priyank Patel &middot; priyank.is-a.dev</span>
+    <span>Priyank Patel</span>
     <span>Ahmedabad, India</span>
   </div>
 </footer>
@@ -817,9 +818,26 @@ import Lenis from 'lenis';
   var lenis = null;
   if (!reduce) {
     // One engine for every scroll: smooth wheel on mouse and trackpad, native touch on phones, and all jumps.
-    lenis = new Lenis({ lerp: .085, wheelMultiplier: .85, smoothWheel: fine, autoRaf: false });
+    lenis = new Lenis({ lerp: .085, wheelMultiplier: .85, smoothWheel: fine, autoRaf: false, autoResize: true });
     window.__lenis = lenis;
   }
+  // Re-measure whenever the page can have changed size, and start from a clean target.
+  var resyncQ = false;
+  function resync(hard) {
+    if (!lenis) return;
+    if (hard) { lenis.resize(); if (lenis.reset) lenis.reset(); lenis.scrollTo(window.scrollY, { immediate: true, force: true }); return; }
+    if (resyncQ) return; resyncQ = true;
+    requestAnimationFrame(function () { resyncQ = false; lenis.resize(); });
+  }
+  if (lenis) {
+    if (document.fonts) document.fonts.ready.then(function () { resync(); });
+    window.addEventListener('load', function () { resync(); });
+    if ('ResizeObserver' in window) new ResizeObserver(function () { resync(); }).observe(document.body);
+  }
+  // While the loader or shutters are up, wheel, touch and scroll keys do nothing at all.
+  function covered() { return root.classList.contains('loading') || root.classList.contains('quick'); }
+  ['wheel', 'touchmove'].forEach(function (ev) { window.addEventListener(ev, function (e) { if (covered()) e.preventDefault(); }, { passive: false, capture: true }); });
+  window.addEventListener('keydown', function (e) { if (covered() && /^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| |Spacebar)$/.test(e.key)) e.preventDefault(); }, true);
   // Where an element sits in the flow, even when it's currently stuck by position: sticky.
   function flowTop(el) {
     var list = el.parentElement;
@@ -849,8 +867,11 @@ import Lenis from 'lenis';
     if (reduce) return;
     var sec = el.matches('.sec, .slope') ? el : null;
     if (sec) { sec.classList.remove('arrive'); void sec.offsetWidth; sec.classList.add('arrive'); setTimeout(function () { sec.classList.remove('arrive'); }, 1700); }
+    var h2 = sec && sec.querySelector('h2.sc');
+    // a jump can outrun the observer; the heading is always fully revealed when you land
+    if (h2 && !h2.classList.contains('in')) { h2.classList.add('in'); setTimeout(function () { h2.classList.add('done'); }, 1300 + h2.querySelectorAll('.ch').length * 22); }
     var h = sec && sec.querySelector('h2.sc.done');
-    if (h) [].forEach.call(h.querySelectorAll('.ch'), function (c, i) { c.animate({ transform: ['translateY(0)', 'translateY(-.2em)', 'translateY(0)'] }, { duration: 650, delay: 260 + i * 30, easing: 'cubic-bezier(.3,0,.2,1)', composite: 'add' }); });
+    if (h) [].forEach.call(h.querySelectorAll('.ch'), function (c, i) { c.animate({ transform: ['translateY(0)', 'translateY(-.12em)', 'translateY(0)'] }, { duration: 650, delay: 260 + i * 30, easing: 'cubic-bezier(.3,0,.2,1)', composite: 'add' }); });
   }
   if (lenis) document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href^="#"]');
@@ -1477,7 +1498,7 @@ import Lenis from 'lenis';
   /* ---------- Loading screen (first visit of a session) and shutters (every refresh after) ---------- */
   (function () {
     var L = $('#loader'), S = $('#shutter');
-    function done() { root.classList.remove('loading', 'quick', 'go'); if (L) L.remove(); if (S) S.remove(); if (lenis) lenis.start(); }
+    function done() { root.classList.remove('loading', 'quick', 'go'); if (L) L.remove(); if (S) S.remove(); if (lenis) { lenis.start(); resync(true); } }
     var failsafe = setTimeout(function () { h1.style.visibility = ''; done(); fireLoaded(); }, 9000);
     var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     if (root.classList.contains('loading')) {
@@ -1711,7 +1732,7 @@ import Lenis from 'lenis';
       });
     });
     // Headings drift slightly against the text beside them, for depth.
-    var pHeads = $$('.sec h2, .slope-head h2'), pVis = new Set();
+    var pHeads = $$('#now h2, #oss h2, #contact h2, .slope-head h2'), pVis = new Set();
     var io3 = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) pVis.add(en.target); else { pVis.delete(en.target); en.target.style.translate = ''; } }); });
     pHeads.forEach(function (h) { io3.observe(h); });
     var lastPh = -1;
