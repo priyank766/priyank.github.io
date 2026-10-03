@@ -570,12 +570,24 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
 .compose::before, .compose::after { content: ""; position: absolute; left: 0; right: 56px; bottom: 0; height: 1px; background: var(--rule); pointer-events: none; }
 .compose::after { background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform .8s var(--eio); }
 .compose:focus-within::after { transform: none; }
-.compose input[type="text"] { flex: 1; min-width: 0; appearance: none; background: none; border: 0; border-radius: 0; outline: 0; color: var(--ink); font: 400 clamp(1.125rem, 1.9vw, 1.375rem)/1.4 var(--serif); padding: 12px 0; caret-color: var(--accent); }
-.compose input[type="text"]::placeholder { color: var(--muted); font-style: italic; opacity: 1; }
+.compose #msg { flex: 1; min-width: 0; appearance: none; background: none; border: 0; border-radius: 0; outline: 0; color: var(--ink); font: 400 clamp(1.125rem, 1.9vw, 1.375rem)/1.4 var(--serif); padding: 12px 0; caret-color: var(--accent); }
+.compose #msg::placeholder { color: var(--muted); font-style: italic; opacity: 1; }
 .compose button { flex: none; position: relative; overflow: hidden; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule); background: none; color: var(--ink-2); display: grid; place-items: center; cursor: pointer; transition: border-color .3s, background-color .3s, color .3s, scale .2s var(--eo); }
 .compose button svg { width: 18px; height: 18px; }
 .compose button:hover, .compose.ready button { background: var(--accent); border-color: var(--accent); color: #141412; }
 .compose button:active { scale: .9; }
+.cprev { display: flex; align-items: baseline; gap: 12px; max-width: 36rem; margin: 30px 0 -22px; min-width: 0; }
+.csug { display: flex; align-items: baseline; gap: 12px; max-width: 36rem; width: 100%; margin: 30px 0 -22px; padding: 0; appearance: none; background: none; border: 0; cursor: pointer; text-align: left; font: italic 400 1.125rem/1.4 var(--serif); color: var(--muted); min-height: 1.4em; transition: color .25s; }
+#csug-t .scr { color: var(--accent); }
+#csug-t { min-width: 0; padding-block: .15em; }
+.csug:hover, .csug:focus-visible { color: var(--accent); outline: 0; }
+.csug[hidden], .cprev[hidden] { display: none; }
+.cprev q { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: italic 400 1rem/1.4 var(--serif); color: var(--ink-2); quotes: "“" "”"; }
+.cprev button { flex: none; appearance: none; background: none; border: 0; padding: 0; cursor: pointer; font: 12px/1 var(--mono); color: var(--muted); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; transition: color .25s, text-decoration-color .25s; }
+.cprev button:hover, .cprev button:focus-visible { color: var(--accent); text-decoration-color: var(--accent); outline: 0; }
+.compose.busy button { pointer-events: none; }
+.compose.busy button svg { animation: cspin .9s linear infinite; }
+@keyframes cspin { to { rotate: 360deg; } }
 .compose-note { font: 12px/1.5 var(--mono); color: var(--muted); min-height: 1.5em; margin: 8px 0 26px; }
 #contact .contact-links { gap: 10px 28px; font-size: 1rem; }
 #contact .contact-links a { display: inline-flex; align-items: center; gap: 6px; }
@@ -805,11 +817,13 @@ main:focus, section:focus, article:focus { outline: none; }
         <p class="prose now-line" id="now-line">I&rsquo;m on India time (UTC+5:30).</p>
         <a class="mail" id="mail" href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a>
         <p class="mail-sub"><a href="mailto:priyank8445@gmail.com" class="mail-app">Open in your mail app</a><span class="mail-tip"><span class="mail-hint" id="mail-hint" hidden>or click the address to copy it</span><span class="mail-ok" id="mail-ok" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2 6.6 4.7 9.2 10 3.2" pathLength="1"/></svg>Copied</span></span><span class="vh" role="status" id="mail-status"></span></p>
-        <form class="compose" id="compose" action="mailto:priyank8445@gmail.com" method="get" enctype="text/plain">
-          <input type="hidden" name="subject" value="Hello from your site">
-          <label class="vh" for="msg">Your message</label>
-          <input id="msg" name="body" type="text" placeholder="Write it here, I&rsquo;ll read it." autocomplete="off" enterkeyhint="send">
-          <button type="submit" aria-label="Write it in your mail app"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="csug" id="csug"><span id="csug-t"></span></button>
+        <p class="cprev" id="cprev" hidden><q id="cprev-t"></q><button type="button" id="cprev-e">edit</button></p>
+        <form class="compose" id="compose" novalidate>
+          <label class="vh" for="msg" id="msg-l">Your message</label>
+          <input id="msg" name="message" type="text" placeholder="Write it here, I&rsquo;ll read it." autocomplete="off" enterkeyhint="next">
+          <input class="vh" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit" aria-label="Next"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5.5 15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </form>
         <p class="compose-note" id="compose-note" role="status"></p>
         <ul class="contact-links">
@@ -1473,31 +1487,147 @@ import Lenis from 'lenis';
     });
     // socials get a small arrow that leans out on hover
     setTimeout(function () { $$('#contact .contact-links a').forEach(function (a) { a.insertAdjacentHTML('beforeend', '<svg class="go-ic" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'); }); }, 0);
-    // the composer hands your words to your own mail app; nothing is sent from here
-    input.addEventListener('input', function () { form.classList.toggle('ready', !!input.value.trim()); });
+    // The composer takes the message, then asks for an email to reply to, and sends both straight to my inbox.
+    // If the send fails it falls back to the visitor's own mail app.
+    var ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL, step = 1, msg = '', prev = $('#cprev'), prevT = $('#cprev-t'), lab = $('#msg-l'), honey = form.querySelector('[name="_honey"]');
+    input.addEventListener('input', function () {
+      var has = !!input.value.trim();
+      form.classList.toggle('ready', has);
+      if (step === 1) note.textContent = has ? '↵ next: your email, so I can reply' : HINT;
+    });
+    // The placeholder types out a few reasons people actually write, one after another, while the field is empty.
+    var PH = [
+      'Saw your graph at 2am. Now I can\u2019t stop clicking the nodes.',
+      'My LLM said \u201cgreat question\u201d one too many times. Can you fix it?',
+      'We need an agent that reads 400 emails so our CEO doesn\u2019t have to.',
+      'Settle this: tabs or spaces, and does your agent care?',
+      'Hiring. Remote. Agents. Interested?',
+      'You don\u2019t know me, but I have a very specific bug.',
+      'Teach me one thing about MCP in a single reply.',
+      'Is it weird to email a stranger about a theme button? Asking for me.',
+      'My agent and I are no longer on speaking terms. Help.'
+    ];
+    // The whole line is there at once; every few seconds it decodes into the next one, left to right,
+    // the same way the name decodes in the hero.
+    var sug = $('#csug'), sugT = $('#csug-t');
+    var phI = (Math.random() * PH.length) | 0, phT = null, phFull = PH[phI], hovering = false, GL = 'abcdefghijklmnopqrstuvwxyz#/*+<>';
+    sugT.textContent = phFull;
+    function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+    function decodeTo(t) {
+      var from = phFull, len = Math.max(from.length, t.length), t0 = performance.now(), D = 700 + len * 6;
+      phFull = t;
+      (function f(now) {
+        var p = Math.min(1, (now - t0) / D), done = '', scr = '', rest = '';
+        for (var i = 0; i < len; i++) {
+          var at = i / len * .65;                     // when this letter starts scrambling
+          if (p >= at + .35) done += t[i] || '';      // settled
+          else if (p >= at) { var c = t[i] || ''; scr += c === ' ' || !c ? c : GL[(Math.random() * GL.length) | 0]; }
+          else rest += from[i] || '';
+        }
+        sugT.innerHTML = esc(done) + '<span class="scr">' + esc(scr) + '</span>' + esc(rest);
+        if (p < 1) requestAnimationFrame(f); else sugT.textContent = t;
+      })(t0);
+    }
+    function tick() {
+      phT = setTimeout(tick, 3600);
+      if (reduce || step !== 1 || hovering || document.hidden) return;
+      phI++; decodeTo(PH[phI % PH.length]);
+    }
+    phT = setTimeout(tick, 3000);
+    var HINT = 'write your own, or tap the line above to borrow it';
+    note.textContent = HINT;
+    function phStart() { if (step === 1 && !note.textContent) note.textContent = HINT; }
+    function phStop() {}
+    sug.addEventListener('pointerenter', function () { hovering = true; });
+    sug.addEventListener('pointerleave', function () { hovering = false; });
+    // the suggestion line above the field: click it to borrow the line, then edit or send
+    var typingId = 0;
+    input.addEventListener('keydown', function () { typingId++; });
+    input.addEventListener('pointerdown', function () { typingId++; });
+    sug.addEventListener('click', function () {
+      if (!phFull) return;
+      // it types itself into the field; any key the visitor presses takes over
+      var full = phFull, k = 0, id = ++typingId;
+      input.focus();
+      if (reduce) { input.value = full; input.dispatchEvent(new Event('input')); return; }
+      input.value = ''; input.dispatchEvent(new Event('input'));
+      (function t() {
+        if (id !== typingId) return;
+        k += 1 + (Math.random() < .3 ? 1 : 0);
+        input.value = full.slice(0, k); input.setSelectionRange(k, k);
+        input.dispatchEvent(new Event('input'));
+        if (k < full.length) setTimeout(t, 22 + Math.random() * 30);
+      })();
+    });
+    $('#cprev-e').addEventListener('click', function () { setStep(1, msg); say3(''); });
     var noteT = null;
     function say3(txt) {
       clearTimeout(noteT); note.textContent = '';
       if (reduce) { note.textContent = txt; return; }
       var i = 0, chars = Array.from(txt), id = setInterval(function () { i++; note.textContent = chars.slice(0, i).join(''); if (i >= chars.length) clearInterval(id); }, 18);
     }
+    function shake() { if (!reduce) form.animate({ transform: ['translateX(0)', 'translateX(-7px)', 'translateX(6px)', 'translateX(-3px)', 'translateX(0)'] }, { duration: 380, easing: 'ease-out' }); input.focus(); }
+    function fly() {
+      if (reduce) return;
+      sendBtn.querySelector('svg').animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(26px,-26px)', opacity: 0, offset: .45 }, { transform: 'translate(-26px,26px)', opacity: 0, offset: .46 }, { transform: 'none', opacity: 1 }], { duration: 900, easing: EIO });
+      sendBtn.animate({ boxShadow: ['0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent)', '0 0 0 14px transparent'] }, { duration: 700, easing: EO });
+    }
+    function setStep(n, value) {
+      step = n;
+      var two = n === 2;
+      function swap() {
+        input.type = two ? 'email' : 'text';
+        input.name = two ? 'email' : 'message';
+        input.placeholder = two ? 'Your email, so I can write back' : 'Write it here, I\u2019ll read it.';
+        input.setAttribute('autocomplete', two ? 'email' : 'off');
+        input.setAttribute('enterkeyhint', two ? 'send' : 'next');
+        input.value = value || '';
+        lab.textContent = two ? 'Your email' : 'Your message';
+        sendBtn.setAttribute('aria-label', two ? 'Send' : 'Next');
+        if (two) {
+          prevT.textContent = msg; prev.hidden = false;
+          if (!reduce) prev.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 500, easing: EO });
+        } else prev.hidden = true;
+        form.classList.toggle('two', two);
+        sug.hidden = two;
+        if (two) phStop(); else phStart();
+        form.classList.toggle('ready', !!input.value.trim());
+      }
+      if (reduce) { swap(); input.focus(); return; }
+      input.animate({ transform: ['none', 'translateX(28px)'], opacity: [1, 0] }, { duration: 260, easing: EIO }).onfinish = function () {
+        swap(); input.focus();
+        input.animate({ transform: ['translateX(-18px)', 'none'], opacity: [0, 1] }, { duration: 420, easing: EO });
+      };
+    }
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && step === 2) { e.preventDefault(); setStep(1, msg); say3(''); }
+    });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var txt = input.value.trim();
-      if (!txt) {
-        if (!reduce) form.animate({ transform: ['translateX(0)', 'translateX(-7px)', 'translateX(6px)', 'translateX(-3px)', 'translateX(0)'] }, { duration: 380, easing: 'ease-out' });
-        input.focus(); return;
+      if (form.classList.contains('busy')) return;
+      var v = input.value.trim();
+      if (step === 1) {
+        if (!v) { shake(); return; }
+        msg = v; fly(); setStep(2);
+        say3('↵ sends it straight to my inbox');
+        return;
       }
-      var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Hello from your site') + '&body=' + encodeURIComponent(txt);
-      if (!reduce) {
-        var svg = sendBtn.querySelector('svg');
-        svg.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(26px,-26px)', opacity: 0, offset: .45 }, { transform: 'translate(-26px,26px)', opacity: 0, offset: .46 }, { transform: 'none', opacity: 1 }], { duration: 900, easing: EIO });
-        input.animate({ transform: ['none', 'translateX(28px)', 'none'], opacity: [1, 0, 1], offset: [0, .45, 1] }, { duration: 900, easing: EIO });
-        sendBtn.animate({ boxShadow: ['0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent)', '0 0 0 14px transparent'] }, { duration: 700, easing: EO });
-      }
-      say3('Opening your mail app\u2026');
-      setTimeout(function () { location.href = url; }, reduce ? 0 : 420);
-      noteT = setTimeout(function () { say3('If nothing opened, the address above is the way in.'); }, 4200);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { shake(); say3('That email doesn\u2019t look right.'); return; }
+      form.classList.add('busy'); say3('Sending\u2026');
+      fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email: v, message: msg, _subject: 'Hello from priyank.is-a.dev', _template: 'table', _captcha: 'false', _honey: honey.value })
+      }).then(function (r) { return r.json().then(function (j) { if (!r.ok || String(j.success) !== 'true') throw 0; }); })
+        .then(function () {
+          form.classList.remove('busy'); fly(); setStep(1); msg = '';
+          say3('Sent. I\u2019ll reply to ' + v + '.');
+        }, function () {
+          form.classList.remove('busy');
+          say3('Couldn\u2019t send it from here, so opening your mail app instead\u2026');
+          var url = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Hello from your site') + '&body=' + encodeURIComponent(msg);
+          setTimeout(function () { location.href = url; }, 900);
+        });
     });
   })();
 
