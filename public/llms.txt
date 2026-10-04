@@ -1,6 +1,6 @@
 # Priyank Patel
 
-> AI product engineer and forward deployed engineer in Ahmedabad, India. He builds multi-agent systems that executives use at work, reviews code for Kubeflow's MCP server (CNCF), and is in his third year of a B.E. at L.D. College of Engineering (2023 - 2027).
+> AI product engineer and forward deployed engineer in Ahmedabad, India. He builds multi-agent systems that executives use at work, reviews code for Kubeflow's MCP server (CNCF), and is in his final year of a B.E. at L.D. College of Engineering (2023 - 2027).
 
 This file is a plain-text summary of https://priyank.is-a.dev/ for AI agents and LLMs. Everything here is also on the page.
 

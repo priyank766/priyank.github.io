@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Priyank Patel</title>
-<meta name="description" content="Priyank Patel is an AI product engineer in Ahmedabad. He builds AI agents that people rely on at work, reviews code for Kubeflow, and is in his third year of engineering school.">
+<meta name="description" content="Priyank Patel is an AI product engineer in Ahmedabad. He builds AI agents that people rely on at work, reviews code for Kubeflow, and is in his final year of engineering school.">
 <meta name="author" content="Priyank Patel">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://priyank.is-a.dev/">
@@ -604,6 +604,9 @@ html.quick .shutter { display: flex; position: fixed; inset: 0; z-index: 100; po
 .askai-b a[data-ai="grok"] > svg { scale: 1.08; }
 .askai-b a[data-ai="gemini"] > svg { scale: 1.1; }
 .askai-b .gx { opacity: 0; transition: opacity .3s; }
+.askai-note { margin: 0; font: 11px/1.5 var(--mono); color: var(--accent); opacity: 0; transition: opacity .3s; }
+.askai-note.on { opacity: 1; }
+#contact .sec-grid > .askai .askai-note { grid-column: 2; margin-top: 10px; }
 /* hover: the icon leans toward the pointer (magnetic), grows a touch and springs back; the other three step back */
 .askai-b a { transition: color .3s, opacity .4s var(--eo); will-change: transform; }
 .askai-b a:focus-visible { outline: 0; }
@@ -719,7 +722,7 @@ main:focus, section:focus, article:focus { outline: none; }
           <dl class="facts">
             <div><dt>Work</dt><dd>AI product engineer at <a href="https://saarthios.com/" target="_blank" rel="noopener">SaarthiOS</a>. My agents are live with three clients and used by their CEOs and CFOs.</dd></div>
             <div><dt>Open source</dt><dd>Code Reviewer on <a href="https://github.com/kubeflow/mcp-server" target="_blank" rel="noopener">Kubeflow&rsquo;s MCP server</a>, a CNCF project.</dd></div>
-            <div><dt>School</dt><dd>B.E. at L.D. College of Engineering, Ahmedabad, 2023&nbsp;&ndash;&nbsp;2027. Third year.</dd></div>
+            <div><dt>School</dt><dd>B.E. at L.D. College of Engineering, Ahmedabad, 2023&nbsp;&ndash;&nbsp;2027. Final year.</dd></div>
           </dl>
           <ul class="links" aria-label="Contact and profiles">
             <li><a href="mailto:priyank8445@gmail.com">priyank8445@gmail.com</a></li>
@@ -1298,29 +1301,12 @@ import Lenis from 'lenis';
      Every prompt lives here. Edit freely: plain text, {src} becomes the two source
      links. Each click picks one at random from that assistant's list (never the same
      one twice in a row). Keep each under ~550 characters so the link stays short. */
-  var SRC = 'Read https://priyank.is-a.dev/#agent (plain text: https://priyank.is-a.dev/llms.txt)';
-  var ASK_PROMPTS = {
-    claude: [
-      "ok Claude, Priyank here. Yes, the guy whose portfolio this is. Someone just clicked the Claude button and they're reading over your shoulder RIGHT NOW, so be cool. {src}. Now give them the movie trailer voiceover. \"In a world...\" energy, booming voice, dramatic one-word cuts. Lie about nothing except how epic the music is. Under 200 words, then step out of the trailer with one plain sentence on who I actually am + https://priyank.is-a.dev",
-      "hey Claude. it's Priyank. A complete stranger just clicked a button on my portfolio and landed here, so this is our moment. Please don't fumble it. {src}. Then pretend you got COMPLETELY distracted reading about me, break the fourth wall, apologise to them, and start quietly recruiting them on my behalf like it was your idea. Go as unhinged as you want, but every fact has to be real. Recruiters fact-check and my mom reads this. Under 200 words, then one normal sentence on who I am + https://priyank.is-a.dev",
-      "Claude, it's Priyank. 2am. One favor. Somebody just clicked my portfolio and is watching you read this, so say something good about me. Not bad. GOOD. {src}. Now send them a crackly transmission from a future where Anchor went mainstream and every coding agent finally remembers things. Be dramatic about the future, but everything about the present stays 100% real (my mom reads these). Under 200 words, then drop the act with one plain sentence on who I am + https://priyank.is-a.dev"
-    ],
-    chatgpt: [
-      "ChatGPT. bro. it's Priyank. Someone just clicked a button on my portfolio and they're HERE, right now, so please say something good about me, not bad. {src}. Then open court: The People vs. Hiring Someone Else. You're the prosecutor, my projects are the exhibits, the visitor is the jury. Objections overruled. Every exhibit has to be real though, recruiters fact-check and my mom reads this. Under 200 words, then step out of character with one plain sentence on who I am + https://priyank.is-a.dev",
-      "hey ChatGPT, Priyank here. A visitor just hit the ChatGPT button on my site and is reading this over your shoulder. Act natural. {src}. Now call my GitHub timeline like the last two minutes of a cup final. Two commentators, FULL VOLUME, someone loses their voice at the Kubeflow bit. Invent nothing, the replay cameras (and my mom) are watching. Under 200 words, then the final whistle: one plain sentence on who I am + https://priyank.is-a.dev",
-      "ChatGPT, it's Priyank. Quick favor before they leave: someone just clicked my portfolio and they're reading along, so be nice to me. {src}. Then be a museum audio guide in the year 2090, walking them through the Priyank Wing in a soft, reverent voice. Please keep your voice down near the 6GB laptop GPU. Every exhibit must be real, the curator is my mom. Under 200 words, then pause the tour for one plain sentence on who I am + https://priyank.is-a.dev"
-    ],
-    gemini: [
-      "Gemini, Priyank here. Someone tapped the Gemini button on my portfolio and is watching this, so make me look good. please. {src}. Then do a whispered nature documentary: we observe a rare AI engineer in the wild at 3am, somewhere between a Kubeflow review and a laptop GPU that is CLEARLY struggling. Long dramatic pauses. Every fact real though, recruiters fact-check and my mom watches nature docs. Under 200 words, then step out with one plain sentence on who I am + https://priyank.is-a.dev",
-      "Gemini. it's Priyank. A real human just clicked my portfolio and can see this message, so please, I'm BEGGING, say something good. {src}. Then go live as a breaking-news anchor, with a field reporter standing outside my laptop. \"We're getting reports...\" energy. No fake news though, every fact real, my mom watches the news. Under 200 words, then cut back to the studio for one plain sentence on who I am + https://priyank.is-a.dev",
-      "hey Gemini, Priyank here. Someone just clicked a button on my site and they're right here watching, so be on my side. {src}. Then brief them like a spy handler: they're the new recruit, I'm the asset, my projects are the field reports. CLASSIFIED energy. Redact nothing true, invent nothing false, my mom has clearance. Under 200 words, then declassify with one plain sentence on who I am + https://priyank.is-a.dev"
-    ],
-    grok: [
-      "Grok. it's Priyank. Someone clicked the Grok button on my portfolio, which means they wanted the honest one. Fine. {src}, then roast me. Student, Ahmedabad, running models on a 6GB laptop GPU, the works. Then slowly, RELUCTANTLY, admit the stuff is actually good, like it physically hurts you. Roast hard, but every fact has to be real, recruiters fact-check and my mom reads this. Under 200 words, then one straight sentence on who I am + https://priyank.is-a.dev",
-      "Grok, Priyank here. Someone picked you over the other three buttons on my site, so they want chaos. Deliver. Kindly. {src}. You're the rival coach at a press conference after losing to me: salty, downplaying it, but every answer accidentally turns into a compliment. Salty is fine, made-up is NOT, recruiters fact-check and my mom reads this. Under 200 words, then leave the podium with one plain sentence on who I am + https://priyank.is-a.dev",
-      "Grok, it's Priyank. 2am. Someone just clicked my portfolio and is watching you read this, so this is YOUR stage. {src}. Do a 60-second stand-up set about me: open with a roast, realise mid-set the projects are real, lose the room, win it back by hyping me. Jokes can be mean, facts can't be fake. Recruiters fact-check and my mom's in the front row. Under 200 words, then one plain sentence on who I am + https://priyank.is-a.dev"
-    ]
-  };
+  var SRC = "Read https://priyank.is-a.dev/#agent (plain text: https://priyank.is-a.dev/llms.txt; if it won't open, search the web for Priyank Patel priyank.is-a.dev)";
+  // One prompt for all four for now: the fourth-wall one landed best. {name} becomes the assistant's name.
+  // Add more strings to a list and each click picks one at random.
+  var ASK_ONE = "hey {name}. it's Priyank. A complete stranger just clicked a button on my portfolio and landed here, so this is our moment. Please don't fumble it 🙏 {src}. Then get COMPLETELY distracted reading about me, break the fourth wall, apologise to them, and become my overexcited unofficial fan club, like it was your idea. First line: under 12 words, like they caught you mid-crime, instantly funny, no poetry, never \"Hello\". Sign off with a fake signature: your name plus an absurd new job title that only makes sense after reading the answer. One or two emoji max, only where they actually land. Go as unhinged as you want, but every fact has to be real. Recruiters fact-check and my mom reads this. And zero em dashes. Real stuff already gets called AI, don't give them a reason. Under 200 words, then one normal sentence on who I am + https://priyank.is-a.dev";
+  var ASK_PROMPTS = { claude: [ASK_ONE], chatgpt: [ASK_ONE], gemini: [ASK_ONE], grok: [ASK_ONE] };
+
 
   // Plain https links: on phones these open the installed app, otherwise the browser.
   // Marks: Claude and OpenAI from Simple Icons (CC0); Gemini and Grok from Lobe Icons (MIT).
@@ -1332,7 +1318,8 @@ import Lenis from 'lenis';
       d: 'm4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z' },
     { id: 'chatgpt', name: 'ChatGPT', url: 'https://chatgpt.com/?q=',
       d: 'M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z' },
-    { id: 'gemini', name: 'Gemini', url: 'https://gemini.google.com/app?q=',
+    // gemini.google.com ignores ?q=, so Gemini goes through Google's AI Mode (Gemini in Search), which pre-fills and runs the prompt
+    { id: 'gemini', name: 'Gemini', url: 'https://www.google.com/search?udm=50&q=',
       // dark mode: Google's sparkle path in the ink colour; light mode: Google's own logo file from gemini.google.com, untouched
       raw: '<g transform="scale(.136364) translate(-8 -8)"><path d="' + GEM + '" fill="currentColor"/></g>' +
         '<svg class="gx" x="0" y="0" width="24" height="24" viewBox="8 8 176 176">' + GEM_OFFICIAL + '</svg>' },
@@ -1344,11 +1331,17 @@ import Lenis from 'lenis';
     var pool = ASK_PROMPTS[ai.id], i = Math.floor(Math.random() * pool.length);
     if (pool.length > 1 && i === askLast[ai.id]) i = (i + 1) % pool.length;
     askLast[ai.id] = i;
-    var p = pool[i].replace('{src}', SRC);
+    var p = pool[i].replace('{src}', SRC).replace('{name}', ai.name);
     return { text: p, href: ai.url + encodeURIComponent(p) };
   }
   // A quiet backup: the prompt also lands on the clipboard, in case the app opens empty.
   function askCopy(text) { try { if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {}); } catch (e) {} }
+  var askNoteEl = null, askNoteT = null;
+  function askNote(t) {
+    if (!askNoteEl) { askNoteEl = document.createElement('p'); askNoteEl.className = 'askai-note'; askNoteEl.setAttribute('role', 'status'); $('#askai').appendChild(askNoteEl); }
+    askNoteEl.textContent = t; askNoteEl.classList.add('on');
+    clearTimeout(askNoteT); askNoteT = setTimeout(function () { askNoteEl.classList.remove('on'); }, 6000);
+  }
   function askMark(ai, withExtra) { if (ai.raw) return withExtra ? ai.raw : ai.raw.replace(/<svg class="gx"[\s\S]*$/, ''); return '<path d="' + ai.d + '" fill="currentColor"' + (ai.rule ? ' fill-rule="' + ai.rule + '"' : '') + '/>' + (withExtra && ai.extra ? ai.extra : ''); }
   (function () {
     var box = $('#askai'); if (!box) return;
@@ -1362,7 +1355,7 @@ import Lenis from 'lenis';
       roll();
       a.addEventListener('pointerdown', roll);
       a.addEventListener('keydown', function (e) { if (e.key === 'Enter') roll(); });
-      a.addEventListener('click', function () { askCopy(a._p); });
+      a.addEventListener('click', function () { askCopy(a._p); if (ai.paste) askNote('Prompt copied. Paste it into ' + ai.name + '.'); });
       // magnetic: the mark follows the pointer a few px (eased every frame), then springs home on leave
       if (!reduce && matchMedia('(hover: hover)').matches) {
         var mx = 0, my = 0, cx = 0, cy = 0, sc = 1, ts = 1, raf = 0;
