@@ -38,6 +38,9 @@
     try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('loading'); var last = +(localStorage.getItem('pp-intro') || 0); if (Date.now() - last < 12 * 3600e3) r.classList.add('repeat'); } catch (e) {}
     setTimeout(function () { if (!window.__ppReady) r.classList.remove('loading', 'quick'); }, 5000);
     try { if (localStorage.getItem('pp-theme-choice') === 'light') r.setAttribute('data-theme', 'light'); } catch (e) {}
+    // The site wears Calico by default; the original look is one menu row away ("Toggle theme"), remembered here.
+    try { var orig = localStorage.getItem('pp-look') === 'base'; } catch (e) { orig = false; }
+    if (!orig) { r.setAttribute('data-look', 'calico'); document.write('<link rel="stylesheet" href="/looks/calico.css"><script defer src="/looks/calico.js"><\/script>'); }
   })();
 </script>
 <style>
@@ -290,11 +293,11 @@ html.lenis, html.lenis body { scroll-behavior: auto !important; height: auto; }
 .progress { position: fixed; z-index: 11; top: 0; left: 0; right: 0; height: 2px; background: var(--glow); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
 @media (min-width: 760px) { .progress { display: none; } }
 /* phone nav: never wider than the screen */
-@media (max-width: 420px) {
-  .top nav { gap: 12px; font-size: .8125rem; }
-  .top nav a[href="#now"] { display: none; }
+/* phones: the bar mirrors desktop, name on the left, Agent mode + theme on the right; section links live in the page */
+@media (max-width: 599px) {
+  .top nav { gap: 14px; }
+  .top nav > a { display: none; }
 }
-@media (max-width: 360px) { .top .me { display: none; } .top .wrap { justify-content: flex-end; } }
 
 /* split text: words never break, letters are their own boxes */
 .sx .wd { display: inline-block; white-space: nowrap; }
@@ -349,6 +352,10 @@ a:active .rl, button:active .rl { scale: .94; }
 /* Agent mode button: ink fills from below */
 .llm { appearance: none; background: none; cursor: pointer; position: relative; overflow: hidden; isolation: isolate; transition: color .3s, border-color .3s; }
 .llm::before { content: ""; position: absolute; inset: -1px; background: var(--llm); transform: scaleY(0); transform-origin: 50% 100%; transition: transform .5s var(--eo); z-index: -1; }
+/* the label flips colour as the fill passes its middle, not before; leaving, the fill drops first and the label follows */
+.llm { transition: color .25s .12s, border-color .3s; }
+.llm:not(:hover) { transition-delay: 0s; }
+.llm:not(:hover)::before { transition-duration: .4s; }
 .llm:hover { background: none; color: var(--bg); border-color: var(--llm); }
 .llm:hover::before { transform: none; }
 .theme svg { transition: rotate 1s var(--eio), scale .25s var(--eo); }
@@ -448,6 +455,15 @@ html.sheet-open body { overflow: hidden; }
 .kbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted); transition: color .2s, scale .2s var(--eo); }
 .kbtn kbd { display: inline-block; font-family: var(--mono); font-size: 11px; line-height: 1; padding: 4px 6px 3px; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px; transition: border-color .2s, translate .15s; }
 .kbtn:hover { color: var(--ink); }
+/* look swap: strips in the next look's colours cover the page, then it reloads into that look */
+.swap { position: fixed; inset: 0; z-index: 10000; display: flex; pointer-events: all; }
+.swap i { flex: 1; background: var(--sw-bg); border-bottom: 2px solid var(--sw-ink); transform: translateY(-101%); }
+.swap p { position: absolute; left: 50%; top: 50%; translate: -50% -50%; margin: 0; font: 13px/1 var(--mono); letter-spacing: .04em; color: var(--sw-fg); white-space: nowrap; }
+.swap p::after { content: ""; display: inline-block; width: .55em; height: 1em; margin-left: 3px; vertical-align: -2px; background: var(--sw-ink); }
+/* phones: a search button opens the same menu */
+.sbtn { appearance: none; background: none; border: 0; padding: 4px; margin: -4px; cursor: pointer; color: var(--ink-2); display: none; }
+.sbtn svg { display: block; width: 18px; height: 18px; }
+@media (max-width: 759px), (hover: none) { .sbtn { display: block; } }
 .kbtn:hover kbd { border-color: var(--tick); }
 .kbtn:active kbd { translate: 0 1px; border-bottom-width: 1px; margin-bottom: 1px; }
 @media (max-width: 759px), (hover: none) { .kbtn { display: none; } }
@@ -704,6 +720,7 @@ main:focus, section:focus, article:focus { outline: none; }
       <a href="#contact">Contact</a>
       <span class="clock opt" id="topclock"></span>
       <button class="kbtn" id="kbtn" type="button" aria-haspopup="dialog" aria-controls="cmdk" aria-expanded="false" aria-keyshortcuts="Control+F Meta+F Control+K Meta+K /" aria-label="Open the command menu" hidden><kbd>&#8984;F</kbd></button>
+      <button class="sbtn" id="sbtn" type="button" aria-haspopup="dialog" aria-controls="cmdk" aria-label="Search this site"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.6 12.6 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
       <button class="llm" id="forai" type="button" aria-haspopup="dialog" aria-controls="ai-sheet" title="See this page the way an AI agent reads it">Agent mode</button>
       <button class="theme" id="theme" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
@@ -1063,7 +1080,8 @@ import Lenis from 'lenis';
           n = Math.min(total, n + base + ((Math.random() * jit) | 0)); // slightly uneven, like a real stream
           pre.innerHTML = render(lines, n);
           var c = pre.querySelector('.caret');
-          if (c) { var over = c.getBoundingClientRect().bottom - (body.getBoundingClientRect().bottom - 48); if (over > 0) body.scrollTop += Math.max(26, over); }
+          // glide, don't jump: keep the caret about a fifth of the sheet above the bottom, closing a third of the gap each frame
+          if (c) { var over = c.getBoundingClientRect().bottom - (body.getBoundingClientRect().bottom - body.clientHeight * .2); if (over > 0) body.scrollTop += Math.ceil(over * .34); }
         }
         if (n < total) requestAnimationFrame(tick);
       })(performance.now());
@@ -1399,15 +1417,35 @@ import Lenis from 'lenis';
     var kb = $('#kbtn'), dlg = $('#cmdk'), bgd = $('#cmdk-bg'), q = $('#cmdk-q'), list = $('#cmdk-list'), cnt = $('#cmdk-n'), last = null, isOpen = false, sel = 0, shown = [];
     var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
     kb.querySelector('kbd').textContent = '\u2318F'; kb.hidden = false;
+    $('#sbtn').addEventListener('click', function () { open(); });
     var IC = {
       go: '<path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
       sq: '<rect x="4.5" y="4.5" width="7" height="7" fill="currentColor"/>',
       copy: '<rect x="5.5" y="5.5" width="7.5" height="7.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 10.5V4a1 1 0 0 1 1-1h6.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
       doc: '<path d="M4 2.5h5.5L12.5 5.5V13a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 8h4.5M6 10.5h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+      look: '<rect x="4.5" y="4.5" width="7" height="7" transform="rotate(45 8 8)" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="6.6" y="6.6" width="2.8" height="2.8" transform="rotate(45 8 8)" fill="currentColor"/>',
       theme: '<circle cx="8" cy="8" r="5.25" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 2.75a5.25 5.25 0 0 1 0 10.5z" fill="currentColor"/>',
       out: '<path d="M6 3.5H3.5v9h9V10M9 3h4v4M13 3 7.5 8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
       ok: '<path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"><animate attributeName="stroke-dashoffset" from="1" to="0" dur=".4s" fill="freeze"/></path>'
     };
+    function swapLook() {
+      var toOrig = !!root.getAttribute('data-look'), light = root.getAttribute('data-theme') === 'light';
+      var bg = toOrig ? (light ? '#f4f3ef' : '#0c0c0b') : (light ? '#f4f1e8' : '#0a1130');
+      var ink = toOrig ? '#ff5a3c' : (light ? '#c22a40' : '#f2475a');
+      var fg = toOrig ? (light ? '#141412' : '#ecebe6') : (light ? '#121c52' : '#efeadf');
+      try { localStorage.setItem('pp-look', toOrig ? 'base' : 'calico'); localStorage.removeItem('pp-intro'); } catch (e) {}
+      if (reduce) { location.reload(); return; }
+      var ov = document.createElement('div'); ov.className = 'swap'; ov.setAttribute('aria-hidden', 'true');
+      ov.innerHTML = '<i></i><i></i><i></i><i></i><i></i><p></p>';
+      ov.style.setProperty('--sw-bg', bg); ov.style.setProperty('--sw-ink', ink); ov.style.setProperty('--sw-fg', fg);
+      document.body.appendChild(ov);
+      var strips = [].slice.call(ov.querySelectorAll('i')), line = ov.querySelector('p');
+      strips.forEach(function (st, i) { st.animate({ transform: ['translateY(-101%)', 'none'] }, { duration: 620, delay: i * 70, easing: EIO, fill: 'both' }); });
+      var txt = toOrig ? 'unthreading the indigo\u2026' : 'dyeing it indigo\u2026', k = 0;
+      setTimeout(function () {
+        var id = setInterval(function () { k++; line.textContent = txt.slice(0, k); if (k >= txt.length) { clearInterval(id); setTimeout(function () { location.reload(); }, 380); } }, 34);
+      }, 620 + 4 * 70);
+    }
     function jump(id, center) { var el = $(id); if (!el) return; scrollToEl(el, { center: center }); }
     function ext(u) { window.open(u, '_blank', 'noopener'); }
     var EMAIL = 'priyank8445@gmail.com';
@@ -1426,7 +1464,7 @@ import Lenis from 'lenis';
         if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(ok, bad); else bad();
       } },
       { g: 'Actions', l: 'Agent mode', h: 'llms.txt', ic: 'doc', k: 'ai llm', run: function () { openSheet(); } },
-      { g: 'Actions', l: 'Toggle theme', h: 'double-click for light', ic: 'theme', k: 'dark light mode', stay: true, run: function (row, at) {
+      { g: 'Actions', l: 'Toggle light', h: 'double-click for light', ic: 'theme', k: 'dark light mode', stay: true, run: function (row, at) {
         var light = root.getAttribute('data-theme') === 'light';
         function go(t) { close(true); setTimeout(function () { setTheme(t, true, at); setTimeout(function () { say(t === 'dark' ? nextBack() : nextLight(), t === 'dark' ? '' : 'click once to come back'); }, 200); }, 430); }
         if (light) { go('dark'); return; }
@@ -1437,6 +1475,7 @@ import Lenis from 'lenis';
         if (!reduce) row.el.animate({ transform: ['translateX(0)', 'translateX(-6px)', 'translateX(5px)', 'translateX(-2px)', 'translateX(0)'] }, { duration: 360, easing: 'ease-out' });
         clearTimeout(row._t); row._t = setTimeout(function () { row._armed = 0; row.hint.textContent = row.h; }, 3000);
       } },
+      { g: 'Actions', l: 'Toggle theme', h: root.getAttribute('data-look') ? 'go crazy: the orange original' : 'go crazy: indigo block print', ic: 'look', k: 'look style calico original swap', wait: 0, run: function () { swapLook(); } },
       { g: 'Elsewhere', l: 'GitHub', h: 'github.com/priyank766', ic: 'out', run: function () { ext('https://github.com/priyank766'); } },
       { g: 'Elsewhere', l: 'X', h: 'x.com/priyank766', ic: 'out', k: 'twitter', run: function () { ext('https://x.com/priyank766'); } },
       { g: 'Elsewhere', l: 'LinkedIn', h: 'linkedin.com/in/priyank766', ic: 'out', run: function () { ext('https://www.linkedin.com/in/priyank766/'); } }
