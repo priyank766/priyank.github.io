@@ -34,25 +34,22 @@
       return { ready: new Promise(function () {}), finished: vt.finished, updateCallbackDone: vt.updateCallbackDone, skipTransition: function () { vt.skipTransition(); } };
     };
   }
+  // waves are sized in pixels (long swell + small ripple), so a phone gets the same gentle surface as a desktop
+  function wave(x, level, ph, amp) { return level + Math.sin(ph + x * 6.2832 / 280) * amp + Math.sin(ph * 1.7 + x * 6.2832 / 170) * amp * .3; }
+  function wavePts(W, level, ph, amp) { var d = '', n = Math.max(24, Math.ceil(W / 10)); for (var i = 1; i <= n; i++) { var x = W * i / n; d += ' L' + x.toFixed(1) + ' ' + wave(x, level, ph, amp).toFixed(1); } return d; }
   function surface(W, H, level, ph, amp) {
-    var n = 36, d = 'M0 ' + (H + 400) + ' L0 ' + (level + Math.sin(ph) * amp).toFixed(1);
-    for (var i = 1; i <= n; i++) {
-      var x = W * i / n, y = level + Math.sin(ph + i * .55) * amp + Math.sin(ph * 1.7 + i * 1.3) * amp * .35;
-      d += ' L' + x.toFixed(1) + ' ' + y.toFixed(1);
-    }
+    var d = 'M0 ' + (H + 400) + ' L0 ' + wave(0, level, ph, amp).toFixed(1);
+    d += wavePts(W, level, ph, amp);
     return "path('" + d + ' L' + W + ' ' + (H + 400) + " Z')";
   }
   // the area ABOVE a wavy surface (used to keep the light page above the rising dye)
   function surfaceTop(W, H, level, ph, amp) {
-    var n = 36, d = 'M0 -400 L0 ' + (level + Math.sin(ph) * amp).toFixed(1);
-    for (var i = 1; i <= n; i++) {
-      var x = W * i / n, y = level + Math.sin(ph + i * .55) * amp + Math.sin(ph * 1.7 + i * 1.3) * amp * .35;
-      d += ' L' + x.toFixed(1) + ' ' + y.toFixed(1);
-    }
+    var d = 'M0 -400 L0 ' + wave(0, level, ph, amp).toFixed(1);
+    d += wavePts(W, level, ph, amp);
     return "path('" + d + ' L' + W + " -400 Z')";
   }
   function dip(toDark) {
-    var W = innerWidth, H = innerHeight, amp = Math.min(22, H * .026), frames = [], N = 40;
+    var W = innerWidth, H = innerHeight, amp = Math.min(20, H * .022, W * .035), frames = [], N = 48;
     for (var k = 0; k <= N; k++) {
       var t = k / N, e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       var a = amp * Math.sin(Math.PI * t);
