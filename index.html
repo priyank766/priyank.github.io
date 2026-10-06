@@ -98,6 +98,7 @@ code { font-family: var(--mono); font-size: .78em; }
 .top .me-t { opacity: 0; }
 .top.past .me-t, .top .me:focus-visible .me-t { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .top .me-t { transition: opacity .2s; } }
+#hello.h1-away { opacity: 0 !important; }
 .namefly { position: fixed; z-index: 12; left: 0; top: 0; margin: 0; white-space: nowrap; pointer-events: none; transform-origin: 0 0; }
 .top nav { display: flex; align-items: center; gap: 22px; }
 .top nav a { text-decoration: none; color: var(--ink-2); }
@@ -446,6 +447,14 @@ a:active .rl, button:active .rl { scale: .94; }
 .sheet-body pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 .sheet-body a { color: #7a3e18; }
 .sheet-body .h1 { font-size: 1.45em; }
+.sheet-body .h3 { font-size: 1.08em; font-weight: 600; }
+.sheet-body .mk { opacity: .42; font-weight: 400; }
+.sheet-body .mk.li { opacity: .8; color: var(--accent); }
+.sheet-body .md-t { font-weight: 600; }
+/* links never hijack a text selection: no link-dragging, the selection runs straight through them */
+.sheet-body a { -webkit-user-drag: none; user-select: text; }
+.sheet-body strong { font-weight: 700; }
+.sheet-body code { font: inherit; padding: 0 .3em; border-radius: 3px; background: color-mix(in srgb, currentColor 9%, transparent); }
 .sheet-body .h2 { display: inline-block; margin-top: .3em; }
 .sheet-body .q { color: #5a4126; }
 .sheet-body .pl { display: block; min-height: 1.7em; }
@@ -1044,35 +1053,69 @@ import Lenis from 'lenis';
     var copy = $('#ai-copy'), close = $('#ai-close'), status = $('#ai-status'), cpA = copy.querySelector('.cp-a'), cpT = copy.querySelector('.cp-t');
     function letters(el, txt) { el.innerHTML = Array.from(txt).map(function (c, i) { return '<span class="rc2" style="--i:' + i + '">' + (c === ' ' ? '&nbsp;' : esc(c)) + '</span>'; }).join(''); }
     letters(cpA, 'Copy'); letters(cpT, 'Copied');
+    // Half-rendered markdown: every symbol an agent reads stays on the page (faded), and its effect is applied on top.
+    // Only the on-page view is styled; /llms.txt and the Copy button stay plain markdown.
+    function mk(t) { return '<span class="mk">' + t + '</span>'; }
+    function inline(s) {
+      var keep = [];
+      function stash(h) { keep.push(h); return '\u0000' + (keep.length - 1) + '\u0000'; }
+      s = s.replace(/`([^`]+)`/g, function (_, c) { return stash(mk('`') + '<code>' + c + '</code>' + mk('`')); });
+      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, t, u) {
+        return stash('<a class="md-t" href="' + u + '" target="_blank" rel="noopener" draggable="false">' + t + '</a>');  // the name is the link; the raw [..](..) stays in /llms.txt
+      });
+      s = s.replace(/https?:\/\/[^\s)<\u0000]+/g, function (u) { return stash('<a href="' + u + '" target="_blank" rel="noopener" draggable="false">' + u + '</a>'); });
+      s = s.replace(/\*\*([^*]+)\*\*/g, function (_, t) { return mk('**') + '<strong>' + t + '</strong>' + mk('**'); });
+      return s.replace(/\u0000(\d+)\u0000/g, function (_, i) { return keep[+i]; });
+    }
     function fmt(line) {
-      var s = esc(line);
-      if (/^# /.test(line)) s = '<span class="h1">' + s + '</span>';
-      else if (/^## /.test(line)) s = '<span class="h2">' + s + '</span>';
-      else if (/^&gt; /.test(s)) s = '<span class="q">' + s + '</span>';
-      return s.replace(/https?:\/\/[^\s)<]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; });
+      var s = esc(line), m;
+      if ((m = /^(#{1,3}) (.*)$/.exec(s))) return '<span class="h' + m[1].length + '">' + mk(m[1]) + ' ' + inline(m[2]) + '</span>';
+      if ((m = /^&gt; (.*)$/.exec(s))) return '<span class="q">' + mk('&gt;') + ' ' + inline(m[1]) + '</span>';
+      if ((m = /^(\s*)- (.*)$/.exec(s))) return m[1] + '<span class="mk li">-</span> ' + inline(m[2]);
+      return inline(s);
     }
     // Typewriter: the summary streams in like a model writing it. A click, scroll or key on the paper finishes it.
     var typing = 0;
+    // Each line is formatted first, then revealed by visible characters, so links, colours and headings
+    // appear already styled as they type (the raw [..](..) never flashes on screen).
+    var viewCache = null, viewFor = null, scratch = document.createElement('div');
+    function view(lines) {
+      if (viewFor === lines) return viewCache;
+      viewFor = lines;
+      viewCache = lines.map(function (ln) { var h = fmt(ln); scratch.innerHTML = h; return { html: h, len: scratch.textContent.length }; });
+      return viewCache;
+    }
+    function cut(html, k) {
+      scratch.innerHTML = html;
+      var w = document.createTreeWalker(scratch, NodeFilter.SHOW_TEXT), n, left = k, drop = [];
+      while ((n = w.nextNode())) {
+        if (left <= 0) drop.push(n);
+        else if (n.data.length > left) { n.data = n.data.slice(0, left); left = 0; }
+        else left -= n.data.length;
+      }
+      drop.forEach(function (t) { t.remove(); });
+      return scratch.innerHTML;
+    }
     function render(lines, upto) {
-      var out = [], left = upto;
-      for (var i = 0; i < lines.length; i++) {
-        var ln = lines[i];
-        if (left >= ln.length) {
-          var lastLine = i === lines.length - 1 || left - ln.length - 1 < 0;
-          out.push('<span class="pl typed">' + fmt(ln) + (lastLine ? '<span class="caret" aria-hidden="true"></span>' : '') + '</span>');
-          left -= ln.length + 1;
+      var v = view(lines), out = [], left = upto, caret = '<span class="caret" aria-hidden="true"></span>';
+      for (var i = 0; i < v.length; i++) {
+        if (left >= v[i].len) {
+          var lastLine = i === v.length - 1 || left - v[i].len - 1 < 0;
+          out.push('<span class="pl typed">' + v[i].html + (lastLine ? caret : '') + '</span>');
+          left -= v[i].len + 1;
           if (left < 0) break;
         } else {
-          out.push('<span class="pl typed">' + esc(ln.slice(0, left)) + '<span class="caret" aria-hidden="true"></span></span>');
+          out.push('<span class="pl typed">' + cut(v[i].html, left) + caret + '</span>');
           break;
         }
       }
       return out.join('');
     }
+    function visibleTotal(lines) { return view(lines).reduce(function (a, x) { return a + x.len + 1; }, -1); }
     function all() { return raw.replace(/\s+$/, ''); }
-    function finishTyping() { if (!raw) return; typing++; pre.innerHTML = render(all().split('\n'), all().length); }
+    function finishTyping() { if (!raw) return; typing++; var ls = all().split('\n'); pre.innerHTML = render(ls, visibleTotal(ls)); }
     function stream() {
-      var txt = all(), lines = txt.split('\n'), total = txt.length, n = 0, id = ++typing;
+      var txt = all(), lines = txt.split('\n'), total = visibleTotal(lines), n = 0, id = ++typing;
       if (reduce) { pre.innerHTML = render(lines, total); return; }
       pre.innerHTML = render(lines, 0);
       var start = performance.now() + 650; // let the paper finish unrolling first
@@ -1091,7 +1134,7 @@ import Lenis from 'lenis';
       })(performance.now());
     }
     ['pointerdown', 'wheel', 'touchmove'].forEach(function (ev) { body.addEventListener(ev, function () { if (n_typing()) finishTyping(); }, { passive: true }); });
-    function n_typing() { return isOpen() && raw && pre.querySelector('.caret') && pre.textContent.length < all().length - 2; }
+    function n_typing() { return isOpen() && raw && pre.querySelector('.caret') && pre.textContent.length < visibleTotal(all().split('\n')) - 2; }
     function load() {
       if (raw) { stream(); return; }
       fetch('/llms.txt').then(function (r) { return r.text(); }).then(function (t) { raw = t; stream(); })
@@ -1102,9 +1145,10 @@ import Lenis from 'lenis';
     function isOpen() { return sh.classList.contains('open'); }
     function open(fromHistory) {
       if (isOpen()) return;
-      last = document.activeElement; keepY = window.scrollY; load(); body.scrollTop = 0;
+      last = document.activeElement; keepY = window.scrollY; body.scrollTop = 0;
       if (!fromHistory) { history.pushState({ agent: 1 }, '', '#agent'); pushed = true; }
       sh.classList.add('open'); bg.classList.add('open'); root.classList.add('sheet-open');
+      load();  // after the sheet is marked open: the typewriter stops itself if it starts on a closed sheet
       if (lenis) lenis.stop();
       setTimeout(function () { sh.focus({ preventScroll: true }); }, 60);
     }
@@ -1828,14 +1872,16 @@ import Lenis from 'lenis';
     var bTop = b.top + (b.height - fsMe) / 2;          // the bar name's text box, without its line spacing
     // where the title's text box starts (its cap line) and how far it has to travel to reach the bar
     var startY = a.top + (a.height - gh) / 2, dist = startY + window.scrollY - bTop;
-    var t = dist > 0 ? Math.min(1, Math.max(0, window.scrollY / dist)) : 1;
+    var span = Math.max(dist * 1.8, 260);              // stretched over more scroll than the title needs to reach the bar, so it feels unhurried
+    var t = dist > 0 ? Math.min(1, Math.max(0, window.scrollY / span)) : 1;
     var e = t * t * (3 - 2 * t);                       // smoothstep: rides the page, then settles into the bar
     var on = t > 0 && t < 1;
-    if (on !== morphOn) { morphOn = on; ghost.style.visibility = on ? 'visible' : 'hidden'; h1.style.visibility = on ? 'hidden' : ''; }
-    if (t >= 1) h1.style.visibility = '';
+    if (on !== morphOn) { morphOn = on; ghost.style.visibility = on ? 'visible' : 'hidden'; }
+    // the big title stays hidden for as long as any of it is scrolled into the bar's travel (opacity, so no letter can override it)
+    h1.classList.toggle('h1-away', t > 0);
     if (on) {
       var es = 1 - Math.pow(1 - t, 2.6);                 // it shrinks ahead of the move, so it's small by the time it reaches the bar
-      var x = a.left + (b.left - a.left) * e, y = startY + (bTop - startY) * e, sc = 1 + (k - 1) * es;
+      var x = a.left + (b.left - a.left) * e, y = Math.max(startY, bTop) + (bTop - Math.max(startY, bTop)) * e, sc = 1 + (k - 1) * es;
       ghost.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + sc.toFixed(4) + ')';
       ghost.style.opacity = t > .86 ? ((1 - t) / .14).toFixed(3) : '1';
     }

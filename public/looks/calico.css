@@ -323,7 +323,7 @@ html[data-look="calico"] {
   & #ai-copy.done { border-color: #c22a40; color: #fbf8f1; }
   & .cp-b svg path { stroke: #fbf8f1; }
   & .sheet-body { font: 14.5px/1.75 "IBM Plex Mono", ui-monospace, monospace; }
-  & .sheet-body a { color: #b0243a; text-decoration-color: #d47c89; }
+  & .sheet-body a { color: #1d2c8f; text-decoration-color: #8e98c9; }
   & .sheet-body .h1 { font-family: "Rozha One", Georgia, serif; font-size: 2.1em; line-height: 1.2; color: #121c52; }
   & .sheet-body .h2 { font-weight: 500; color: #1d2c8f; }
   & .sheet-body .q { color: #3b4579; }
